@@ -1,5 +1,10 @@
 "use client";
 
+import ImageInput from "@/components/ImageInput";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -10,34 +15,39 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 import { Input } from "../../../../components/ui/input";
-import ImageInput from "@/components/ImageInput";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { productFormSchema, ProductFormSchemaType } from "../validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { productFormSchema, ProductFormSchemaType } from "../lib/validation";
 
 export default function ProductForm() {
-  const [isDraft, setIsDraft] = useState(false);
+  const [isPublished, setIsPublished] = useState(true);
   const form = useForm({
     defaultValues: {
-      imageUrl: "",
+      image: undefined,
       title: "",
       description: "",
       price: "",
-      salePrice: "",
+      sale_price: "",
     },
     resolver: zodResolver(productFormSchema),
   });
 
-  function onSubmit(product: ProductFormSchemaType) {
-    console.log("Fields: ", { ...product, isDraft });
-    setIsDraft(false);
+  async function onSubmit(product: ProductFormSchemaType) {
+    form.reset();
+    setIsPublished(true);
   }
   return (
     <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
       <Form {...form}>
-        <ImageInput />
+        <FormField
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <ImageInput onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           name="title"
           render={({ field }) => (
@@ -91,7 +101,7 @@ export default function ProductForm() {
           <Button
             type="submit"
             variant={"secondary"}
-            onClick={() => setIsDraft(true)}
+            onClick={() => setIsPublished(false)}
           >
             Save as Draft
           </Button>
