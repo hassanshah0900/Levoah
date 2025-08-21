@@ -35,7 +35,7 @@ interface DataTableActionBarSelectionProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableActionBarSelection<TData>({
+function DataTableActionBarSelection<TData>({
   table,
 }: DataTableActionBarSelectionProps<TData>) {
   return (
