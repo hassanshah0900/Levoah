@@ -18,7 +18,7 @@ interface Props<TData> {
 }
 export default function DataTable<TData>({ table, pageSizes }: Props<TData>) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 grid grid-cols-1">
       <div className="border border-border">
         <Table>
           <TableHeader>
@@ -52,7 +52,6 @@ export default function DataTable<TData>({ table, pageSizes }: Props<TData>) {
                     <TableCell
                       key={cell.id}
                       style={getCommonPinningStyles(cell.column)}
-                      className="px-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
