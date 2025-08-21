@@ -1,16 +1,22 @@
+import { createSortingStateParser } from "@/lib/parsers";
+import {
+  createSearchParamsCache,
+  parseAsInteger,
+  parseAsString,
+} from "nuqs/server";
 import z from "zod";
 export const productFormSchema = z
   .object({
-    imageUrl: z.string().optional(),
+    image: z.instanceof(File, { error: "Image is required." }),
     title: z.string().min(1, "Title is required"),
     price: z
       .string()
       .min(1, "Price is required.")
       .transform((val) => parseInt(val)),
-    salePrice: z.string().transform((val) => (val ? parseInt(val) : 0)),
+    sale_price: z.string().transform((val) => (val ? parseInt(val) : 0)),
     description: z.string(),
   })
-  .refine((data) => data.price > data.salePrice, {
+  .refine((data) => data.price > data.sale_price, {
     error: "Sale price can't be greater than original price",
     path: ["salePrice"],
     when(payload) {
@@ -22,5 +28,3 @@ export const productFormSchema = z
         .safeParse(payload.value).success;
     },
   });
-
-export type ProductFormSchemaType = z.infer<typeof productFormSchema>;
