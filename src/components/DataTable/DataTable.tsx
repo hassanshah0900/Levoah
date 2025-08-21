@@ -10,6 +10,7 @@ import {
 import { flexRender, Table as TableType } from "@tanstack/react-table";
 import DataTablePagination from "./DataTablePagination";
 import { getCommonPinningStyles } from "@/lib/dataTableUtils";
+import { cn } from "@/lib/utils";
 
 interface Props<TData> {
   table: TableType<TData>;
@@ -51,6 +52,7 @@ export default function DataTable<TData>({ table, pageSizes }: Props<TData>) {
                     <TableCell
                       key={cell.id}
                       style={getCommonPinningStyles(cell.column)}
+                      className="px-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
