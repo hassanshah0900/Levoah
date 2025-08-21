@@ -1,33 +1,50 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React, {
-  ComponentPropsWithoutRef,
-  ComponentPropsWithRef,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import placeholderImage from "../../public/images/image-placeholder.webp";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
 
-interface Props extends ComponentPropsWithoutRef<"input"> {
+interface Props {
   imgUrl?: string;
   rounded?: boolean;
+  onChange: (file: File) => void;
 }
 export default function ImageInput({
   imgUrl,
   rounded = true,
-  ...props
+  onChange,
 }: Props) {
   const [selectedImg, setSelectedImg] = useState<string | null>(imgUrl ?? null);
-  const ref = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { formState } = useFormContext();
+
+  function removeImage(e: MouseEvent) {
+    setSelectedImg(null);
+    e.stopPropagation();
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  function selectImage(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.currentTarget?.files?.item(0);
+    if (file) {
+      setSelectedImg(URL.createObjectURL(file));
+      onChange(file);
+    }
+  }
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) setSelectedImg(null);
+  }, [formState.isSubmitted]);
+
   return (
     <div>
       <div
         className={cn(
-          "relative w-60 aspect-square overflow-hidden",
+          "relative w-60 aspect-square overflow-hidden group",
           rounded && "rounded-md"
         )}
-        onClick={() => ref.current?.click()}
+        onClick={() => inputRef.current?.click()}
       >
         <Image
           src={selectedImg ?? placeholderImage}
@@ -38,13 +55,9 @@ export default function ImageInput({
         {selectedImg && (
           <Button
             variant={"destructive"}
-            onClick={(e) => {
-              setSelectedImg(null);
-              e.stopPropagation();
-              if (ref.current) ref.current.value = "";
-            }}
+            onClick={removeImage}
             className={cn(
-              "absolute top-1/2 left-1/2 -translate-1/2 hover:opacity-100 opacity-0 transition-all"
+              "absolute top-1/2 left-1/2 -translate-1/2 group-hover:opacity-100 opacity-0 transition-all"
             )}
           >
             Remove
@@ -54,14 +67,8 @@ export default function ImageInput({
       <input
         type="file"
         className="opacity-0 w-0 h-0 overflow-hidden"
-        ref={ref}
-        {...props}
-        onChange={(e) => {
-          const file = e.currentTarget?.files?.item(0);
-          if (file) {
-            setSelectedImg(URL.createObjectURL(file));
-          }
-        }}
+        ref={inputRef}
+        onChange={selectImage}
       />
     </div>
   );
