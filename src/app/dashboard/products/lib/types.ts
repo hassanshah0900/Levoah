@@ -6,4 +6,5 @@ export interface Product {
   price: number;
   sale_price: number;
   published: boolean;
+  [key: string]: any;
 }
