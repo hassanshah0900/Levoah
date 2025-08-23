@@ -8,11 +8,13 @@ import { Button } from "./ui/button";
 interface Props {
   imgUrl?: string;
   rounded?: boolean;
+  shouldReset?: boolean;
   onChange: (file: File) => void;
 }
 export default function ImageInput({
   imgUrl,
   rounded = true,
+  shouldReset = true,
   onChange,
 }: Props) {
   const [selectedImg, setSelectedImg] = useState<string | null>(imgUrl ?? null);
@@ -34,7 +36,7 @@ export default function ImageInput({
   }
 
   useEffect(() => {
-    if (formState.isSubmitSuccessful) setSelectedImg(null);
+    if (formState.isSubmitSuccessful && shouldReset) setSelectedImg(null);
   }, [formState.isSubmitted]);
 
   return (
