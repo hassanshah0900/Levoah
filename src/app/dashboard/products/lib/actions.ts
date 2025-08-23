@@ -59,17 +59,6 @@ export async function editProduct(
 ) {
   const supabase = await createClient();
 
-  let url;
-  if (editedProduct.image) {
-    const { data, error } = await supabase.storage
-      .from("Product Images")
-      .upload(crypto.randomUUID(), editedProduct.image);
-
-    if (error) throw error;
-    url = data.path;
-  }
-  console.log("Now Above fields");
-
   let editedFields: { [key: string]: any } = {};
 
   for (let key of Object.keys(product)) {
@@ -77,22 +66,28 @@ export async function editProduct(
       editedFields[key] = editedProduct[key];
   }
 
-  if (url) {
-    const { error } = await supabase.storage
+  if (editedProduct.image) {
+    const { data, error } = await supabase.storage
+      .from("Product Images")
+      .upload(crypto.randomUUID(), editedProduct.image);
+
+    if (error) throw error;
+
+    console.log("Product Image Url: ", product.image_url);
+    const { error: deletionError } = await supabase.storage
       .from("Product Images")
       .remove([product.image_url]);
-    if (error) throw error;
-    editedFields["image_url"] = url;
-  }
 
-  console.log("Edited Fields: ", editedFields);
+    if (deletionError) throw deletionError;
+
+    editedFields["image_url"] = data.path;
+  }
 
   const { error } = await supabase
     .from("products")
     .update(editedFields)
     .eq("id", product.id);
 
-  console.log("Finally at the end");
   if (error) throw error;
 }
 
