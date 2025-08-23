@@ -37,9 +37,11 @@ export default function ProductDeleteDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-2">
-          <Button variant={"destructive"} onClick={onDelete}>
-            Delete
-          </Button>
+          <DialogClose asChild>
+            <Button variant={"destructive"} onClick={onDelete}>
+              Delete
+            </Button>
+          </DialogClose>
           <DialogClose asChild>
             <Button variant={"outline"}>Cancel</Button>
           </DialogClose>
