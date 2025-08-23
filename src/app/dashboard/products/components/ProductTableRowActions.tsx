@@ -12,12 +12,28 @@ import { useState } from "react";
 import { Product } from "../lib/types";
 import ProductDeleteDialog from "./ProductDeleteDialog";
 import ProductEditForm from "./ProductEditForm";
+import { toast } from "sonner";
+import { deleteSingleProduct } from "../lib/actions";
+import { useRouter } from "next/navigation";
 
 interface Props {
   row: Row<Product>;
 }
 export default function ProductTableRowActions({ row }: Props) {
   const [openState, setOpenState] = useState<"DELETE" | "EDIT" | null>(null);
+  const router = useRouter();
+
+  function deleteProduct() {
+    toast.promise(deleteSingleProduct(row.original.id), {
+      loading: "Deleting product...",
+      success: () => {
+        router.refresh();
+        return "Successfully deleted product";
+      },
+      error: ({ message }) => <div>{message}</div>,
+    });
+    setOpenState(null);
+  }
   return (
     <div>
       <DropdownMenu>
@@ -38,7 +54,7 @@ export default function ProductTableRowActions({ row }: Props) {
         </DropdownMenuContent>
       </DropdownMenu>
       <ProductDeleteDialog
-        onDelete={() => null}
+        onDelete={deleteProduct}
         open={openState === "DELETE"}
         onOpenChange={() => setOpenState(null)}
       />
