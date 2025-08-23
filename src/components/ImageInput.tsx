@@ -44,7 +44,7 @@ export default function ImageInput({
           "relative w-60 aspect-square overflow-hidden group",
           rounded && "rounded-md"
         )}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => selectedImg || inputRef.current?.click()}
       >
         <Image
           src={selectedImg ?? placeholderImage}
