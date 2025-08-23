@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -15,6 +16,7 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 import { Input } from "../../../../components/ui/input";
+import { createProduct } from "../lib/actions";
 import { productFormSchema, ProductFormSchemaType } from "../lib/validation";
 
 export default function ProductForm() {
@@ -30,8 +32,16 @@ export default function ProductForm() {
     resolver: zodResolver(productFormSchema),
   });
 
+  console.log(form.formState.errors);
   async function onSubmit(product: ProductFormSchemaType) {
+    toast.promise(createProduct(product, isPublished), {
+      loading: "Creating Product...",
+      success: "Successfully created product",
+      error: (err) => err.message,
+    });
     form.reset();
+    console.log(product);
+
     setIsPublished(true);
   }
   return (
@@ -73,7 +83,7 @@ export default function ProductForm() {
           )}
         />
         <FormField
-          name="salePrice"
+          name="sale_price"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sale Price</FormLabel>
