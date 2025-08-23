@@ -32,7 +32,6 @@ export default function ProductForm() {
     resolver: zodResolver(productFormSchema),
   });
 
-  console.log(form.formState.errors);
   async function onSubmit(product: ProductFormSchemaType) {
     toast.promise(createProduct(product, isPublished), {
       loading: "Creating Product...",
@@ -40,7 +39,6 @@ export default function ProductForm() {
       error: (err) => err.message,
     });
     form.reset();
-    console.log(product);
 
     setIsPublished(true);
   }
