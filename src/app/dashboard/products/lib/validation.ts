@@ -40,7 +40,9 @@ export const productEditFormSchema = productFormSchema
     },
   });
 
-export type ProductEditFormSchemaType = z.infer<typeof productEditFormSchema>;
+export type ProductEditFormSchemaType = z.infer<
+  typeof productEditFormSchema
+> & { [key: string]: any };
 
 export const productsPageSearchParamsCache = createSearchParamsCache({
   pageIndex: parseAsInteger.withDefault(0),
