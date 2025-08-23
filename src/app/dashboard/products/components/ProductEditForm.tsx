@@ -30,6 +30,9 @@ import {
 import { X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getProductImageUrl } from "../lib/utils";
+import { editProduct } from "../lib/actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
   product: Product;
@@ -52,8 +55,18 @@ export default function ProductEditForm({
     resolver: zodResolver(productEditFormSchema),
   });
 
-  async function onSubmit(product: ProductEditFormSchemaType) {
-    console.log(product);
+  const router = useRouter();
+
+  async function onSubmit(edittedProduct: ProductEditFormSchemaType) {
+    toast.promise(editProduct(product, edittedProduct), {
+      loading: "Editing product...",
+      success: () => {
+        router.refresh();
+        return "Successfully edited.";
+      },
+      error: ({ message }) => <div>{message}</div>,
+    });
+    onOpenChange?.(false);
   }
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="right" modal>
