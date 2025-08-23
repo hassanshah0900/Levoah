@@ -114,6 +114,7 @@ export const columns = [
     id: "actions",
     cell: ({ row }) => <ProductTableRowActions row={row} />,
     enablePinning: true,
+    enableHiding: false,
     minSize: 50,
     size: 50,
   }),
