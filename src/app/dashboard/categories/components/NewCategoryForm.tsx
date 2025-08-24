@@ -24,7 +24,7 @@ export default function NewCategoryForm() {
     <div>
       <Drawer direction="right">
         <DrawerTrigger asChild>
-          <Button>
+          <Button size={"sm"}>
             <Plus /> New
           </Button>
         </DrawerTrigger>
