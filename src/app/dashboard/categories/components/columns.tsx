@@ -31,6 +31,7 @@ export const columns = [
     ),
     enableSorting: false,
     enableColumnFilter: false,
+    enableHiding: false,
   }),
   columnHelper.accessor("name", {
     id: "name",
@@ -50,5 +51,8 @@ export const columns = [
     id: "actions",
     cell: ({ row }) => <CategoriesTableRowActions row={row} />,
     size: 50,
+    enableColumnFilter: false,
+    enableHiding: false,
+    enableSorting: false,
   }),
 ];
