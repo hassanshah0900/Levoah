@@ -1,3 +1,5 @@
+"use client";
+
 export function useLocalStorage(key: string) {
   function setItem(value: unknown) {
     try {
