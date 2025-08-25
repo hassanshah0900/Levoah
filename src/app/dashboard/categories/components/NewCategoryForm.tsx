@@ -1,3 +1,4 @@
+import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -36,7 +37,7 @@ export default function NewCategoryForm() {
           <form action="" className="p-4 space-y-4">
             <Form {...form}>
               <FormField
-                name="Name"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -53,7 +54,7 @@ export default function NewCategoryForm() {
                   <FormItem>
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <SlugInput {...field} slugSourceFieldName="name" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

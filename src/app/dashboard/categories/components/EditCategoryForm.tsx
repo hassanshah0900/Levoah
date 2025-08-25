@@ -1,10 +1,10 @@
+import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   Form,
@@ -14,7 +14,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Category } from "../lib/types";
 
@@ -40,7 +39,7 @@ export default function EditCategoryForm({
           <form action="" className="p-4 space-y-4">
             <Form {...form}>
               <FormField
-                name="Name"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -56,7 +55,7 @@ export default function EditCategoryForm({
                   <FormItem>
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <SlugInput {...field} slugSourceFieldName="name" />
                     </FormControl>
                   </FormItem>
                 )}
