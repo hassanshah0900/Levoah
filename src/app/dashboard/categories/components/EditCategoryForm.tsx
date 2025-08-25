@@ -16,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Category } from "../lib/types";
+import CategoriesCombobox from "./CategoriesCombobox";
+import { categorySchema, CategorySchemaType } from "../lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   category: Category;
@@ -27,7 +30,14 @@ export default function EditCategoryForm({
   open,
   onOpenChange,
 }: Props) {
-  const form = useForm();
+  const form = useForm<CategorySchemaType>({
+    defaultValues: {
+      ...category,
+      parent_category: category.parent_category || "",
+    },
+    resolver: zodResolver(categorySchema),
+  });
+
   return (
     <div>
       <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
@@ -56,6 +66,17 @@ export default function EditCategoryForm({
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
                       <SlugInput {...field} slugSourceFieldName="name" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="parent_category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Parent Category</FormLabel>
+                    <FormControl>
+                      <CategoriesCombobox {...field} />
                     </FormControl>
                   </FormItem>
                 )}
