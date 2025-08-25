@@ -6,10 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function slugify(text: string) {
-  if (text)
-    return text
-      .trim()
-      .toLowerCase()
-      .replace(/[\s\W-]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+  if (!text) return "";
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[\s\W-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
