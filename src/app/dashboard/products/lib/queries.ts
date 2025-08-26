@@ -36,3 +36,16 @@ export async function getAllProducts({
   if (error) throw error;
   return { products: data, count };
 }
+
+export async function getAllProductVariants(product_id: number) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("product_variants_with_images")
+    .select("*")
+    .eq("product_id", product_id);
+
+  if (error) console.log(error);
+
+  return { data };
+}
