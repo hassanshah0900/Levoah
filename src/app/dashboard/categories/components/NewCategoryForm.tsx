@@ -38,6 +38,12 @@ export default function NewCategoryForm() {
   });
   async function onSubmit(category: CategorySchemaType) {
     console.log(category);
+
+    toast.promise(createCategory(category), {
+      loading: "Creating new category...",
+      success: "Success",
+      error: ({ message }) => message,
+    });
     setOpen(false);
   }
   return (
