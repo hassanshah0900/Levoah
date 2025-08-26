@@ -7,6 +7,7 @@ import placeholder from "../../../../../public/images/image-placeholder.webp";
 import { Product } from "../lib/types";
 import { calculatePercentage, getProductImageUrl } from "../lib/utils";
 import ProductTableRowActions from "./ProductTableRowActions";
+import Link from "next/link";
 
 const columnHelper = createColumnHelper<Product>();
 
@@ -35,24 +36,6 @@ export const columns = [
     ),
     enableHiding: false,
   }),
-  columnHelper.accessor("image_url", {
-    id: "image_url",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Pic" />
-    ),
-    cell: ({ getValue }) => (
-      <div className="relative h-10 aspect-square ml-2">
-        <Image
-          src={getProductImageUrl(getValue()!) || placeholder}
-          alt=""
-          fill
-          className="object-center object-cover"
-        />
-      </div>
-    ),
-    enableColumnFilter: false,
-    enableSorting: false,
-  }),
   columnHelper.accessor("title", {
     id: "title",
     header: ({ column }) => (
@@ -60,35 +43,6 @@ export const columns = [
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
     enableColumnFilter: true,
-  }),
-  columnHelper.accessor("price", {
-    id: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
-    ),
-    cell: ({ getValue }) => <div className="ml-3">Rs {getValue()}</div>,
-  }),
-  columnHelper.accessor("sale_price", {
-    id: "sale_price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Sale Price" />
-    ),
-    cell: ({ row }) => (
-      <div className="ml-3">
-        Rs {row.original.sale_price || row.original.price}
-      </div>
-    ),
-  }),
-  columnHelper.display({
-    id: "discount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Discount" />
-    ),
-    cell: ({ row: { original } }) => (
-      <div className="ml-5">
-        {calculatePercentage(original.sale_price, original.price)}
-      </div>
-    ),
   }),
 
   columnHelper.accessor("description", {
@@ -109,6 +63,12 @@ export const columns = [
       </Badge>
     ),
     enableSorting: false,
+  }),
+  columnHelper.display({
+    id: "link",
+    cell: ({ row }) => (
+      <Link href={`/dashboard/products/${row.original.id}`}>Click Me</Link>
+    ),
   }),
   columnHelper.display({
     id: "actions",
