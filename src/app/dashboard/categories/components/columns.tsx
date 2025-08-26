@@ -47,6 +47,23 @@ export const columns = [
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
   }),
+  columnHelper.accessor("parent_category", {
+    id: "parent_category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Parent Category" />
+    ),
+    cell: ({ getValue, table }) => {
+      const parent_category = table
+        .getCoreRowModel()
+        .rows.map((row) => row.original)
+        .find((category) => category.id === getValue());
+      return (
+        <div className="ml-3">
+          {parent_category ? parent_category.name : "No Parent"}
+        </div>
+      );
+    },
+  }),
   columnHelper.display({
     id: "actions",
     cell: ({ row }) => <CategoriesTableRowActions row={row} />,
