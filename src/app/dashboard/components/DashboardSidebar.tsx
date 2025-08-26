@@ -52,7 +52,9 @@ export default function DashboardSidebar() {
                 </SidebarMenuItem>
               </Collapsible>
               <SidebarMenuItem>
-                <SidebarMenuButton>Categories</SidebarMenuButton>
+                <SidebarMenuButton asChild>
+                  <Link href={"/dashboard/categories"}>Categories</Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton>Orders</SidebarMenuButton>
