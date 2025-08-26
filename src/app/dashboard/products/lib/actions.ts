@@ -1,32 +1,62 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
-import { Product } from "./types";
-import { ProductEditFormSchemaType, ProductFormSchemaType } from "./validation";
+import { Product, ProductVariant } from "./types";
+import {
+  ProductEditFormSchemaType,
+  ProductFormSchemaType,
+  ProductVariantSchemaType,
+} from "./validation";
 
 export async function createProduct(
-  product: ProductFormSchemaType,
-  isPublished: boolean
+  product: ProductFormSchemaType & { published: boolean }
 ) {
   const supabase = await createClient();
-  const { data, error: storageError } = await supabase.storage
-    .from("Product Images")
-    .upload(crypto.randomUUID(), product.image);
 
-  if (storageError) throw storageError;
-
-  const newProduct = {
-    image_url: data.path,
+  const { error } = await supabase.from("products").insert({
     title: product.title,
-    description: product.description,
-    price: product.price,
-    sale_price: product.sale_price,
-    published: isPublished,
-  };
-
-  const { error } = await supabase.from("products").insert(newProduct);
+    slug: product.slug,
+    description: product.slug,
+    published: product.published,
+    product_type: 1,
+  });
 
   if (error) throw error;
+}
+
+export async function addProductVariant(
+  productVariant: ProductVariantSchemaType & { product_id: number }
+) {
+  const supabase = await createClient();
+
+  const { data: variant, error } = await supabase
+    .from("product_variants")
+    .insert({
+      price: productVariant.price,
+      quantity_in_stock: productVariant.quantity_in_stock,
+      product_id: productVariant.product_id,
+      attributes: {
+        frame_color: productVariant.frame_color,
+        lense_color: productVariant.lense_color,
+      },
+    })
+    .select("id")
+    .single();
+
+  if (error) throw error;
+
+  const { data, error: storageError } = await supabase.storage
+    .from("Product Images")
+    .upload(crypto.randomUUID(), productVariant.image);
+  if (storageError) throw storageError;
+
+  const { error: imageError } = await supabase.from("images").insert({
+    product_id: productVariant.product_id,
+    variant_id: variant.id,
+    path: data.path,
+  });
+
+  if (imageError) throw imageError;
 }
 
 export async function deleteSingleProduct(productId: string) {
