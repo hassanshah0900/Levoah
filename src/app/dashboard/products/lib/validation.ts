@@ -5,40 +5,29 @@ import {
   parseAsString,
 } from "nuqs/server";
 import z from "zod";
-export const productFormSchema = z
-  .object({
-    image: z.instanceof(File, { error: "Image is required." }),
-    title: z.string().min(1, "Title is required"),
-    price: z.coerce.number().min(1, "Price is required."),
-    sale_price: z.coerce.number().optional().default(0),
-    description: z.string(),
-  })
-  .refine((data) => data.price > data.sale_price, {
-    error: "Sale price can't be greater than original price",
-    path: ["sale_price"],
-    when(payload) {
-      return productFormSchema
-        .pick({ price: true, sale_price: true })
-        .safeParse(payload.value).success;
-    },
-  });
+
+export const productVariantSchema = z.object({
+  image: z.instanceof(File, { error: "Image is required" }),
+  price: z.coerce.number().min(1, "Price is required."),
+  quantity_in_stock: z.coerce.number().min(1, "Quantity is required."),
+  frame_color: z.string().min(1, "Frame color is required."),
+  lense_color: z.string().min(1, "Lense Color is required."),
+});
+
+export type ProductVariantSchemaType = z.infer<typeof productVariantSchema>;
+
+export const productFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  slug: z.string().min(1, "Slug is required."),
+  category: z.number("Category is required"),
+  description: z.string(),
+});
 
 export type ProductFormSchemaType = z.infer<typeof productFormSchema>;
 
-export const productEditFormSchema = productFormSchema
-  .extend({
-    published: z.boolean().default(true),
-  })
-  .partial({ image: true })
-  .refine((data) => data.price > data.sale_price, {
-    error: "Sale price can't be greater than original price",
-    path: ["sale_price"],
-    when(payload) {
-      return productFormSchema
-        .pick({ price: true, sale_price: true })
-        .safeParse(payload.value).success;
-    },
-  });
+export const productEditFormSchema = productFormSchema.extend({
+  published: z.boolean().default(true),
+});
 
 export type ProductEditFormSchemaType = z.infer<
   typeof productEditFormSchema
