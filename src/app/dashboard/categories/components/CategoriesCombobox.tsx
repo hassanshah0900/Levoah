@@ -19,11 +19,12 @@ import { getAllCategories } from "../lib/queries";
 import { Category } from "../lib/types";
 
 interface Props {
-  onChange: (id: string) => void;
+  onChange: (id: Category["parent_category"]) => void;
 }
 export default function CategoriesCombobox({ onChange }: Props) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [categoryId, setCategoryId] =
+    useState<Category["parent_category"]>(undefined);
   const [isPending, startTransition] = useTransition();
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -33,15 +34,15 @@ export default function CategoriesCombobox({ onChange }: Props) {
     });
   }, []);
 
-  function handleSelect(value: string) {
-    onChange(value);
+  function handleSelect(categoryId: Category["parent_category"]) {
+    onChange(categoryId);
     setOpen(false);
-    setValue(value);
+    setCategoryId(categoryId);
   }
 
   function getButtonText() {
-    if (!value || value === "no_parent") return "No Parent";
-    return categories.find((category) => category.id === value)?.name;
+    if (!categoryId) return "No Parent";
+    return categories.find((category) => category.id === categoryId)?.name;
   }
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -68,7 +69,7 @@ export default function CategoriesCombobox({ onChange }: Props) {
                       {category.name}
                     </CommandItem>
                   ))}
-                  <CommandItem onSelect={handleSelect} value="no_parent">
+                  <CommandItem onSelect={() => handleSelect(undefined)}>
                     No Parent
                   </CommandItem>
                 </CommandGroup>
