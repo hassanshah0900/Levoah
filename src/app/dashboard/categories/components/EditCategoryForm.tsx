@@ -12,6 +12,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
@@ -19,6 +20,8 @@ import { Category } from "../lib/types";
 import CategoriesCombobox from "./CategoriesCombobox";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { editCategory } from "../lib/actions";
 
 interface Props {
   category: Category;
@@ -32,11 +35,21 @@ export default function EditCategoryForm({
 }: Props) {
   const form = useForm<CategorySchemaType>({
     defaultValues: {
-      ...category,
-      parent_category: category.parent_category || "",
+      name: category.name,
+      slug: category.slug,
+      parent_category: category.parent_category,
     },
     resolver: zodResolver(categorySchema),
   });
+
+  function onSubmit(editedCategory: CategorySchemaType) {
+    toast.promise(editCategory({ ...editedCategory, id: category.id }), {
+      loading: "Editing category...",
+      success: "Success",
+      error: ({ message }) => message,
+    });
+    onOpenChange(false);
+  }
 
   return (
     <div>
@@ -46,7 +59,11 @@ export default function EditCategoryForm({
             <DrawerTitle>Edit Category</DrawerTitle>
           </DrawerHeader>
 
-          <form action="" className="p-4 space-y-4">
+          <form
+            action=""
+            className="p-4 space-y-4"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <Form {...form}>
               <FormField
                 name="name"
@@ -56,6 +73,7 @@ export default function EditCategoryForm({
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -67,6 +85,7 @@ export default function EditCategoryForm({
                     <FormControl>
                       <SlugInput {...field} slugSourceFieldName="name" />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -78,6 +97,7 @@ export default function EditCategoryForm({
                     <FormControl>
                       <CategoriesCombobox {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
