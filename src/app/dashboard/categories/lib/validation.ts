@@ -9,10 +9,7 @@ export const categorySchema = z.object({
     .string()
     .min(1, "Slug is required.")
     .max(100, "Slug can be at max 100 characters"),
-  parent_category: z
-    .string()
-    .transform((field) => (field === "" ? undefined : field))
-    .optional(),
+  parent_category: z.number().optional(),
 });
 
 export type CategorySchemaType = z.infer<typeof categorySchema>;
