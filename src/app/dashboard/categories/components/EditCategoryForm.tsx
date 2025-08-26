@@ -33,7 +33,7 @@ export default function EditCategoryForm({
   open,
   onOpenChange,
 }: Props) {
-  const form = useForm<CategorySchemaType>({
+  const form = useForm({
     defaultValues: {
       name: category.name,
       slug: category.slug,
