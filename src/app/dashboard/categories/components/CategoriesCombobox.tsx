@@ -17,6 +17,7 @@ import {
 import { useEffect, useState, useTransition } from "react";
 import { getAllCategories } from "../lib/queries";
 import { Category } from "../lib/types";
+import { toast } from "sonner";
 
 interface Props {
   onChange: (id: Category["parent_category"]) => void;
@@ -29,9 +30,13 @@ export default function CategoriesCombobox({ onChange }: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    startTransition(async () => {
-      setCategories((await getAllCategories()).data);
-    });
+    try {
+      startTransition(async () => {
+        setCategories((await getAllCategories()).data || []);
+      });
+    } catch (e) {
+      toast.error("An error occured while fetching categories.");
+    }
   }, []);
 
   function handleSelect(categoryId: Category["parent_category"]) {
