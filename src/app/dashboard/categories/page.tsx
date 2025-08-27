@@ -6,7 +6,7 @@ export default async function CategoriesPage() {
   const { data } = await getAllCategories();
   return (
     <div>
-      <CategoriesTable categories={data} />
+      <CategoriesTable categories={data || []} />
     </div>
   );
 }
