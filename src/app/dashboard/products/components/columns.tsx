@@ -1,13 +1,11 @@
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createColumnHelper } from "@tanstack/react-table";
-import Image from "next/image";
-import placeholder from "../../../../../public/images/image-placeholder.webp";
-import { Product } from "../lib/types";
-import { calculatePercentage, getProductImageUrl } from "../lib/utils";
-import ProductTableRowActions from "./ProductTableRowActions";
 import Link from "next/link";
+import ProductTableRowActions from "./ProductTableRowActions";
+import { Product } from "@/types/products.types";
 
 const columnHelper = createColumnHelper<Product>();
 
@@ -44,7 +42,12 @@ export const columns = [
     cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
     enableColumnFilter: true,
   }),
-
+  columnHelper.accessor("slug", {
+    header: ({ column }) => (
+      <DataTableColumnHeader title="Slug" column={column} />
+    ),
+    cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
+  }),
   columnHelper.accessor("description", {
     id: "description",
     header: ({ column }) => (
@@ -65,10 +68,18 @@ export const columns = [
     enableSorting: false,
   }),
   columnHelper.display({
-    id: "link",
+    id: "variants_link",
     cell: ({ row }) => (
-      <Link href={`/dashboard/products/${row.original.id}`}>Click Me</Link>
+      <Link
+        href={`/dashboard/products/${row.original.id}`}
+        className={buttonVariants({ variant: "link" })}
+      >
+        Variants
+      </Link>
     ),
+    enableColumnFilter: false,
+    enableHiding: false,
+    enableSorting: false,
   }),
   columnHelper.display({
     id: "actions",

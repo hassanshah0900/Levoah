@@ -7,11 +7,10 @@ import { Input } from "@/components/ui/input";
 import { useDataTable } from "@/hooks/useDataTable";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { Product } from "../lib/types";
 import ProductTableActionBar from "./ProductTableActionBar";
 import { columns } from "./columns";
-
-const data: Product[] = [];
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Product } from "@/types/products.types";
 
 interface Props {
   products: Product[];
@@ -31,7 +30,10 @@ export default function ProductsTable({ products, rowCount }: Props) {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 mt-5">
+      <div>
+        <SidebarTrigger />
+      </div>
       <div className="flex justify-between items-center">
         <Input
           className="max-w-xs"

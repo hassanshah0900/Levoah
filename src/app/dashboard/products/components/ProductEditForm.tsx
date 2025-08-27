@@ -1,6 +1,5 @@
 "use client";
 
-import ImageInput from "@/components/ImageInput";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -11,7 +10,12 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Textarea } from "@/components/ui/textarea";
+import { Product } from "@/types/products.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -21,18 +25,11 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 import { Input } from "../../../../components/ui/input";
-import { Product } from "../lib/types";
+import { editProduct } from "../lib/actions";
 import {
   productEditFormSchema,
   ProductEditFormSchemaType,
-  ProductFormSchemaType,
 } from "../lib/validation";
-import { X } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getProductImageUrl } from "../lib/utils";
-import { editProduct } from "../lib/actions";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 interface Props {
   product: Product;
@@ -47,9 +44,8 @@ export default function ProductEditForm({
   const form = useForm({
     defaultValues: {
       title: product.title,
+      slug: product.slug,
       description: product.description ?? "",
-      price: product.price,
-      sale_price: product.sale_price || "",
       published: product.published,
     },
     resolver: zodResolver(productEditFormSchema),
@@ -88,21 +84,6 @@ export default function ProductEditForm({
         >
           <Form {...form}>
             <FormField
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <ImageInput
-                      onChange={field.onChange}
-                      imgUrl={getProductImageUrl(product.image_url)}
-                      shouldReset={false}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
               name="title"
               render={({ field }) => (
                 <FormItem>
@@ -115,24 +96,12 @@ export default function ProductEditForm({
               )}
             />
             <FormField
-              name="price"
+              name="slug"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Slug</FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="sale_price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sale Price</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="number" />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -150,6 +119,7 @@ export default function ProductEditForm({
                 </FormItem>
               )}
             />
+
             <Button type="submit" className="w-full">
               Edit
             </Button>

@@ -1,10 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { ProductVariant } from "../lib/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
 import Image from "next/image";
 import { getProductImageUrl } from "../lib/utils";
 import placeholderImage from "../../../../../public/images/image-placeholder.webp";
+import { ProductVariant } from "@/types/products.types";
 
 const columnHelper = createColumnHelper<ProductVariant>();
 

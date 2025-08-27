@@ -1,15 +1,14 @@
 export interface Product {
   id: string;
-  image_url: string;
   title: string;
+  slug: string;
   description?: string;
-  price: number;
-  sale_price: number;
   published: boolean;
   [key: string]: any;
 }
 
 export interface ProductVariant {
+  id: number;
   price: number;
   quantity_in_stock: number;
   frame_color: string;

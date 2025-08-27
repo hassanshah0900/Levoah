@@ -16,8 +16,8 @@ import {
   changeProductsPublishedStatus,
   deleteMultipleProducts,
 } from "../lib/actions";
-import { Product } from "../lib/types";
 import ProductDeleteDialog from "./ProductDeleteDialog";
+import { Product } from "@/types/products.types";
 
 interface Props {
   table: Table<Product>;

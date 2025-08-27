@@ -4,9 +4,9 @@ import DataTable from "@/components/DataTable/DataTable";
 import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableColumnVisibilityToggler";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
-import { ProductVariant } from "../lib/types";
 import { productVariantColumns } from "./productVariantColumns";
 import ProductVariantForm from "./ProductVariantForm";
+import { ProductVariant } from "@/types/products.types";
 
 interface Props {
   product_id: number;
