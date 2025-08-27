@@ -22,6 +22,7 @@ import { categorySchema, CategorySchemaType } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { editCategory } from "../lib/actions";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
   category: Category;
@@ -96,6 +97,18 @@ export default function EditCategoryForm({
                     <FormLabel>Parent Category</FormLabel>
                     <FormControl>
                       <CategoriesCombobox {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

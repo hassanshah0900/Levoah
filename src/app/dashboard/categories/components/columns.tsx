@@ -64,6 +64,13 @@ export const columns = [
       );
     },
   }),
+  columnHelper.accessor("description", {
+    id: "description",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Description" />
+    ),
+    cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
+  }),
   columnHelper.display({
     id: "actions",
     cell: ({ row }) => <CategoriesTableRowActions row={row} />,

@@ -25,6 +25,7 @@ import { createCategory } from "../lib/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function NewCategoryForm() {
   const [open, setOpen] = useState(false);
@@ -96,6 +97,18 @@ export default function NewCategoryForm() {
                     <FormLabel>Parent Category</FormLabel>
                     <FormControl>
                       <CategoriesCombobox {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
