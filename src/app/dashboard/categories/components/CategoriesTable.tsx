@@ -3,20 +3,22 @@
 import DataTable from "@/components/DataTable/DataTable";
 import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableColumnVisibilityToggler";
 import { Input } from "@/components/ui/input";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategories } from "../lib/queries";
+import CategoriesTableActionBar from "./CategoriesTableActionBar";
 import { columns } from "./columns";
 import NewCategoryForm from "./NewCategoryForm";
-import CategoriesTableActionBar from "./CategoriesTableActionBar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Category } from "../lib/types";
 
-const categories = [{ id: "134", name: "Men", slug: "men" }];
-interface Props {
-  categories: Category[];
-}
-export default function CategoriesTable({ categories }: Props) {
+export default function CategoriesTable() {
+  const { data, status } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories,
+  });
+
   const { table } = useDataTable({
-    data: categories,
+    data: data ? data.categories : [],
     columns,
     initialState: {
       columnPinning: {
@@ -25,6 +27,11 @@ export default function CategoriesTable({ categories }: Props) {
       },
     },
   });
+
+  if (status === "error") return <div>An Error Occured.</div>;
+
+  if (status === "pending") return <div>Loading...</div>;
+
   return (
     <div>
       <div className="my-4">

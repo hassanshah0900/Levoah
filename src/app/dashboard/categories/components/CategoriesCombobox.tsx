@@ -14,30 +14,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useEffect, useState, useTransition } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { getAllCategories } from "../lib/queries";
 import { Category } from "../lib/types";
-import { toast } from "sonner";
 
 interface Props {
   onChange: (id: Category["parent_category"]) => void;
 }
 export default function CategoriesCombobox({ onChange }: Props) {
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories,
+  });
+
   const [open, setOpen] = useState(false);
   const [categoryId, setCategoryId] =
     useState<Category["parent_category"]>(undefined);
-  const [isPending, startTransition] = useTransition();
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    try {
-      startTransition(async () => {
-        setCategories((await getAllCategories()).data || []);
-      });
-    } catch (e) {
-      toast.error("An error occured while fetching categories.");
-    }
-  }, []);
 
   function handleSelect(categoryId: Category["parent_category"]) {
     onChange(categoryId);
@@ -47,8 +40,10 @@ export default function CategoriesCombobox({ onChange }: Props) {
 
   function getButtonText() {
     if (!categoryId) return "No Parent";
-    return categories.find((category) => category.id === categoryId)?.name;
+    return data?.categories.find((category) => category.id === categoryId)
+      ?.name;
   }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -60,13 +55,17 @@ export default function CategoriesCombobox({ onChange }: Props) {
         <Command>
           <CommandInput placeholder="Search category..." />
           <CommandList>
-            {isPending ? (
+            {isError ? (
+              <CommandEmpty>
+                An Error occured while fetching categories.
+              </CommandEmpty>
+            ) : isPending ? (
               <CommandEmpty>Loading...</CommandEmpty>
             ) : (
               <>
                 <CommandEmpty>No categories found.</CommandEmpty>
                 <CommandGroup>
-                  {categories.map((category) => (
+                  {data?.categories.map((category) => (
                     <CommandItem
                       key={category.id}
                       onSelect={() => handleSelect(category.id)}
