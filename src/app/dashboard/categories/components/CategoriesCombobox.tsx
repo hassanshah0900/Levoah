@@ -19,20 +19,21 @@ import { useState } from "react";
 import { getAllCategories } from "../lib/queries";
 import { Category } from "../lib/types";
 
+type ParentCategory = Category["parent_category"];
 interface Props {
-  onChange: (id: Category["parent_category"]) => void;
+  onChange: (id: ParentCategory) => void;
+  value: ParentCategory;
 }
-export default function CategoriesCombobox({ onChange }: Props) {
+export default function CategoriesCombobox({ onChange, value }: Props) {
   const { data, isPending, isError } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
   });
 
   const [open, setOpen] = useState(false);
-  const [categoryId, setCategoryId] =
-    useState<Category["parent_category"]>(undefined);
+  const [categoryId, setCategoryId] = useState<ParentCategory>(value);
 
-  function handleSelect(categoryId: Category["parent_category"]) {
+  function handleSelect(categoryId: ParentCategory) {
     onChange(categoryId);
     setOpen(false);
     setCategoryId(categoryId);
