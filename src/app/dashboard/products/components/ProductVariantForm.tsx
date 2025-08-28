@@ -27,10 +27,10 @@ import { toast } from "sonner";
 import { addProductVariant } from "../lib/actions";
 
 interface Props {
-  product_id: number;
+  productId: number;
 }
 
-export default function ProductVariantForm({ product_id }: Props) {
+export default function ProductVariantForm({ productId }: Props) {
   const form = useForm({
     defaultValues: {
       price: "",
@@ -42,7 +42,7 @@ export default function ProductVariantForm({ product_id }: Props) {
   });
 
   function onSubmit(data: ProductVariantSchemaType) {
-    const productVariant = { ...data, product_id, image_url: "" };
+    const productVariant = { ...data, product_id: productId, image_url: "" };
     toast.promise(addProductVariant(productVariant), {
       loading: "Creating variant...",
       success: "Sucess",

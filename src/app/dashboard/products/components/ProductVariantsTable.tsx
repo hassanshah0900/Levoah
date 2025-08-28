@@ -4,17 +4,22 @@ import DataTable from "@/components/DataTable/DataTable";
 import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableColumnVisibilityToggler";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
+import { useQuery } from "@tanstack/react-query";
+import { getAllProductVariants } from "../lib/queries";
 import { productVariantColumns } from "./productVariantColumns";
 import ProductVariantForm from "./ProductVariantForm";
-import { ProductVariant } from "@/types/products.types";
 
 interface Props {
-  product_id: number;
-  variants: ProductVariant[];
+  productId: number;
 }
-export default function ProductVariantsTable({ product_id, variants }: Props) {
+export default function ProductVariantsTable({ productId }: Props) {
+  const { data } = useQuery({
+    queryKey: ["product_variants"],
+    queryFn: () => getAllProductVariants({ productId }),
+  });
+
   const { table } = useDataTable({
-    data: variants,
+    data: data ? data.productVariants : [],
     columns: productVariantColumns,
   });
   return (
@@ -24,7 +29,7 @@ export default function ProductVariantsTable({ product_id, variants }: Props) {
       </div>
       <div className="flex justify-between items-center">
         <DataTableColumnVisibilityToggler table={table} />
-        <ProductVariantForm product_id={product_id} />
+        <ProductVariantForm productId={productId} />
       </div>
       <DataTable table={table}></DataTable>
     </div>

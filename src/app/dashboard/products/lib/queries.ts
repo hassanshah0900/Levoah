@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
+import { ProductVariant } from "@/types/products.types";
 import { SortingState } from "@tanstack/react-table";
 
 interface GetAllProductsProps {
@@ -37,15 +38,19 @@ export async function getAllProducts({
   return { products: data, count };
 }
 
-export async function getAllProductVariants(product_id: number) {
+export async function getAllProductVariants({
+  productId,
+}: {
+  productId: number;
+}) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const { data, count, error } = await supabase
     .from("product_variants_with_images")
-    .select("*")
-    .eq("product_id", product_id);
+    .select("*", { count: "exact" })
+    .eq("product_id", productId);
 
-  if (error) console.log(error);
+  if (error) throw error;
 
-  return { data };
+  return { productVariants: data as ProductVariant[], count };
 }
