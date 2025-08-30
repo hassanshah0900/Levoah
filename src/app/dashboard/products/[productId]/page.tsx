@@ -9,15 +9,15 @@ import { getAllProductVariants } from "../lib/queries";
 export default async function DashboardProductPage({
   params,
 }: {
-  params: Promise<{ productId: number }>;
+  params: Promise<{ productId: string }>;
 }) {
-  const { productId } = await params;
-  console.log(productId);
+  const resolvedParams = await params;
+  const productId = parseInt(resolvedParams.productId);
 
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["product_variants", { productId }],
+    queryKey: ["product_variants", productId],
     queryFn: () => getAllProductVariants({ productId }),
   });
 

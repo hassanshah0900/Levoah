@@ -14,7 +14,7 @@ interface Props {
 }
 export default function ProductVariantsTable({ productId }: Props) {
   const { data } = useQuery({
-    queryKey: ["product_variants"],
+    queryKey: ["product_variants", productId],
     queryFn: () => getAllProductVariants({ productId }),
   });
 
