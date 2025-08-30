@@ -5,6 +5,7 @@ import Image from "next/image";
 import { getProductImageUrl } from "../lib/utils";
 import placeholderImage from "../../../../../public/images/image-placeholder.webp";
 import { ProductVariant } from "@/types/products.types";
+import ProductVariantTableRowActions from "./ProductVariantTableRowActions";
 
 const columnHelper = createColumnHelper<ProductVariant>();
 
@@ -69,5 +70,13 @@ export const productVariantColumns = [
       <DataTableColumnHeader title="Lense Color" column={column} />
     ),
     cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+  }),
+  columnHelper.display({
+    id: "actions",
+    cell: ({ row }) => <ProductVariantTableRowActions row={row} />,
+    enablePinning: true,
+    enableHiding: false,
+    minSize: 50,
+    size: 50,
   }),
 ];
