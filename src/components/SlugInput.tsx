@@ -18,8 +18,8 @@ export default function SlugInput({
     <div className="flex justify-center items-center gap-2">
       <Input {...props} onChange={(e) => onChange(e.currentTarget.value)} />
       <Button
-        variant={"secondary"}
         type="button"
+        variant={"secondary"}
         onClick={() => {
           onChange(slugify(value)!);
         }}
