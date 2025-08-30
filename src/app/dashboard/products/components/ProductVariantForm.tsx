@@ -25,12 +25,27 @@ import {
 } from "../lib/validation";
 import { toast } from "sonner";
 import { addProductVariant } from "../lib/actions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   productId: number;
 }
 
 export default function ProductVariantForm({ productId }: Props) {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: addProductVariant,
+    onSuccess() {
+      toast.success("Success", { id: "new_variant" });
+      queryClient.invalidateQueries({
+        queryKey: ["product_variants", productId],
+      });
+    },
+    onError(error) {
+      toast.error(error.message, { id: "new_variant" });
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       price: "",
@@ -42,12 +57,9 @@ export default function ProductVariantForm({ productId }: Props) {
   });
 
   function onSubmit(data: ProductVariantSchemaType) {
-    const productVariant = { ...data, product_id: productId, image_url: "" };
-    toast.promise(addProductVariant(productVariant), {
-      loading: "Creating variant...",
-      success: "Sucess",
-      error: ({ message }) => message,
-    });
+    const productVariant = { ...data, product_id: productId };
+    mutate(productVariant);
+    toast.loading("Creating variant...", { id: "new_variant" });
     console.log(data);
   }
 
