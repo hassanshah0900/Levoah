@@ -3,6 +3,11 @@ export interface Product {
   title: string;
   slug: string;
   description?: string;
+  product_type: {
+    id: number;
+    name: string;
+    slug: string;
+  };
   published: boolean;
   [key: string]: any;
 }
