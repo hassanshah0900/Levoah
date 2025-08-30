@@ -89,7 +89,7 @@ export async function editProductVariant(
   if (error) throw error;
 }
 
-export async function deleteSingleProduct(productId: string) {
+export async function deleteSingleProduct(productId: number) {
   console.log("action Id: ", productId);
 
   const supabase = await createClient();
@@ -102,7 +102,7 @@ export async function deleteSingleProduct(productId: string) {
   if (error) throw error;
 }
 
-export async function deleteMultipleProducts(productIds: string[]) {
+export async function deleteMultipleProducts(productIds: Product["id"][]) {
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -152,7 +152,7 @@ export async function editProduct(
 }
 
 export async function changeProductsPublishedStatus(
-  productIds: string[],
+  productIds: Product["id"][],
   published: boolean
 ) {
   const supabase = await createClient();
