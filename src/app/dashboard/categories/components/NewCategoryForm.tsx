@@ -26,8 +26,24 @@ import { toast } from "sonner";
 import { createCategory } from "../lib/actions";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
 import CategoriesCombobox from "./CategoriesCombobox";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function NewCategoryForm() {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: createCategory,
+    onSuccess() {
+      toast.success("New category successfully created.", {
+        id: "new_category",
+      });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError(error) {
+      toast.error(error.message, { id: "new_category" });
+    },
+  });
+
   const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
@@ -37,14 +53,11 @@ export default function NewCategoryForm() {
     },
     resolver: zodResolver(categorySchema),
   });
-  async function onSubmit(category: CategorySchemaType) {
-    console.log(category);
 
-    toast.promise(createCategory(category), {
-      loading: "Creating new category...",
-      success: "Success",
-      error: ({ message }) => message,
-    });
+  function onSubmit(category: CategorySchemaType) {
+    console.log(category);
+    mutate(category);
+    toast.loading("Creating new category...", { id: "new_category" });
     setOpen(false);
   }
   return (

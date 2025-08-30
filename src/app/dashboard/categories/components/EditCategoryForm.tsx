@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getProductImageUrl } from "../../products/lib/utils";
@@ -36,6 +37,23 @@ export default function EditCategoryForm({
   open,
   onOpenChange,
 }: Props) {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: editCategory,
+    onSuccess(data, variables) {
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
+      });
+      toast.success(`Successfully edited category ${variables.name}`, {
+        id: "edit_category",
+      });
+    },
+    onError(error) {
+      toast.error(error.message, { id: "edit_category" });
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       name: category.name,
@@ -46,11 +64,8 @@ export default function EditCategoryForm({
   });
 
   function onSubmit(data: CategorySchemaType) {
-    toast.promise(editCategory({ ...category, ...data }), {
-      loading: "Editing category...",
-      success: "Success",
-      error: ({ message }) => message,
-    });
+    mutate({ ...category, ...data });
+    toast.loading("Editing category...", { id: "edit_category" });
     onOpenChange(false);
   }
 
