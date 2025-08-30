@@ -57,3 +57,20 @@ export async function editCategory(category: CategorySchemaType & Category) {
 
   if (error) throw error;
 }
+
+export async function deleteSingleCategory(category: Category) {
+  const supabase = await createClient();
+
+  if (category.image_url) {
+    const { error } = await supabase.storage
+      .from("Product Images")
+      .remove([category.image_url]);
+    if (error) throw error;
+  }
+
+  const { error } = await supabase
+    .from("categories")
+    .delete()
+    .eq("id", category.id);
+  if (error) throw error;
+}
