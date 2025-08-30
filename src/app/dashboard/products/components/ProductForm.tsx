@@ -22,9 +22,21 @@ import { Input } from "../../../../components/ui/input";
 import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
 import { createProduct } from "../lib/actions";
 import { productFormSchema, ProductFormSchemaType } from "../lib/validation";
+import { useMutation } from "@tanstack/react-query";
 
 export default function ProductForm() {
   const [isPublished, setIsPublished] = useState(true);
+
+  const { mutate } = useMutation({
+    mutationFn: createProduct,
+    onSuccess() {
+      toast.success("Successfully created Product", { id: "new_product" });
+      form.reset();
+    },
+    onError(error) {
+      toast.error(error.message, { id: "new_product" });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -38,11 +50,8 @@ export default function ProductForm() {
 
   function onSubmit(data: ProductFormSchemaType) {
     const product = { ...data, published: isPublished };
-    toast.promise(createProduct(product), {
-      loading: "Creating product...",
-      success: "Successfully created Product",
-      error: ({ message }) => message,
-    });
+    mutate(product);
+    toast.loading("Creating product...", { id: "new_product" });
   }
 
   return (
