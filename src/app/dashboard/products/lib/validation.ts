@@ -16,6 +16,16 @@ export const productVariantSchema = z.object({
 
 export type ProductVariantSchemaType = z.infer<typeof productVariantSchema>;
 
+export const productVariantEditSchema = z
+  .object({
+    ...productVariantSchema.shape,
+  })
+  .partial({ image: true });
+
+export type ProductVariantEditSchemaType = z.infer<
+  typeof productVariantEditSchema
+>;
+
 export const productFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required."),
