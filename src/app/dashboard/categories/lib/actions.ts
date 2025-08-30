@@ -7,16 +7,52 @@ import { CategorySchemaType } from "./validation";
 export async function createCategory(category: CategorySchemaType) {
   const supabase = await createClient();
 
-  const { error } = await supabase.from("categories").insert({ ...category });
+  let image_url = null;
+  if (category.image) {
+    const { data, error } = await supabase.storage
+      .from("Product Images")
+      .upload(crypto.randomUUID(), category.image);
+    if (error) throw error;
+    image_url = data.path;
+  }
+
+  const { name, slug, description, parent_category } = category;
+  const { error } = await supabase
+    .from("categories")
+    .insert({ name, slug, description, parent_category, image_url });
   if (error) throw error;
 }
 
-export async function editCategory(category: Category) {
+export async function editCategory(category: CategorySchemaType & Category) {
   const supabase = await createClient();
 
+  let image_url = category.image_url;
+  if (category.image) {
+    if (category.image_url) {
+      const { data, error } = await supabase.storage
+        .from("Product Images")
+        .remove([category.image_url]);
+      if (error) throw error;
+    }
+
+    const { data, error: uploadError } = await supabase.storage
+      .from("Product Images")
+      .upload(crypto.randomUUID(), category.image);
+    if (uploadError) throw uploadError;
+
+    image_url = data.path;
+  }
+
+  const { name, slug, description, parent_category } = category;
   const { error } = await supabase
     .from("categories")
-    .update({ ...category })
+    .update({
+      name,
+      slug,
+      description,
+      image_url,
+      parent_category,
+    })
     .eq("id", category.id);
 
   if (error) throw error;

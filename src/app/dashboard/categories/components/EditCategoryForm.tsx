@@ -1,3 +1,4 @@
+import ImageInput from "@/components/ImageInput";
 import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,14 +16,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { Category } from "../lib/types";
-import CategoriesCombobox from "./CategoriesCombobox";
-import { categorySchema, CategorySchemaType } from "../lib/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { editCategory } from "../lib/actions";
 import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { getProductImageUrl } from "../../products/lib/utils";
+import { editCategory } from "../lib/actions";
+import { Category } from "../lib/types";
+import { categorySchema, CategorySchemaType } from "../lib/validation";
+import CategoriesCombobox from "./CategoriesCombobox";
 
 interface Props {
   category: Category;
@@ -43,8 +45,8 @@ export default function EditCategoryForm({
     resolver: zodResolver(categorySchema),
   });
 
-  function onSubmit(editedCategory: CategorySchemaType) {
-    toast.promise(editCategory({ ...editedCategory, id: category.id }), {
+  function onSubmit(data: CategorySchemaType) {
+    toast.promise(editCategory({ ...category, ...data }), {
       loading: "Editing category...",
       success: "Success",
       error: ({ message }) => message,
@@ -55,7 +57,7 @@ export default function EditCategoryForm({
   return (
     <div>
       <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
-        <DrawerContent>
+        <DrawerContent className="h-screen overflow-y-auto overflow-x-hidden">
           <DrawerHeader>
             <DrawerTitle>Edit Category</DrawerTitle>
           </DrawerHeader>
@@ -66,6 +68,24 @@ export default function EditCategoryForm({
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <Form {...form}>
+              <FormField
+                name={`image`}
+                render={({ field: { onChange } }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ImageInput
+                        onChange={onChange}
+                        shouldReset={false}
+                        imgUrl={
+                          category.image_url &&
+                          getProductImageUrl(category.image_url)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 name="name"
                 render={({ field }) => (

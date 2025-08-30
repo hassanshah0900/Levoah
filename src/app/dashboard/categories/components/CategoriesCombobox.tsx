@@ -34,7 +34,7 @@ export default function CategoriesCombobox({ onChange, value }: Props) {
   const [categoryId, setCategoryId] = useState<ParentCategory>(value);
 
   function handleSelect(categoryId: ParentCategory) {
-    onChange(categoryId);
+    onChange(categoryId ?? null);
     setOpen(false);
     setCategoryId(categoryId);
   }
@@ -74,7 +74,7 @@ export default function CategoriesCombobox({ onChange, value }: Props) {
                       {category.name}
                     </CommandItem>
                   ))}
-                  <CommandItem onSelect={() => handleSelect(undefined)}>
+                  <CommandItem onSelect={() => handleSelect(null)}>
                     No Parent
                   </CommandItem>
                 </CommandGroup>

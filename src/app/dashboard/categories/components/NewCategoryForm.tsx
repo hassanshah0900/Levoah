@@ -1,3 +1,4 @@
+import ImageInput from "@/components/ImageInput";
 import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,16 +17,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import CategoriesCombobox from "./CategoriesCombobox";
-import { Category } from "../lib/types";
 import { toast } from "sonner";
 import { createCategory } from "../lib/actions";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
-import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import CategoriesCombobox from "./CategoriesCombobox";
 
 export default function NewCategoryForm() {
   const [open, setOpen] = useState(false);
@@ -55,7 +55,7 @@ export default function NewCategoryForm() {
             <Plus /> New
           </Button>
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent className="h-screen overflow-y-auto overflow-x-hidden">
           <DrawerHeader>
             <DrawerTitle>Create New Category</DrawerTitle>
           </DrawerHeader>
@@ -66,6 +66,17 @@ export default function NewCategoryForm() {
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <Form {...form}>
+              <FormField
+                name={`image`}
+                render={({ field: { onChange } }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ImageInput onChange={onChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 name="name"
                 render={({ field }) => (

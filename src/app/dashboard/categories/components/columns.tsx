@@ -3,6 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createColumnHelper } from "@tanstack/react-table";
 import CategoriesTableRowActions from "./CategoriesTableRowActions";
 import { Category } from "../lib/types";
+import ProductImage from "@/app/(app)/products/components/ProductImage";
 
 const columnHelper = createColumnHelper<Category>();
 
@@ -33,22 +34,33 @@ export const columns = [
     enableColumnFilter: false,
     enableHiding: false,
   }),
+  columnHelper.accessor("image_url", {
+    id: "Image",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Image" />
+    ),
+    cell: ({ getValue }) => (
+      <ProductImage src={getValue()} alt="" className="w-20" />
+    ),
+    enableSorting: false,
+    enableColumnFilter: false,
+  }),
   columnHelper.accessor("name", {
-    id: "name",
+    id: "Name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
   }),
   columnHelper.accessor("slug", {
-    id: "slug",
+    id: "Slug",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Slug" />
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
   }),
   columnHelper.accessor("parent_category", {
-    id: "parent_category",
+    id: "Parent Category",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Parent Category" />
     ),
@@ -65,7 +77,7 @@ export const columns = [
     },
   }),
   columnHelper.accessor("description", {
-    id: "description",
+    id: "Description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
