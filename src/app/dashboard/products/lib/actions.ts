@@ -1,12 +1,13 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
-import { Product, ProductVariant } from "./types";
 import {
   ProductEditFormSchemaType,
   ProductFormSchemaType,
+  ProductVariantEditSchemaType,
   ProductVariantSchemaType,
 } from "./validation";
+import { Product, ProductVariant } from "@/types/products.types";
 
 export async function createProduct(
   product: ProductFormSchemaType & { published: boolean }
@@ -57,6 +58,35 @@ export async function addProductVariant(
   });
 
   if (imageError) throw imageError;
+}
+
+export async function editProductVariant(
+  productVariant: ProductVariant & Pick<ProductVariantEditSchemaType, "image">
+) {
+  const supabase = await createClient();
+
+  let image_url = productVariant.image_url;
+  if (productVariant.image) {
+    const { data, error } = await supabase.storage
+      .from("Product Images")
+      .upload(crypto.randomUUID(), productVariant.image);
+    if (error) throw error;
+
+    const { error: deleteError } = await supabase.storage
+      .from("Product Images")
+      .remove([productVariant.image_url]);
+    if (deleteError) throw deleteError;
+
+    image_url = data.path;
+  }
+
+  const { error } = await supabase.rpc("update_product_variant", {
+    variant: {
+      ...productVariant,
+      image_url,
+    },
+  });
+  if (error) throw error;
 }
 
 export async function deleteSingleProduct(productId: string) {
