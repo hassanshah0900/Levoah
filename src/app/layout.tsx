@@ -4,16 +4,19 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import ReactQueryClientProvider from "@/providers/ReactQueryClientProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ShoppingCartProvider } from "@/contexts/ShoppingCartContext";
+import Navbar from "@/components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,11 +31,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        className="overflow-x-hidden"
       >
         <Toaster closeButton />
         <NuqsAdapter>
-          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+          <ReactQueryClientProvider>
+            {children}
+            <ReactQueryDevtools
+              initialIsOpen={false}
+              buttonPosition="bottom-left"
+            />
+          </ReactQueryClientProvider>
         </NuqsAdapter>
       </body>
     </html>
