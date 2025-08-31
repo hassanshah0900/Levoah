@@ -13,3 +13,14 @@ export function slugify(text: string) {
     .replace(/[\s\W-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+export function getNextPageIndex(
+  currentPageIndex: number,
+  numberOfRows: number,
+  pageSize: number
+) {
+  const numberofPages = Math.ceil(numberOfRows / pageSize);
+  const lastPageIndex = numberofPages - 1;
+
+  if (currentPageIndex < lastPageIndex) return currentPageIndex + 1;
+}
