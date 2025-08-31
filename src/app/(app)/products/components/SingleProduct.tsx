@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { cn } from "@/lib/utils";
 import { ProductVariant } from "@/types/products.types";
 import { useQuery } from "@tanstack/react-query";
@@ -20,12 +21,16 @@ export default function SingleProduct({ slug }: { slug: string }) {
   const { product } = data;
   const [currentVariant, setCurrentVariant] = useState(product.variants[0]);
 
+  const { addCartItem, setIsOpen, isInCart } = useShoppingCart();
+
+  const isItemInCart = isInCart(product.id, currentVariant.id);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10 py-10">
       <ProductImage
         src={currentVariant.image_url}
         alt=""
-        className="shadow-highlight shadow-[0_0_5px] md:shadow-[0_0_10px] rounded-sm"
+        className="shadow-highlight shadow-[0_0_5px] md:shadow-[0_0_10px] rounded-xs overflow-hidden"
       />
       <div className="space-y-4 md:space-y-5">
         <div>
@@ -64,7 +69,25 @@ export default function SingleProduct({ slug }: { slug: string }) {
           perspiciatis modi labore a rerum!
         </p>
         <Separator />
-        <Button className="w-full">Add to Cart</Button>
+        <Button
+          onClick={() => {
+            addCartItem({
+              product_id: product.id,
+              variant_id: currentVariant.id,
+              image_url: currentVariant.image_url,
+              title: product.title,
+              price: currentVariant.price,
+              quantity: 1,
+              frame_color: currentVariant.frame_color,
+              lense_color: currentVariant.lense_color,
+            });
+            setIsOpen(true);
+          }}
+          className={"w-full"}
+          disabled={isItemInCart}
+        >
+          {!isItemInCart ? "Add to Cart" : "Already in cart"}
+        </Button>
       </div>
     </div>
   );
