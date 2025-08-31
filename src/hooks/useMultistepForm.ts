@@ -1,6 +1,6 @@
 "use client";
 
-import { MultistepFormStep } from "@/app/checkout/lib/types";
+import { MultistepFormStep } from "@/app/(app)/checkout/lib/types";
 import { useState } from "react";
 
 export default function useMultistepForm(steps: MultistepFormStep[]) {
