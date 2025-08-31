@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Container from "@/components/Container";
 import {
   dehydrate,
