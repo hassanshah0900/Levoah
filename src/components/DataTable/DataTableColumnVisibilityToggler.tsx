@@ -26,7 +26,7 @@ export default function DataTableColumnVisibilityToggler<TData>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant={"outline"} size={"sm"}>
-          View <ChevronsUpDown className="opacity-60" />
+          View <ChevronsUpDown />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-40">
