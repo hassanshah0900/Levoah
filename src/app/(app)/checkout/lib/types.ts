@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { AddressSchemaType, CheckoutFormSchemaType } from "./validation";
+import { CheckoutFormSchemaType } from "./validation";
 
 export interface MultistepFormStep {
   label: string;
