@@ -26,12 +26,15 @@ import {
 import { toast } from "sonner";
 import { addProductVariant } from "../lib/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 interface Props {
   productId: number;
 }
 
 export default function ProductVariantForm({ productId }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: addProductVariant,
@@ -40,6 +43,7 @@ export default function ProductVariantForm({ productId }: Props) {
       queryClient.invalidateQueries({
         queryKey: ["product_variants", productId],
       });
+      form.reset();
     },
     onError(error) {
       toast.error(error.message, { id: "new_variant" });
@@ -60,11 +64,12 @@ export default function ProductVariantForm({ productId }: Props) {
     const productVariant = { ...data, product_id: productId };
     mutate(productVariant);
     toast.loading("Creating variant...", { id: "new_variant" });
+    setIsOpen(false);
     console.log(data);
   }
 
   return (
-    <Drawer direction="right">
+    <Drawer direction="right" open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <Button size={"sm"}>
           <Plus /> New{" "}
