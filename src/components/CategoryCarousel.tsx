@@ -53,7 +53,7 @@ export default function CategoryCarousel() {
   return (
     <div className="overflow-hidden group/carousel">
       <div ref={emblaRef} className={cn("relative")}>
-        <div className="flex gap-5">
+        <div className="flex">
           {isPending ? (
             <CategoryCarouselSkeleton />
           ) : (
@@ -68,7 +68,7 @@ export default function CategoryCarousel() {
                     alt=""
                     className="rounded-xs overflow-hidden"
                   />
-                  <p className="underline-offset-3 font-semibold group-hover/category:underline group-focus/category:underline ">
+                  <p className="underline-offset-3 font-semibold group-hover/category:underline group-focus/category:underline text-xs xs:text-sm md:text-base">
                     {category.name}
                   </p>
                 </Link>
@@ -94,7 +94,9 @@ export default function CategoryCarousel() {
 
 function EmblaCategorySlide({ children }: PropsWithChildren) {
   return (
-    <div className="shrink-0 grow-0 basis-1/2 md:basis-1/10">{children}</div>
+    <div className="shrink-0 grow-0 md:basis-1/8 sm:basis-1/6 xs:basis-1/5 basis-1/4 px-1">
+      {children}
+    </div>
   );
 }
 
