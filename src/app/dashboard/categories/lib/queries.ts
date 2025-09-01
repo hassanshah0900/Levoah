@@ -14,3 +14,24 @@ export async function getAllCategories() {
 
   return { categories: data as Category[], count };
 }
+
+export async function getOtherCategories(categorySlug: "all" | string) {
+  const result = await getAllCategories();
+  let { categories } = result;
+  if (categorySlug === "all") return result;
+
+  const currentCategory = categories.find(
+    (category) => category.slug === categorySlug
+  );
+
+  if (!currentCategory) throw new Error("No such category exists.");
+
+  const categoriesToExclude = currentCategory.path.split("/");
+  categories = categories.filter(
+    (category) => !categoriesToExclude.includes(category.slug)
+  );
+
+  console.log(categories);
+
+  return { categories, count: categories.length };
+}
