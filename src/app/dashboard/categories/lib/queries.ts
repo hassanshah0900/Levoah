@@ -16,9 +16,18 @@ export async function getAllCategories() {
 }
 
 export async function getOtherCategories(categorySlug: "all" | string) {
-  const result = await getAllCategories();
-  let { categories } = result;
+  const supabase = await createClient();
+
+  const { data, error, count } = await supabase
+    .from("categories")
+    .select("*", { count: "exact" });
+
+  if (error) throw error;
+
+  const result = { categories: data as Category[], count };
   if (categorySlug === "all") return result;
+
+  let { categories } = result;
 
   const currentCategory = categories.find(
     (category) => category.slug === categorySlug
