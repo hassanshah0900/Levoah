@@ -1,8 +1,7 @@
+import { Facebook, Instagram, Youtube } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import Container from "./Container";
 import { Button } from "./ui/button";
-import { Facebook, Instagram, Youtube } from "lucide-react";
 
 const links = [
   { label: "Company" },
@@ -12,7 +11,7 @@ const links = [
 ];
 export default function Footer() {
   return (
-    <footer className="bg-primary pt-10 pb-20">
+    <footer className="bg-primary pt-10 pb-20 border-t-2 border-highlight/60">
       <Container>
         <div className="grid grid-cols-[1.5fr_repeat(3,1fr)]">
           <div className="space-y-5">

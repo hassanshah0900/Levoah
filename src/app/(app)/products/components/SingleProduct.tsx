@@ -103,7 +103,7 @@ function Variants({
   currentVariant: ProductVariant;
 }) {
   return (
-    <div className="space-y-1 md:space-y-2">
+    <div className="space-y-2">
       <p className="font-semibold text-xs md:text-sm text-muted-foreground">
         {variants.length} Colors
       </p>
