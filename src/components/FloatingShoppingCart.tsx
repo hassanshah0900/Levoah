@@ -52,7 +52,7 @@ export default function FloatingShoppingCart() {
           </div>
           <DrawerFooter>
             {cartItems.length ? (
-              <Link href={"/checkout"}>
+              <Link href={"/checkout"} onClick={() => setIsOpen(false)}>
                 <Button className="w-full">Checkout</Button>
               </Link>
             ) : null}
