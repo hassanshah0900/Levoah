@@ -2,11 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import useMultistepForm from "@/hooks/useMultistepForm";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { createOrder } from "../lib/actions";
 import { MultistepFormStep } from "../lib/types";
-import { addressSchema } from "../lib/validation";
+import { checkoutFormSchema } from "../lib/validation";
 import CustomerAddressFields from "./CustomerAddressFields";
 import MultistepFormProgressBar from "./MultistepFormProgressBar";
 import OrderSummary from "./OrderSummary";
@@ -29,7 +34,10 @@ const steps: MultistepFormStep[] = [
       "province",
       "country",
       "city",
-    ],
+      "postal_code",
+    ].map(
+      (field) => `shipping_address.${field}`
+    ) as MultistepFormStep["fields"],
   },
   {
     label: "Payment Options",
@@ -39,17 +47,35 @@ const steps: MultistepFormStep[] = [
 ];
 
 function CheckoutForm() {
+  const router = useRouter();
+  const { mutate, status } = useMutation({
+    mutationFn: createOrder,
+    onSuccess(data) {
+      router.push(`/order/confirmation/${data.tracking_code}`);
+    },
+
+    onError(error) {
+      toast.error("Couldn't place order.");
+    },
+  });
+
+  const { cartItems } = useShoppingCart();
+
   const form = useForm({
-    resolver: zodResolver(addressSchema),
+    resolver: zodResolver(checkoutFormSchema),
     mode: "onChange",
     defaultValues: {
-      full_name: "",
-      address: "",
-      city: "",
-      country: "",
-      email: "",
-      phone: "",
-      province: "",
+      shipping_address: {
+        full_name: "",
+        address: "",
+        city: "",
+        country: "Pakistan",
+        email: "",
+        phone: "",
+        province: "",
+        postal_code: "",
+      },
+      payment_method: "Cash on delivery",
     },
   });
 
@@ -64,11 +90,37 @@ function CheckoutForm() {
   } = useMultistepForm(steps);
 
   function onSubmit(data: any) {
-    console.log(data);
+    const order = {
+      ...data,
+      orderItems: cartItems,
+    };
+    mutate(order);
+    console.log(order);
   }
 
   async function areAllCurrentPageFieldsValid() {
     return await form.trigger(step.fields);
+  }
+
+  async function areAllPreviousStepsFieldsValid(stepNumber: number) {
+    const previousStepsFields = steps.reduce<MultistepFormStep["fields"]>(
+      (acc, curr, idx) => {
+        const fields = curr.fields;
+        const currentStep = idx + 1;
+        if (currentStep < stepNumber) {
+          fields.forEach((field) => acc.push(field));
+        }
+        return acc;
+      },
+      []
+    );
+    const result = await form.trigger(previousStepsFields);
+
+    // clear errors of all previous steps except for current step.
+    form.clearErrors(
+      previousStepsFields.filter((field) => !step.fields.includes(field))
+    );
+    return result;
   }
 
   return (
@@ -78,14 +130,22 @@ function CheckoutForm() {
         currentStep={currentStep}
         onStepSelect={async (stepNumber) => {
           if (
-            (await areAllCurrentPageFieldsValid()) ||
-            stepNumber <= currentStep
+            stepNumber <= currentStep ||
+            (await areAllPreviousStepsFieldsValid(stepNumber))
           )
             goTo(stepNumber);
         }}
       />
       <form action="" onSubmit={form.handleSubmit(onSubmit)}>
-        <Form {...form}>{steps[currentStep - 1].element}</Form>
+        <Form {...form}>
+          {steps[currentStep - 1].element}
+
+          {!hasNextStep() && (
+            <Button className="w-full">
+              {status === "pending" ? "Loading..." : "Complete Order"}
+            </Button>
+          )}
+        </Form>
       </form>
       <div className="flex justify-start items-center gap-5 mt-10">
         <Button disabled={!hasPreviousStep()} onClick={previousStep}>

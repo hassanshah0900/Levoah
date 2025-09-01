@@ -33,7 +33,7 @@ const formFields: FormField[] = [
     name: "country",
     title: "Country",
     component: ({ field }: ComponentFunctionProps) => (
-      <Select {...field} onValueChange={field.onChange}>
+      <Select {...field} onValueChange={field.onChange} defaultValue="Pakistan">
         <SelectTrigger asChild>
           <Button variant={"outline"} className="justify-start">
             {field.value || "Select Country"}
@@ -102,7 +102,7 @@ export default function CustomerAddressFields() {
       {formFields.map((formField) => (
         <FormField
           key={formField.name}
-          name={formField.name}
+          name={`shipping_address.${formField.name}`}
           render={({ field }) => (
             <FormItem
               className={`${
