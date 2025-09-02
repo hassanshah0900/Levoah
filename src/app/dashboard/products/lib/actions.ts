@@ -13,15 +13,9 @@ export async function createProduct(
   product: ProductFormSchemaType & { published: boolean }
 ) {
   const supabase = await createClient();
-
-  const { error } = await supabase.from("products").insert({
-    title: product.title,
-    slug: product.slug,
-    description: product.slug,
-    published: product.published,
-    product_type: 1,
+  const { error } = await supabase.rpc("create_product", {
+    product,
   });
-
   if (error) throw error;
 }
 
