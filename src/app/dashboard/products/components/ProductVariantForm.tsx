@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { addProductVariant } from "../lib/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { compressImage } from "@/lib/utils";
 
 interface Props {
   productId: number;
@@ -60,8 +61,11 @@ export default function ProductVariantForm({ productId }: Props) {
     resolver: zodResolver(productVariantSchema),
   });
 
-  function onSubmit(data: ProductVariantSchemaType) {
-    const productVariant = { ...data, product_id: productId };
+  async function onSubmit(data: ProductVariantSchemaType) {
+    const image = await compressImage(data.image);
+    if (!image) return;
+
+    const productVariant = { ...data, product_id: productId, image };
     mutate(productVariant);
     toast.loading("Creating variant...", { id: "new_variant" });
     setIsOpen(false);

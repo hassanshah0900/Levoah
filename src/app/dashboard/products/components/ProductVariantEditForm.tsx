@@ -26,6 +26,7 @@ import {
 import { editProductVariant } from "../lib/actions";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { compressImage } from "@/lib/utils";
 
 interface Props {
   open?: boolean;
@@ -63,8 +64,10 @@ export default function ProductVariantEditForm({
     resolver: zodResolver(productVariantEditSchema),
   });
 
-  function onSubmit(data: ProductVariantEditSchemaType) {
-    const editedProductVariant = { ...productVariant, ...data };
+  async function onSubmit(data: ProductVariantEditSchemaType) {
+    let image = data.image;
+    if (image) image = await compressImage(image);
+    const editedProductVariant = { ...productVariant, ...data, image };
     mutate(editedProductVariant);
     toast.loading("Editing Variant...", { id: "edit_variant" });
     onOpenChange?.(false);
