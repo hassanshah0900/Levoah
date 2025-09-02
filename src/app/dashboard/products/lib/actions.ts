@@ -89,6 +89,27 @@ export async function editProductVariant(
   if (error) throw error;
 }
 
+export async function deleteSingleProductVariant(
+  productVariant: ProductVariant
+) {
+  const supabase = await createClient();
+
+  const { error: storageError } = await supabase.storage
+    .from("Product Images")
+    .remove([productVariant.image_url]);
+  if (storageError) throw storageError;
+
+  const { data, error } = await supabase
+    .from("product_variants")
+    .delete()
+    .eq("id", productVariant.id)
+    .eq("product_id", productVariant.product_id)
+    .select("id");
+  if (error) throw error;
+
+  return data.map((item) => item.id as ProductVariant["id"]);
+}
+
 export async function deleteSingleProduct(productId: number) {
   console.log("action Id: ", productId);
 
