@@ -26,6 +26,7 @@ import { editCategory } from "../lib/actions";
 import { Category } from "../lib/types";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
 import CategoriesCombobox from "./CategoriesCombobox";
+import { compressImage } from "@/lib/utils";
 
 interface Props {
   category: Category;
@@ -63,8 +64,14 @@ export default function EditCategoryForm({
     resolver: zodResolver(categorySchema),
   });
 
-  function onSubmit(data: CategorySchemaType) {
-    mutate({ ...category, ...data });
+  async function onSubmit(data: CategorySchemaType) {
+    let image = data.image;
+
+    if (image) {
+      image = await compressImage(image);
+    }
+
+    mutate({ ...category, ...data, image });
     toast.loading("Editing category...", { id: "edit_category" });
     onOpenChange(false);
   }

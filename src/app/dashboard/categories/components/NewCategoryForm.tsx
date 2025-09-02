@@ -27,6 +27,7 @@ import { createCategory } from "../lib/actions";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
 import CategoriesCombobox from "./CategoriesCombobox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { compressImage } from "@/lib/utils";
 
 export default function NewCategoryForm() {
   const queryClient = useQueryClient();
@@ -49,14 +50,18 @@ export default function NewCategoryForm() {
     defaultValues: {
       name: "",
       slug: "",
-      parent_category: "",
+      parent_category: null,
+      description: "",
     },
     resolver: zodResolver(categorySchema),
   });
 
-  function onSubmit(category: CategorySchemaType) {
-    console.log(category);
-    mutate(category);
+  async function onSubmit(category: CategorySchemaType) {
+    let image = category.image;
+    if (image) {
+      image = await compressImage(image);
+    }
+    mutate({ ...category, image });
     toast.loading("Creating new category...", { id: "new_category" });
     setOpen(false);
   }
