@@ -67,6 +67,13 @@ export const columns = [
     ),
     enableSorting: false,
   }),
+  columnHelper.accessor("category", {
+    id: "Category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ getValue }) => <div className="ml-3">{getValue().name}</div>,
+  }),
   columnHelper.display({
     id: "variants_link",
     cell: ({ row }) => (
