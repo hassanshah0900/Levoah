@@ -3,12 +3,9 @@ import {
   AccordionContent,
   AccordionItem,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form";
 import { AccordionHeader, AccordionTrigger } from "@radix-ui/react-accordion";
 import { Check } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 
 const paymentOptions = [
   {
@@ -48,13 +45,13 @@ export default function PaymentOptions() {
               <AccordionItem key={option.label} value={option.label}>
                 <AccordionHeader>
                   <AccordionTrigger className="flex justify-between items-center w-full [&[data-state=open]>svg]:opacity-100 py-3 px-2">
-                    <span className="text-lg font-semibold uppercase">
+                    <span className="text-base sm:text-lg font-semibold uppercase">
                       {option.label}
                     </span>{" "}
                     <Check className="opacity-0 size-5 me-5 text-highlight" />
                   </AccordionTrigger>
                 </AccordionHeader>
-                <AccordionContent className="px-2">
+                <AccordionContent className="px-2 text-sm sm:text-base">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Consectetur nostrum enim adipisci, animi at, eveniet minima
                   doloremque illo eius commodi vitae? Eos inventore aspernatur

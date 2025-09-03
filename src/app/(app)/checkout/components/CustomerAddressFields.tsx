@@ -8,31 +8,29 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { SelectTrigger } from "@radix-ui/react-select";
+import { FC } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 import { provinces } from "../lib/data";
-
-interface ComponentFunctionProps {
-  field: ControllerRenderProps;
-}
 
 interface FormField {
   name: string;
   title: string;
-  component: Function;
-  colspan?: number;
+  component: FC<{ field: ControllerRenderProps }>;
+  isFullWidth?: boolean;
 }
 
 const formFields: FormField[] = [
   {
     name: "full_name",
     title: "Name",
-    component: ({ field }: ComponentFunctionProps) => <Input {...field} />,
+    component: ({ field }) => <Input {...field} />,
   },
   {
     name: "country",
     title: "Country",
-    component: ({ field }: ComponentFunctionProps) => (
+    component: ({ field }) => (
       <Select {...field} onValueChange={field.onChange} defaultValue="Pakistan">
         <SelectTrigger asChild>
           <Button variant={"outline"} className="justify-start">
@@ -48,7 +46,7 @@ const formFields: FormField[] = [
   {
     name: "province",
     title: "Province",
-    component: ({ field }: ComponentFunctionProps) => (
+    component: ({ field }) => (
       <Select {...field} onValueChange={field.onChange}>
         <SelectTrigger asChild>
           <Button variant={"outline"} className="justify-start">
@@ -68,49 +66,53 @@ const formFields: FormField[] = [
   {
     name: "city",
     title: "City",
-    component: ({ field }: ComponentFunctionProps) => (
-      <Input {...field} required />
-    ),
+    component: ({ field }) => <Input {...field} required />,
   },
   {
     name: "phone",
     title: "Phone",
-    component: ({ field }: ComponentFunctionProps) => (
-      <Input {...field} type="tel" />
-    ),
+    component: ({ field }) => <Input {...field} type="tel" />,
   },
   {
     name: "address",
     title: "Address",
-    component: ({ field }: ComponentFunctionProps) => <Input {...field} />,
+    component: ({ field }) => <Input {...field} />,
   },
   {
     name: "postal_code",
     title: "Postal Code",
-    component: ({ field }: ComponentFunctionProps) => <Input {...field} />,
+    component: ({ field }) => <Input {...field} />,
   },
   {
     name: "email",
     title: "Email Address",
-    component: ({ field }: ComponentFunctionProps) => <Input {...field} />,
+    component: ({ field }) => <Input {...field} />,
+  },
+  {
+    name: "order_note",
+    title: "Order note",
+    component: ({ field }) => <Textarea {...field} />,
+    isFullWidth: true,
   },
 ];
 
 export default function CustomerAddressFields() {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {formFields.map((formField) => (
         <FormField
           key={formField.name}
           name={`shipping_address.${formField.name}`}
           render={({ field }) => (
             <FormItem
-              className={`${
-                formField.colspan && `col-span-${formField.colspan}`
-              }`}
+              className={
+                formField.isFullWidth ? `sm:col-span-2` : "sm:col-span-1"
+              }
             >
               <FormLabel>{formField.title}</FormLabel>
-              <FormControl>{formField.component({ field })}</FormControl>
+              <FormControl>
+                <formField.component field={field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

@@ -141,7 +141,7 @@ function CheckoutForm() {
           {steps[currentStep - 1].element}
 
           {!hasNextStep() && (
-            <Button className="w-full">
+            <Button className="w-full mt-10">
               {status === "pending" ? "Loading..." : "Complete Order"}
             </Button>
           )}
