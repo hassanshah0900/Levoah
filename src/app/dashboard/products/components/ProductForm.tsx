@@ -102,7 +102,7 @@ export default function ProductForm() {
             )}
           />
           <FormField
-            name="category"
+            name="category_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
