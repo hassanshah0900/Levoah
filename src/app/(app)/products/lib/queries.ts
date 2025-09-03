@@ -7,19 +7,30 @@ import { ProductWithVariants } from "@/types/products.types";
 interface GetProductsWithVariantsProps {
   pageIndex: number;
   pageSize: number;
+  categorySlug?: string;
 }
 export async function getProductsWithVariants({
   pageIndex,
   pageSize,
+  categorySlug,
 }: GetProductsWithVariantsProps) {
   const supabase = await createClient();
 
+  let queryBuilder = supabase
+    .from("products_with_variants")
+    .select("*", { count: "exact" });
+
+  if (categorySlug) {
+    const categories = await getCategoryWithParents(categorySlug);
+
+    const categoriesIds = categories.map((category) => category.id);
+
+    queryBuilder = queryBuilder.in("category_id", categoriesIds);
+  }
+
   const rangeStart = pageIndex * pageSize;
   const rangeEnd = rangeStart + pageSize - 1;
-  const { data, count, error } = await supabase
-    .from("products_with_variants")
-    .select("*", { count: "exact" })
-    .range(rangeStart, rangeEnd);
+  const { data, count, error } = await queryBuilder.range(rangeStart, rangeEnd);
 
   if (error) throw error;
 
@@ -51,10 +62,33 @@ export async function getCategoryBySlug(slug: string) {
   const { data, error } = await supabase
     .from("categories")
     .select("*")
-    .eq("slug", slug)
-    .single();
+    .eq("slug", slug);
 
   if (error) throw error;
 
-  return data as Category;
+  return data[0] as Category;
+}
+
+export async function getCategoryWithParents(idOrSlug: number | string) {
+  if (!idOrSlug) return [];
+
+  const supabase = await createClient();
+  const columnName = typeof idOrSlug === "number" ? "id" : "slug";
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq(columnName, idOrSlug);
+
+  if (error) return [];
+  const category = data[0] as Category;
+
+  const categoriesSlug = category.path.split("/");
+
+  const { data: categories, error: categoriesError } = await supabase
+    .from("categories")
+    .select("*")
+    .in("slug", categoriesSlug);
+
+  if (categoriesError) return [];
+  return categories as Category[];
 }
