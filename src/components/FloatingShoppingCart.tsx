@@ -36,7 +36,7 @@ export default function FloatingShoppingCart() {
             </DrawerTitle>
           </DrawerHeader>
           <Separator />
-          <div className="space-y-4 p-2">
+          <div className="space-y-2 sm:space-y-3 p-2">
             {cartItems.length ? (
               cartItems.map((item) => (
                 <FloatingCartItem

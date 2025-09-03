@@ -1,11 +1,10 @@
+import QuantitySelector from "@/app/(app)/checkout/components/QuantitySelector";
 import ProductImage from "@/app/(app)/products/components/ProductImage";
 import {
   ShoppingCartItem,
   useShoppingCart,
 } from "@/contexts/ShoppingCartContext";
-import { Minus, Plus, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
 interface Props {
   cartItem: ShoppingCartItem;
@@ -26,7 +25,7 @@ export default function FloatingCartItem({ cartItem }: Props) {
           <ProductImage src={cartItem.image_url} alt="" className="w-20" />
         </div>
         <div className="flex flex-col justify-between items-start">
-          <h4 className="leading-tight -mt-1">
+          <h4 className="leading-tight sm:text-lg">
             {cartItem.title} another thing
           </h4>
           <div className="text-xs xs:text-sm font-semibold">
@@ -52,45 +51,6 @@ export default function FloatingCartItem({ cartItem }: Props) {
           Rs {cartItem.quantity * cartItem.price}
         </span>
       </div>
-    </div>
-  );
-}
-
-function QuantitySelector({
-  cartItem,
-  className,
-  orientation = "VERTICAL",
-}: {
-  cartItem: ShoppingCartItem;
-  className?: string;
-  orientation?: "HORIZONTAL" | "VERTICAL";
-}) {
-  const { incrementQuantity, decrementQuantity } = useShoppingCart();
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-center gap-1.5",
-        orientation === "VERTICAL" ? "flex-col" : "flex-row-reverse",
-        className
-      )}
-    >
-      <Button
-        variant={"outline"}
-        size={"icon"}
-        className="size-6"
-        onClick={() => incrementQuantity(cartItem.id)}
-      >
-        <Plus className="size-3" />
-      </Button>
-      <div className="text-sm">{cartItem.quantity}</div>
-      <Button
-        variant={"outline"}
-        size={"icon"}
-        className="size-6"
-        onClick={() => decrementQuantity(cartItem.id)}
-      >
-        <Minus className="size-3" />
-      </Button>
     </div>
   );
 }
