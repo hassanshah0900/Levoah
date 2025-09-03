@@ -5,20 +5,22 @@ import Container from "@/components/Container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getNextPageIndex } from "@/lib/utils";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { Fragment } from "react";
+import { InView } from "react-intersection-observer";
+import { PAGE_SIZE } from "../lib/data";
 import { getCategoryBySlug, getProductsWithVariants } from "../lib/queries";
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import ProductsFilters from "./ProductsFilters";
 import ProductsSorter from "./ProductsSorter";
-import { InView } from "react-intersection-observer";
-import { PAGE_SIZE } from "../lib/data";
 
-interface Props {
-  categorySlug?: string;
-  productType?: string;
-}
-export default function ProductsGrid({ productType, categorySlug }: Props) {
+export default function ProductsGrid() {
+  const { categorySlug, productType } = useParams<{
+    categorySlug: string;
+    productType: string;
+  }>();
+
   const {
     data,
     error,
@@ -30,7 +32,11 @@ export default function ProductsGrid({ productType, categorySlug }: Props) {
   } = useInfiniteQuery({
     queryKey: ["products with variants", categorySlug, productType],
     queryFn: ({ pageParam }) =>
-      getProductsWithVariants({ pageIndex: pageParam, pageSize: PAGE_SIZE }),
+      getProductsWithVariants({
+        pageIndex: pageParam,
+        pageSize: PAGE_SIZE,
+        categorySlug,
+      }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam) =>
       getNextPageIndex(lastPageParam, lastPage.count ?? 0, PAGE_SIZE),
@@ -41,14 +47,11 @@ export default function ProductsGrid({ productType, categorySlug }: Props) {
     queryFn: () => getCategoryBySlug(categorySlug ?? ""),
   });
 
-  if (status === "error" || categoryStatus === "error")
-    return <div>An Error Occured.</div>;
-
   return (
     <Container>
       <div className="py-10 space-y-10">
         <CategoryCarousel />
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
           {categoryStatus === "pending" ? (
             <Skeleton className="h-8 w-1/4" />
           ) : (
@@ -56,7 +59,7 @@ export default function ProductsGrid({ productType, categorySlug }: Props) {
               {category?.name ?? "Shop"}
             </h1>
           )}
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex justify-between items-center gap-2">
             <ProductsFilters />
             <ProductsSorter />
           </div>
@@ -81,7 +84,7 @@ export default function ProductsGrid({ productType, categorySlug }: Props) {
       </div>
       <InView
         onChange={(inView) => {
-          if (inView && !isFetchingNextPage && !isFetching) {
+          if (hasNextPage && inView && !isFetchingNextPage && !isFetching) {
             fetchNextPage();
           }
         }}

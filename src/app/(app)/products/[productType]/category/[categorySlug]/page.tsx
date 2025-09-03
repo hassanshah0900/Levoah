@@ -26,7 +26,11 @@ export default async function CategoryPage({
     queryClient.prefetchInfiniteQuery({
       queryKey: ["products with variants", categorySlug, productType],
       queryFn: ({ pageParam }) =>
-        getProductsWithVariants({ pageIndex: pageParam, pageSize: PAGE_SIZE }),
+        getProductsWithVariants({
+          pageIndex: pageParam,
+          pageSize: PAGE_SIZE,
+          categorySlug,
+        }),
       initialPageParam: 0,
     }),
 
@@ -40,7 +44,7 @@ export default async function CategoryPage({
 
   return (
     <HydrationBoundary state={state}>
-      <ProductsGrid categorySlug={categorySlug} productType={productType} />
+      <ProductsGrid />
     </HydrationBoundary>
   );
 }
