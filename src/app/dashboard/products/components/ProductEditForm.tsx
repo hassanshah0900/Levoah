@@ -49,7 +49,7 @@ export default function ProductEditForm({
       slug: product.slug,
       description: product.description ?? "",
       published: product.published,
-      category_id: product.category_id,
+      category_id: product.category.id,
     },
     resolver: zodResolver(productEditFormSchema),
   });
@@ -117,7 +117,7 @@ export default function ProductEditForm({
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <CategoriesCombobox {...field} />
+                    <CategoriesCombobox {...field} placeholder="No Category" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -18,13 +18,22 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllCategories } from "../lib/queries";
 import { Category } from "../lib/types";
+import { useForm, useFormContext } from "react-hook-form";
+import { cn } from "@/lib/utils";
 
 type ParentCategory = Category["parent_category"];
 interface Props {
   onChange: (id: ParentCategory) => void;
+  name: string;
   value: ParentCategory;
+  placeholder?: string;
 }
-export default function CategoriesCombobox({ onChange, value }: Props) {
+export default function CategoriesCombobox({
+  name,
+  onChange,
+  value,
+  placeholder = "No Parent",
+}: Props) {
   const { data, isPending, isError } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
@@ -33,6 +42,10 @@ export default function CategoriesCombobox({ onChange, value }: Props) {
   const [open, setOpen] = useState(false);
   const [categoryId, setCategoryId] = useState<ParentCategory>(value);
 
+  const {
+    formState: { errors },
+  } = useFormContext();
+
   function handleSelect(categoryId: ParentCategory) {
     onChange(categoryId ?? null);
     setOpen(false);
@@ -40,15 +53,18 @@ export default function CategoriesCombobox({ onChange, value }: Props) {
   }
 
   function getButtonText() {
-    if (!categoryId) return "No Parent";
+    if (!categoryId) return placeholder;
     return data?.categories.find((category) => category.id === categoryId)
       ?.name;
   }
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button role="combobox" variant={"outline"}>
+        <Button
+          role="combobox"
+          variant={"outline"}
+          className={cn(errors[name] && "border-destructive")}
+        >
           {getButtonText()}
         </Button>
       </PopoverTrigger>
@@ -75,7 +91,7 @@ export default function CategoriesCombobox({ onChange, value }: Props) {
                     </CommandItem>
                   ))}
                   <CommandItem onSelect={() => handleSelect(null)}>
-                    No Parent
+                    {placeholder}
                   </CommandItem>
                 </CommandGroup>
               </>

@@ -107,7 +107,7 @@ export default function ProductForm() {
               <FormItem>
                 <FormLabel>Category</FormLabel>
                 <FormControl>
-                  <CategoriesCombobox {...field} />
+                  <CategoriesCombobox {...field} placeholder="No Category" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
