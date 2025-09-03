@@ -1,8 +1,10 @@
+import { Category } from "@/app/dashboard/categories/lib/types";
+
 export interface Product {
   id: number;
   title: string;
   slug: string;
-  category_id: number;
+  category: Pick<Category, "id" | "name">;
   description?: string;
   product_type: {
     id: number;
