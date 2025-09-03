@@ -5,16 +5,16 @@ import {
 } from "@/contexts/ShoppingCartContext";
 import { Minus, Plus, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 interface Props {
   cartItem: ShoppingCartItem;
 }
 export default function FloatingCartItem({ cartItem }: Props) {
-  const { deleteCartItem, incrementQuantity, decrementQuantity } =
-    useShoppingCart();
+  const { deleteCartItem } = useShoppingCart();
 
   return (
-    <div className="flex justify-between items-center rounded-xs bg-secondary text-secondary-foreground p-2">
+    <div className="flex flex-col justify-between items-stretch rounded-xs bg-secondary text-secondary-foreground p-2 gap-5">
       <div className="flex gap-2">
         <div className="relative">
           <button
@@ -26,8 +26,10 @@ export default function FloatingCartItem({ cartItem }: Props) {
           <ProductImage src={cartItem.image_url} alt="" className="w-20" />
         </div>
         <div className="flex flex-col justify-between items-start">
-          <h4>{cartItem.title}</h4>
-          <div className="text-sm font-semibold">
+          <h4 className="leading-tight -mt-1">
+            {cartItem.title} another thing
+          </h4>
+          <div className="text-xs xs:text-sm font-semibold">
             <p>
               Frame{" "}
               <span className="font-normal text-muted-foreground">
@@ -43,30 +45,52 @@ export default function FloatingCartItem({ cartItem }: Props) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-1">
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          className="size-6"
-          onClick={() => incrementQuantity(cartItem.id)}
-        >
-          <Plus className="size-3" />
-        </Button>
-        <div className="text-sm">{cartItem.quantity}</div>
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          className="size-6"
-          onClick={() => decrementQuantity(cartItem.id)}
-        >
-          <Minus className="size-3" />
-        </Button>
-      </div>
-      <div className="">
-        <span className="font-semibold text-lg">
+      <QuantitySelector cartItem={cartItem} className="hidden" />
+      <div className="flex justify-between items-center">
+        <QuantitySelector cartItem={cartItem} orientation="HORIZONTAL" />
+        <span className="font-semibold sm:text-lg whitespace-nowrap">
           Rs {cartItem.quantity * cartItem.price}
         </span>
       </div>
+    </div>
+  );
+}
+
+function QuantitySelector({
+  cartItem,
+  className,
+  orientation = "VERTICAL",
+}: {
+  cartItem: ShoppingCartItem;
+  className?: string;
+  orientation?: "HORIZONTAL" | "VERTICAL";
+}) {
+  const { incrementQuantity, decrementQuantity } = useShoppingCart();
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-center gap-1.5",
+        orientation === "VERTICAL" ? "flex-col" : "flex-row-reverse",
+        className
+      )}
+    >
+      <Button
+        variant={"outline"}
+        size={"icon"}
+        className="size-6"
+        onClick={() => incrementQuantity(cartItem.id)}
+      >
+        <Plus className="size-3" />
+      </Button>
+      <div className="text-sm">{cartItem.quantity}</div>
+      <Button
+        variant={"outline"}
+        size={"icon"}
+        className="size-6"
+        onClick={() => decrementQuantity(cartItem.id)}
+      >
+        <Minus className="size-3" />
+      </Button>
     </div>
   );
 }
