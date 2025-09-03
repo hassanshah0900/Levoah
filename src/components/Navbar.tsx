@@ -1,9 +1,18 @@
 "use client";
 
-import { Search, ShoppingBag } from "lucide-react";
+import { Hamburger, Menu, Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import Container from "./Container";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
+import { cn } from "@/lib/utils";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "./ui/drawer";
 
 export default function Navbar() {
   const { cartItems, setIsOpen } = useShoppingCart();
@@ -13,7 +22,7 @@ export default function Navbar() {
       <Container>
         <div className="flex justify-between items-center py-2">
           <div className="w-10 h-10 bg-background"></div>
-          <nav className="flex justify-center items-center gap-4">
+          <nav className="justify-center items-center gap-4 hidden sm:flex">
             <Link
               href={""}
               className="font-semibold hover:text-secondary transition-all"
@@ -40,24 +49,61 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          <div className="space-x-4">
-            <button className="text-secondary [&_svg]:size-5 cursor-pointer">
-              <Search />
-            </button>
+          <div className="space-x-4 flex justify-center items-center">
             <button
-              className="relative text-secondary [&_svg]:size-5 cursor-pointer"
+              className="relative text-secondary [&_svg]:size-4 sm:[&_svg]:size-5 cursor-pointer"
               onClick={() => setIsOpen(true)}
             >
-              {cartItems.length ? (
-                <div className="h-5 w-5 rounded-full bg-highlight text-xs absolute -translate-2 flex justify-center items-center">
-                  {cartItems.length}
-                </div>
-              ) : null}
+              <div
+                className={cn(
+                  "h-4 sm:h-5 aspect-square rounded-full bg-highlight text-xs absolute -translate-2 flex justify-center items-center",
+                  cartItems.length ? "opacity-100" : "opacity-0"
+                )}
+              >
+                {cartItems.length}
+              </div>
               <ShoppingBag />
             </button>
+            <MobileNavbar />
           </div>
         </div>
       </Container>
+    </div>
+  );
+}
+
+function MobileNavbar() {
+  return (
+    <div className="sm:hidden flex justify-center items-center">
+      <Drawer direction="left">
+        <DrawerTrigger aria-label="Open menu">
+          <Menu className="size-5" />
+        </DrawerTrigger>
+        <DrawerContent className="bg-primary">
+          <DrawerHeader className="hidden">
+            <DrawerTitle>Menu</DrawerTitle>
+            <DrawerDescription>
+              Choose a link below to navigate.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-5">
+            <nav className="flex flex-col text-primary-foreground font-semibold">
+              <Link href={""} className="hover:text-secondary transition-all">
+                Home
+              </Link>
+              <Link href={""} className="hover:text-secondary transition-all">
+                Shop
+              </Link>
+              <Link href={""} className="hover:text-secondary transition-all">
+                Categories
+              </Link>
+              <Link href={""} className="hover:text-secondary transition-all">
+                About
+              </Link>
+            </nav>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
