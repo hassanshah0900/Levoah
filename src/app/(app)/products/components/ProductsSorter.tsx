@@ -33,14 +33,18 @@ export default function ProductsSorter() {
     >
       <SelectTrigger>
         Sort by:{" "}
-        <span className="uppercase font-semibold">
+        <span className="uppercase font-semibold text-xs mt-[2px]">
           {items.find((item) => item.id === sort)?.label}
         </span>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           {items.map((item) => (
-            <SelectItem key={item.id} value={item.id} className="uppercase">
+            <SelectItem
+              key={item.id}
+              value={item.id}
+              className="uppercase text-xs sm:text-sm"
+            >
               {item.label}
             </SelectItem>
           ))}

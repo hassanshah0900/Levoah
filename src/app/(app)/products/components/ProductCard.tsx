@@ -44,7 +44,7 @@ export default function ProductCard({ product }: Props) {
               </EmblaSlide>
             ))}
           </div>
-          <div className="py-4 space-y-2">
+          <div className="py-4 space-y-1 xs:space-y-2">
             <div className="flex flex-col xs:flex-row justify-between items-start gap-2 xs:gap-3">
               <h2 className="leading-tight">
                 {product.title} And many other details
@@ -54,7 +54,7 @@ export default function ProductCard({ product }: Props) {
               </span>
             </div>
             <div className="flex justify-between items-center text-xs xs:text-sm text-foreground/70">
-              <span>{product.variants.length} Colors</span>
+              {product.variants.length} Colors
             </div>
           </div>
         </div>
