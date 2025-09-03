@@ -128,42 +128,16 @@ export async function deleteMultipleProducts(productIds: Product["id"][]) {
   if (error) throw error;
 }
 
-export async function editProduct(
-  product: Product,
-  editedProduct: ProductEditFormSchemaType
-) {
+export async function editProduct(product: Product) {
   const supabase = await createClient();
 
-  let editedFields: { [key: string]: any } = {};
-
-  for (let key of Object.keys(product)) {
-    if (product[key] !== editedProduct[key])
-      editedFields[key] = editedProduct[key];
+  const { error } = await supabase.rpc("update_product", {
+    product,
+  });
+  if (error) {
+    console.log(error.code);
+    throw error;
   }
-
-  if (editedProduct.image) {
-    const { data, error } = await supabase.storage
-      .from("Product Images")
-      .upload(crypto.randomUUID(), editedProduct.image);
-
-    if (error) throw error;
-
-    console.log("Product Image Url: ", product.image_url);
-    const { error: deletionError } = await supabase.storage
-      .from("Product Images")
-      .remove([product.image_url]);
-
-    if (deletionError) throw deletionError;
-
-    editedFields["image_url"] = data.path;
-  }
-
-  const { error } = await supabase
-    .from("products")
-    .update(editedFields)
-    .eq("id", product.id);
-
-  if (error) throw error;
 }
 
 export async function changeProductsPublishedStatus(
