@@ -30,6 +30,8 @@ import {
   productEditFormSchema,
   ProductEditFormSchemaType,
 } from "../lib/validation";
+import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
+import SlugInput from "@/components/SlugInput";
 
 interface Props {
   product: Product;
@@ -47,6 +49,7 @@ export default function ProductEditForm({
       slug: product.slug,
       description: product.description ?? "",
       published: product.published,
+      category_id: product.category_id,
     },
     resolver: zodResolver(productEditFormSchema),
   });
@@ -54,7 +57,7 @@ export default function ProductEditForm({
   const router = useRouter();
 
   async function onSubmit(edittedProduct: ProductEditFormSchemaType) {
-    toast.promise(editProduct(product, edittedProduct), {
+    toast.promise(editProduct({ ...product, ...edittedProduct }), {
       loading: "Editing product...",
       success: () => {
         router.refresh();
@@ -101,7 +104,20 @@ export default function ProductEditForm({
                 <FormItem>
                   <FormLabel>Slug</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <SlugInput {...field} slugSourceFieldName="title" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="category_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <CategoriesCombobox {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -42,7 +42,7 @@ export default function ProductForm() {
     defaultValues: {
       title: "",
       slug: "",
-      category: undefined,
+      category_id: "",
       description: "",
     },
     resolver: zodResolver(productFormSchema),

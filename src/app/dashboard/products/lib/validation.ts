@@ -29,7 +29,7 @@ export type ProductVariantEditSchemaType = z.infer<
 export const productFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required."),
-  category: z.number("Category is required"),
+  category_id: z.coerce.number("Category is required"),
   description: z.string(),
 });
 
