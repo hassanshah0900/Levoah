@@ -35,7 +35,7 @@ export default function ProductCard({ product }: Props) {
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
             {product.variants.map((variant) => (
-              <EmblaSlide>
+              <EmblaSlide key={variant.id}>
                 <ProductImage
                   src={variant.image_url}
                   alt=""
