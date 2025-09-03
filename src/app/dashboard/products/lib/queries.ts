@@ -18,7 +18,9 @@ export async function getAllProducts({
 }: GetAllProductsProps) {
   const supabase = await createClient();
 
-  let filterBuilder = supabase.from("products").select("*", { count: "exact" });
+  let filterBuilder = supabase
+    .from("products_view")
+    .select("*", { count: "exact" });
 
   if (title) filterBuilder = filterBuilder.ilike("title", `%${title}%`);
 
