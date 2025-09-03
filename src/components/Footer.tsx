@@ -1,7 +1,7 @@
-import { Facebook, Instagram, Youtube } from "lucide-react";
 import Link from "next/link";
+import { FaFacebookF, FaTiktok } from "react-icons/fa6";
+import { RiInstagramFill } from "react-icons/ri";
 import Container from "./Container";
-import { Button } from "./ui/button";
 
 const links = [
   { label: "Company" },
@@ -20,16 +20,25 @@ export default function Footer() {
               temporibus rerum saepe reiciendis dolore, modi voluptatem
               asperiores ipsam placeat cupiditate corporis omnis sequi
             </p>
-            <div className="flex items-center gap-2">
-              <Button variant={"outline"} size={"icon"}>
-                <Instagram />
-              </Button>
-              <Button variant={"outline"} size={"icon"}>
-                <Facebook />
-              </Button>
-              <Button variant={"outline"} size={"icon"}>
-                <Youtube />
-              </Button>
+            <div className="flex items-center gap-4">
+              <Link
+                href={"https://www.instagram.com/levoahfashion"}
+                className="text-primary-foreground text-2xl"
+              >
+                <RiInstagramFill />
+              </Link>
+              <Link
+                href={"https://www.facebook.com/share/1A4JMP5bxR/"}
+                className="text-primary-foreground text-xl"
+              >
+                <FaFacebookF />
+              </Link>
+              <Link
+                href={"https://www.tiktok.com/@levoahfashion"}
+                className="text-primary-foreground text-xl"
+              >
+                <FaTiktok />
+              </Link>
             </div>
           </div>
           <div>
