@@ -13,15 +13,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
+import Image from "next/image";
+import levoah from "../../public/images/Levoah.png";
 
 export default function Navbar() {
   const { cartItems, setIsOpen } = useShoppingCart();
 
   return (
-    <div className="bg-primary text-primary-foreground sticky top-0 z-10 border-y-0 border-highlight/60 ">
+    <div className="bg-primary text-primary-foreground sticky top-0 z-20 border-y-0 border-highlight/60 ">
       <Container>
         <div className="flex justify-between items-center py-2">
-          <div className="w-10 h-10 bg-background"></div>
+          <div className="w-20">
+            <Image src={levoah} alt="Logo" />
+          </div>
           <nav className="justify-center items-center gap-4 hidden sm:flex">
             <Link
               href={""}
@@ -51,7 +55,7 @@ export default function Navbar() {
 
           <div className="space-x-4 flex justify-center items-center">
             <button
-              className="relative text-secondary [&_svg]:size-4 sm:[&_svg]:size-5 cursor-pointer"
+              className="relative text-secondary [&_svg]:size-5 cursor-pointer"
               onClick={() => setIsOpen(true)}
             >
               <div
@@ -77,7 +81,7 @@ function MobileNavbar() {
     <div className="sm:hidden flex justify-center items-center">
       <Drawer direction="left">
         <DrawerTrigger aria-label="Open menu">
-          <Menu className="size-5" />
+          <Menu />
         </DrawerTrigger>
         <DrawerContent className="bg-primary">
           <DrawerHeader className="hidden">
