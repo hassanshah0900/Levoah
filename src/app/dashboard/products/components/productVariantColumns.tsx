@@ -39,7 +39,7 @@ export const productVariantColumns = [
     header: ({ column }) => (
       <DataTableColumnHeader title="Image" column={column} />
     ),
-    cell: ({ getValue, row }) => (
+    cell: ({ getValue }) => (
       <div className="relative w-10 aspect-square ml-4">
         <Image
           src={getProductImageUrl(getValue()) || placeholderImage}
@@ -49,6 +49,8 @@ export const productVariantColumns = [
         />
       </div>
     ),
+    enableColumnFilter: false,
+    enableSorting: false,
   }),
   columnHelper.accessor("price", {
     id: "price",
