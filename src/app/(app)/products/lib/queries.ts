@@ -21,7 +21,7 @@ export async function getProductsWithVariants({
     .select("*", { count: "exact" });
 
   if (categorySlug) {
-    const categories = await getCategoryWithParents(categorySlug);
+    const categories = await getCategoryWithChildren(categorySlug);
 
     const categoriesIds = categories.map((category) => category.id);
 
@@ -35,10 +35,6 @@ export async function getProductsWithVariants({
   if (error) throw error;
 
   return { products: data as ProductWithVariants[], count };
-}
-
-export async function getProductsByCategory() {
-  const supabase = await createClient();
 }
 
 export async function getProductWithVariants(slug: string) {
@@ -69,26 +65,15 @@ export async function getCategoryBySlug(slug: string) {
   return data[0] as Category;
 }
 
-export async function getCategoryWithParents(idOrSlug: number | string) {
-  if (!idOrSlug) return [];
-
+export async function getCategoryWithChildren(slug: number | string) {
   const supabase = await createClient();
-  const columnName = typeof idOrSlug === "number" ? "id" : "slug";
+
   const { data, error } = await supabase
     .from("categories")
     .select("*")
-    .eq(columnName, idOrSlug);
+    .ilike("path", `%${slug}%`);
 
   if (error) return [];
-  const category = data[0] as Category;
 
-  const categoriesSlug = category.path.split("/");
-
-  const { data: categories, error: categoriesError } = await supabase
-    .from("categories")
-    .select("*")
-    .in("slug", categoriesSlug);
-
-  if (categoriesError) return [];
-  return categories as Category[];
+  return data as Category[];
 }
