@@ -18,14 +18,14 @@ export default function DataTableActionBar<TData>({
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-1/2 -translate-x-1/2 border border-border shadow-md p-2 rounded-sm text-sm flex justify-center items-center transition-all duration-300 gap-2 bg-background",
+        "fixed bottom-0 left-1/2 -translate-x-1/2 border border-border shadow-md p-1.5 rounded-sm text-sm flex justify-center items-center transition-all duration-300 gap-2 bg-background w-max h-11",
         table.getFilteredSelectedRowModel().rows.length > 0
           ? "-translate-y-5"
           : "translate-y-[200%]"
       )}
     >
       <DataTableActionBarSelection table={table} />
-      <Separator orientation="vertical" className="min-h-5" />
+      <Separator orientation="vertical" className="bg-border" />
       <div className="flex justify-center items-center gap-1">{children}</div>
     </div>
   );
@@ -39,9 +39,9 @@ function DataTableActionBarSelection<TData>({
   table,
 }: DataTableActionBarSelectionProps<TData>) {
   return (
-    <div className="flex justify-center items-center border border-border py-1 px-2 rounded-sm gap-2 bg-background">
-      {table.getFilteredSelectedRowModel().rows.length} selected
-      <Separator orientation="vertical" className="min-h-4" />
+    <div className="flex justify-between items-center border border-border py-1.5 px-2 rounded-xs bg-background gap-1 h-8">
+      <span>{table.getFilteredSelectedRowModel().rows.length} selected</span>
+      <Separator orientation="vertical" className="bg-border min-w-[2px]" />
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
