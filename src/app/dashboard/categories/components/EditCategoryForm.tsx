@@ -60,6 +60,7 @@ export default function EditCategoryForm({
       name: category.name,
       slug: category.slug,
       parent_category: category.parent_category,
+      description: category.description,
     },
     resolver: zodResolver(categorySchema),
   });
