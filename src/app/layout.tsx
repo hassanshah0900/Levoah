@@ -1,22 +1,21 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import ReactQueryClientProvider from "@/providers/ReactQueryClientProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ShoppingCartProvider } from "@/contexts/ShoppingCartContext";
-import Navbar from "@/components/Navbar";
+import type { Metadata } from "next";
+import { Montserrat, Poppins } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import "./globals.css";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--montserrat",
+});
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--poppins",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,8 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
-        className="overflow-x-hidden"
+        className={`${poppins.variable} ${montserrat.variable} overflow-x-hidden`}
       >
         <Toaster closeButton />
         <NuqsAdapter>
