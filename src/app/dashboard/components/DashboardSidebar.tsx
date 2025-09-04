@@ -17,9 +17,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
+import { ChevronDown, Glasses, Package, Tags } from "lucide-react";
 import Link from "next/link";
+import { ComponentProps, PropsWithChildren } from "react";
 
 export default function DashboardSidebar() {
   return (
@@ -30,34 +31,39 @@ export default function DashboardSidebar() {
           <SidebarGroupLabel>Main Links</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <Collapsible defaultOpen>
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton>Products</SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton asChild>
-                          <Link href={"/dashboard/products"}>List</Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuSubButton asChild>
-                          <Link href={"/dashboard/products/new"}>New</Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
+              <SidebarCollapsibleMenuItem>
+                <SidebarCollapsibleMenuItemButton>
+                  <Glasses />
+                  <span>Products</span>
+                </SidebarCollapsibleMenuItemButton>
+                <SidebarCollapsibleMenuItemContent>
+                  <SidebarMenuSub>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild>
+                        <Link href={"/dashboard/products"}>List</Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild>
+                        <Link href={"/dashboard/products/new"}>New</Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  </SidebarMenuSub>
+                </SidebarCollapsibleMenuItemContent>
+              </SidebarCollapsibleMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href={"/dashboard/categories"}>Categories</Link>
+                  <Link href={"/dashboard/categories"}>
+                    <Tags />
+                    <span>Categories</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>Orders</SidebarMenuButton>
+                <SidebarMenuButton>
+                  <Package />
+                  <span>Orders</span>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -66,4 +72,30 @@ export default function DashboardSidebar() {
       <SidebarFooter></SidebarFooter>
     </Sidebar>
   );
+}
+
+function SidebarCollapsibleMenuItem({
+  children,
+  ...props
+}: ComponentProps<typeof Collapsible>) {
+  return (
+    <Collapsible {...props} className="group/collapsible">
+      <SidebarMenuItem>{children}</SidebarMenuItem>
+    </Collapsible>
+  );
+}
+
+function SidebarCollapsibleMenuItemButton({ children }: PropsWithChildren) {
+  return (
+    <CollapsibleTrigger asChild>
+      <SidebarMenuButton>
+        {children}
+        <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+      </SidebarMenuButton>
+    </CollapsibleTrigger>
+  );
+}
+
+function SidebarCollapsibleMenuItemContent({ children }: PropsWithChildren) {
+  return <CollapsibleContent> {children}</CollapsibleContent>;
 }
