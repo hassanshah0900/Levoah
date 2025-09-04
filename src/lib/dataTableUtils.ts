@@ -19,7 +19,8 @@ export function getCommonPinningStyles<TData>(
     zIndex: isPinned ? 1 : 0,
     opacity: isPinned ? 0.97 : 1,
     background: "var(--color-background)",
-    width: column.getSize(),
+    maxWidth: `${column.getSize()}px`,
+    whiteSpace: "normal",
   };
 }
 
