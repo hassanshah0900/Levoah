@@ -23,27 +23,37 @@ export default function ProductsTable({ products, rowCount }: Props) {
     rowCount,
     initialState: {
       columnPinning: {
-        left: ["select"],
         right: ["actions"],
       },
     },
   });
 
   return (
-    <div className="space-y-5 mt-5">
+    <div className="space-y-5 mt-5 @container">
       <div>
         <SidebarTrigger />
       </div>
-      <div className="flex justify-between items-center">
-        <Input
-          className="max-w-xs"
-          placeholder="Search product titles..."
-          onChange={(e) => {
-            table.getColumn("title")?.setFilterValue(e.currentTarget.value);
-          }}
-        />
+      <div className="flex justify-between items-start">
+        <div className="space-y-2 @lg:space-y-0">
+          <Input
+            className="max-w-xs"
+            placeholder="Search product titles..."
+            onChange={(e) => {
+              table.getColumn("title")?.setFilterValue(e.currentTarget.value);
+            }}
+          />
+          <DataTableColumnVisibilityToggler
+            table={table}
+            className="@lg:hidden"
+            align="start"
+          />
+        </div>
         <div className="flex justify-center items-center gap-2">
-          <DataTableColumnVisibilityToggler table={table} />
+          <DataTableColumnVisibilityToggler
+            table={table}
+            className="hidden @lg:flex"
+            align="end"
+          />
           <Link href={"/dashboard/products/new"}>
             <Button size={"sm"}>
               <Plus /> New

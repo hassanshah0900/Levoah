@@ -22,7 +22,6 @@ export default function CategoriesTable() {
     columns,
     initialState: {
       columnPinning: {
-        left: ["select"],
         right: ["actions"],
       },
     },
@@ -33,14 +32,25 @@ export default function CategoriesTable() {
   if (status === "pending") return <div>Loading...</div>;
 
   return (
-    <div>
-      <div className="my-4">
+    <div className="space-y-5 mt-5 @container">
+      <div>
         <SidebarTrigger />
       </div>
-      <div className="flex justify-between items-center mb-5">
-        <Input className="max-w-2xs" />
+      <div className="flex justify-between items-start">
+        <div className="space-y-2 @lg:space-y-0">
+          <Input className="max-w-xs" placeholder="Search categories..." />
+          <DataTableColumnVisibilityToggler
+            table={table}
+            className="@lg:hidden"
+            align="start"
+          />
+        </div>
         <div className="flex justify-center items-center gap-2">
-          <DataTableColumnVisibilityToggler table={table} />
+          <DataTableColumnVisibilityToggler
+            table={table}
+            className="hidden @lg:flex"
+            align="end"
+          />
           <NewCategoryForm />
         </div>
       </div>

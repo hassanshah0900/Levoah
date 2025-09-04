@@ -21,6 +21,11 @@ export default function ProductVariantsTable({ productId }: Props) {
   const { table } = useDataTable({
     data: data ? data.productVariants : [],
     columns: productVariantColumns,
+    initialState: {
+      columnPinning: {
+        right: ["actions"],
+      },
+    },
   });
   return (
     <div className="space-y-5 mt-5">
