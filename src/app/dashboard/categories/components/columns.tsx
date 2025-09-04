@@ -81,7 +81,10 @@ export const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
-    cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
+    cell: ({ getValue }) => (
+      <div className="ml-3 line-clamp-3">{getValue()}</div>
+    ),
+    size: 250,
   }),
   columnHelper.display({
     id: "actions",
