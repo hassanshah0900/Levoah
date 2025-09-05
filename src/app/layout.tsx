@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryClientProvider from "@/providers/ReactQueryClientProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { Metadata } from "next";
 import { Montserrat, Poppins } from "next/font/google";
@@ -28,21 +29,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${poppins.variable} ${montserrat.variable} overflow-x-hidden`}
-      >
-        <Toaster closeButton />
-        <NuqsAdapter>
-          <ReactQueryClientProvider>
-            {children}
-            <ReactQueryDevtools
-              initialIsOpen={false}
-              buttonPosition="bottom-left"
-            />
-          </ReactQueryClientProvider>
-        </NuqsAdapter>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${poppins.variable} ${montserrat.variable} overflow-x-hidden`}
+        >
+          <Toaster closeButton />
+          <NuqsAdapter>
+            <ReactQueryClientProvider>
+              {children}
+              <ReactQueryDevtools
+                initialIsOpen={false}
+                buttonPosition="bottom-left"
+              />
+            </ReactQueryClientProvider>
+          </NuqsAdapter>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
