@@ -17,8 +17,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../../components/ui/form";
-import { Input } from "../../../../components/ui/input";
+} from "../../../../../components/ui/form";
+import { Input } from "../../../../../components/ui/input";
 import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
 import { createProduct } from "../lib/actions";
 import { productFormSchema, ProductFormSchemaType } from "../lib/validation";

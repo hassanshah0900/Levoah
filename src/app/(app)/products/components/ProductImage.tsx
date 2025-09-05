@@ -1,4 +1,4 @@
-import { getProductImageUrl } from "@/app/dashboard/products/lib/utils";
+import { getProductImageUrl } from "@/app/dashboard/(main)/products/lib/utils";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { ComponentProps } from "react";

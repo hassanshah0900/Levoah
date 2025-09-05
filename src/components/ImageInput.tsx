@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import placeholderImage from "../../public/images/image-placeholder.webp";
 import { Button } from "./ui/button";
 
 interface Props {
@@ -49,7 +48,7 @@ export default function ImageInput({
         onClick={() => selectedImg || inputRef.current?.click()}
       >
         <Image
-          src={selectedImg ?? placeholderImage}
+          src={selectedImg ?? "/images/image-placeholder.webp"}
           alt=""
           fill
           className="object-center object-cover"

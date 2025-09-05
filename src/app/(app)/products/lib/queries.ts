@@ -1,6 +1,6 @@
 "use server";
 
-import { Category } from "@/app/dashboard/categories/lib/types";
+import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 import { createClient } from "@/supabase/server";
 import { ProductWithVariants } from "@/types/products.types";
 

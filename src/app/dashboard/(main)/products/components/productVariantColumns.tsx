@@ -3,7 +3,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
 import Image from "next/image";
 import { getProductImageUrl } from "../lib/utils";
-import placeholderImage from "../../../../../public/images/image-placeholder.webp";
 import { ProductVariant } from "@/types/products.types";
 import ProductVariantTableRowActions from "./ProductVariantTableRowActions";
 
@@ -42,7 +41,9 @@ export const productVariantColumns = [
     cell: ({ getValue }) => (
       <div className="relative w-10 aspect-square ml-4">
         <Image
-          src={getProductImageUrl(getValue()) || placeholderImage}
+          src={
+            getProductImageUrl(getValue()) || "/image/image-placeholder.webp"
+          }
           alt=""
           fill
           className="object-cover object-center"

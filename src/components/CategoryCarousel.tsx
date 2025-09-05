@@ -1,5 +1,5 @@
 import ProductImage from "@/app/(app)/products/components/ProductImage";
-import { getOtherCategories } from "@/app/dashboard/categories/lib/queries";
+import { getOtherCategories } from "@/app/dashboard/(main)/categories/lib/queries";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";

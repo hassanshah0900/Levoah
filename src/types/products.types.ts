@@ -1,4 +1,4 @@
-import { Category } from "@/app/dashboard/categories/lib/types";
+import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 
 export interface Product {
   id: number;
