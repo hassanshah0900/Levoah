@@ -5,24 +5,23 @@ import { Separator } from "@/components/ui/separator";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { cn } from "@/lib/utils";
 import { ProductVariant } from "@/types/products.types";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { notFound, useParams } from "next/navigation";
 import { useState } from "react";
 import { getProductWithVariants } from "../lib/queries";
 import ProductImage from "./ProductImage";
 
-export default function SingleProduct({ slug }: { slug: string }) {
-  const { data, isError } = useQuery({
+export default function SingleProduct() {
+  const { slug } = useParams<{ slug: string }>();
+  const { data: product } = useSuspenseQuery({
     queryKey: ["single product with variants", { slug }],
     queryFn: () => getProductWithVariants(slug),
   });
-
-  if (!data) return;
-
-  const { product } = data;
-  const [currentVariant, setCurrentVariant] = useState(product.variants[0]);
-
   const { addCartItem, setIsOpen, isInCart } = useShoppingCart();
 
+  if (!product) notFound();
+
+  const [currentVariant, setCurrentVariant] = useState(product.variants[0]);
   const isItemInCart = isInCart(product.id, currentVariant.id);
 
   return (
@@ -47,7 +46,6 @@ export default function SingleProduct({ slug }: { slug: string }) {
           variants={product.variants}
           onVariantSelect={(variant) => setCurrentVariant(variant)}
         />
-
         <div>
           <p className="font-semibold sm:text-lg">
             Frame{"   "}
@@ -62,12 +60,7 @@ export default function SingleProduct({ slug }: { slug: string }) {
             </span>
           </p>
         </div>
-        <p className="text-sm sm:text-base">
-          {product.description} Lorem ipsum dolor sit, amet consectetur
-          adipisicing elit. Harum molestiae quod cumque nobis dolor maxime, sit
-          magni quas, placeat architecto nulla autem ipsam, assumenda nesciunt
-          perspiciatis modi labore a rerum!
-        </p>
+        <p className="text-sm sm:text-base">{product.description}</p>
         <Separator />
         <Button
           onClick={() => {
