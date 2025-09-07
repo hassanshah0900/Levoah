@@ -38,17 +38,17 @@ export async function getProductsWithVariants({
 }
 
 export async function getProductWithVariants(slug: string) {
+  if (!slug) return null;
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("products_with_variants")
     .select("*")
-    .eq("slug", slug)
-    .single();
+    .eq("slug", slug);
 
   if (error) throw error;
 
-  return { product: data as ProductWithVariants };
+  return (data[0] as ProductWithVariants) ?? null;
 }
 
 export async function getCategoryBySlug(slug: string) {
