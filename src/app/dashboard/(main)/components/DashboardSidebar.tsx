@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,11 +20,21 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { ChevronDown, Glasses, Package, Tags } from "lucide-react";
+import { useClerk } from "@clerk/nextjs";
+import { ChevronDown, Glasses, LogOut, Package, Tags } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, PropsWithChildren } from "react";
+import { toast } from "sonner";
 
 export default function DashboardSidebar() {
+  const { signOut } = useClerk();
+
+  function logout() {
+    toast.promise(signOut(), {
+      loading: "Logging out...",
+      error: "Logging out failed. Please try again.",
+    });
+  }
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader></SidebarHeader>
@@ -69,7 +81,16 @@ export default function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter></SidebarFooter>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={logout}>
+              <LogOut />
+              <span>Logout</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
