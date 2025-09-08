@@ -10,7 +10,6 @@ interface Order extends CheckoutFormSchemaType {
   status: OrderStatus;
   payment_status: OrderPaymentStatus;
 }
-
 type OrderPaymentStatus = "Paid" | "Unpaid" | "Refunded";
 type OrderStatus =
   | "Payment Pending"
@@ -44,23 +43,16 @@ export async function createOrder({
 
   const results = await Promise.all(
     orderItems.map(
-      ({
-        product_id,
-        variant_id,
-        price,
-        quantity,
-        frame_color,
-        lense_color,
-      }) => {
+      ({ productId, variantId, price, quantity, title, attributes }) => {
         return supabase.from("order_items").insert({
-          product_id,
-          variant_id,
+          product_info: {
+            title,
+            productId,
+            variantId,
+          },
           unit_price: price,
           quantity,
-          attributes: {
-            frame_color,
-            lense_color,
-          },
+          attributes: attributes,
           order_id: data.id,
         });
       }

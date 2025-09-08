@@ -63,12 +63,13 @@ export default function SingleProduct({ product }: Props) {
         <Button
           onClick={() => {
             addCartItem({
-              product_id: product.id,
-              variant_id: currentVariant.id,
+              productId: product.id,
+              variantId: currentVariant.id,
               image_url: currentVariant.image_url,
               title: product.title,
               price: currentVariant.price,
               quantity: 1,
+              attributes: currentVariant.attributes,
               frame_color: currentVariant.attributes.frame_color,
               lense_color: currentVariant.attributes.lense_color,
             });
