@@ -47,19 +47,20 @@ const steps: MultistepFormStep[] = [
 ];
 
 function CheckoutForm() {
+  const { cartItems, reset } = useShoppingCart();
+
   const router = useRouter();
   const { mutate, status } = useMutation({
     mutationFn: createOrder,
     onSuccess(data) {
-      router.push(`/order/confirmation/${data.tracking_code}`);
+      router.replace(`/order/confirmation/${data.tracking_code}`);
+      reset();
     },
 
     onError(error) {
       toast.error("Couldn't place order.");
     },
   });
-
-  const { cartItems } = useShoppingCart();
 
   const form = useForm({
     resolver: zodResolver(checkoutFormSchema),
