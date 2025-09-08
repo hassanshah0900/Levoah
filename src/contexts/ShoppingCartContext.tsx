@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { Product } from "@/types/products.types";
 import {
   createContext,
   PropsWithChildren,
@@ -11,12 +12,13 @@ import {
 
 export interface ShoppingCartItem {
   id?: string;
-  product_id: number;
-  variant_id: number;
   image_url: string;
+  productId: Product["id"];
+  variantId: Product["id"];
   title: string;
   price: number;
   quantity: number;
+  attributes: { [key: string]: string };
   frame_color: string;
   lense_color: string;
 }
@@ -28,9 +30,10 @@ interface ShoppingCartContextType {
   incrementQuantity: (id: ShoppingCartItem["id"]) => void;
   decrementQuantity: (id: ShoppingCartItem["id"]) => void;
   isInCart: (
-    productId: ShoppingCartItem["product_id"],
-    variantId: ShoppingCartItem["variant_id"]
+    productId: ShoppingCartItem["productId"],
+    variantId: ShoppingCartItem["variantId"]
   ) => boolean;
+  reset: () => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
@@ -38,7 +41,7 @@ interface ShoppingCartContextType {
 const ShoppingCartContext = createContext<ShoppingCartContextType | null>(null);
 
 export function ShoppingCartProvider({ children }: PropsWithChildren) {
-  const { getItem, setItem } = useLocalStorage("shopping cart");
+  const { getItem, setItem, removeItem } = useLocalStorage("shopping cart");
   const [cartItems, setCartItems] = useState<ShoppingCartItem[]>(
     () => getItem() || []
   );
@@ -48,14 +51,14 @@ export function ShoppingCartProvider({ children }: PropsWithChildren) {
     setCartItems((cartItems) => {
       const existingCartItem = cartItems.find(
         (cartItem) =>
-          cartItem.product_id == item.product_id &&
-          cartItem.variant_id == item.variant_id
+          cartItem.productId == item.productId &&
+          cartItem.variantId == item.variantId
       );
 
       if (existingCartItem) {
         return cartItems.map((item) =>
-          item.product_id === existingCartItem.product_id &&
-          item.variant_id === existingCartItem.variant_id
+          item.productId === existingCartItem.productId &&
+          item.variantId === existingCartItem.variantId
             ? { ...existingCartItem, quantity: existingCartItem.quantity + 1 }
             : item
         );
@@ -95,12 +98,16 @@ export function ShoppingCartProvider({ children }: PropsWithChildren) {
   }
 
   function isInCart(
-    productId: ShoppingCartItem["product_id"],
-    variantId: ShoppingCartItem["variant_id"]
+    productId: ShoppingCartItem["productId"],
+    variantId: ShoppingCartItem["variantId"]
   ) {
     return !!cartItems.find(
-      (item) => item.product_id === productId && item.variant_id === variantId
+      (item) => item.productId === productId && item.variantId === variantId
     );
+  }
+
+  function reset() {
+    setCartItems([]);
   }
 
   useEffect(() => {
@@ -116,6 +123,7 @@ export function ShoppingCartProvider({ children }: PropsWithChildren) {
         incrementQuantity,
         decrementQuantity,
         isInCart,
+        reset,
         isOpen,
         setIsOpen,
       }}
