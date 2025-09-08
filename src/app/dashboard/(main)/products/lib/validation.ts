@@ -10,8 +10,14 @@ export const productVariantSchema = z.object({
   image: z.instanceof(File, { error: "Image is required" }),
   price: z.coerce.number().min(1, "Price is required."),
   quantity_in_stock: z.coerce.number().min(1, "Quantity is required."),
-  frame_color: z.string().min(1, "Frame color is required."),
-  lense_color: z.string().min(1, "Lense Color is required."),
+  frame_color: z
+    .string()
+    .min(1, "Frame color is required.")
+    .transform((value) => `Frame Color#${value}`),
+  lense_color: z
+    .string()
+    .min(1, "Lense Color is required.")
+    .transform((value) => `Lense Color#${value}`),
 });
 
 export type ProductVariantSchemaType = z.infer<typeof productVariantSchema>;

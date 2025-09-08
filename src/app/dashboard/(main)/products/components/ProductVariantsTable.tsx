@@ -6,13 +6,19 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProductVariants } from "../lib/queries";
-import { productVariantColumns } from "./productVariantColumns";
+import { createProductVariantColumns } from "./productVariantColumns";
 import ProductVariantForm from "./ProductVariantForm";
+import { useMemo } from "react";
 
 interface Props {
   productId: number;
 }
 export default function ProductVariantsTable({ productId }: Props) {
+  const columns = useMemo(
+    () => createProductVariantColumns("glasses"),
+    [productId]
+  );
+
   const { data } = useQuery({
     queryKey: ["product_variants", productId],
     queryFn: () => getAllProductVariants({ productId }),
@@ -20,7 +26,7 @@ export default function ProductVariantsTable({ productId }: Props) {
 
   const { table } = useDataTable({
     data: data ? data.productVariants : [],
-    columns: productVariantColumns,
+    columns: columns,
     initialState: {
       columnPinning: {
         right: ["actions"],

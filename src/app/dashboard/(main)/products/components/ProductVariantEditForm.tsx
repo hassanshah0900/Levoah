@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { ProductVariant } from "@/types/products.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { getProductImageUrl } from "../lib/utils";
+import { getProductImageUrl, parseProductAttribute } from "../lib/utils";
 import {
   productVariantEditSchema,
   ProductVariantEditSchemaType,
@@ -31,7 +31,7 @@ import { compressImage } from "@/lib/utils";
 interface Props {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  productVariant: ProductVariant;
+  productVariant: ProductVariant<"glasses">;
 }
 
 export default function ProductVariantEditForm({
@@ -58,8 +58,10 @@ export default function ProductVariantEditForm({
     defaultValues: {
       price: productVariant.price,
       quantity_in_stock: productVariant.quantity_in_stock,
-      frame_color: productVariant.frame_color,
-      lense_color: productVariant.lense_color,
+      frame_color: parseProductAttribute(productVariant.attributes.frame_color)
+        .value,
+      lense_color: parseProductAttribute(productVariant.attributes.lense_color)
+        .value,
     },
     resolver: zodResolver(productVariantEditSchema),
   });
@@ -67,7 +69,11 @@ export default function ProductVariantEditForm({
   async function onSubmit(data: ProductVariantEditSchemaType) {
     let image = data.image;
     if (image) image = await compressImage(image);
-    const editedProductVariant = { ...productVariant, ...data, image };
+    const editedProductVariant = {
+      ...productVariant,
+      ...data,
+      image,
+    };
     mutate(editedProductVariant);
     toast.loading("Editing Variant...", { id: "edit_variant" });
     onOpenChange?.(false);

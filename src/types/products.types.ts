@@ -1,6 +1,6 @@
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 
-type ProductType = "glasses" | "accessories";
+export type ProductType = "glasses" | "accessories";
 interface SharedProductProperties {
   id: number;
   title: string;
@@ -36,6 +36,14 @@ type AccessoryVariant = SharedProductVariantProperties<{
   color: string;
   model: string;
 }>;
+
+export type ProductAttributesKey = keyof (GlassesVariant["attributes"] &
+  AccessoryVariant["attributes"]);
+
+export interface ProductAttribute {
+  label: string;
+  value: string;
+}
 
 type VariantMap = {
   glasses: GlassesVariant;
