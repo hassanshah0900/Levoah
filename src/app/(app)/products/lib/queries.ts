@@ -2,7 +2,7 @@
 
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 import { createClient } from "@/supabase/server";
-import { ProductWithVariants } from "@/types/products.types";
+import { Product } from "@/types/products.types";
 
 interface GetProductsWithVariantsProps {
   pageIndex: number;
@@ -34,7 +34,7 @@ export async function getProductsWithVariants({
 
   if (error) throw error;
 
-  return { products: data as ProductWithVariants[], count };
+  return { products: data as Product[], count };
 }
 
 export async function getProductWithVariants(slug: string) {
@@ -48,7 +48,7 @@ export async function getProductWithVariants(slug: string) {
 
   if (error) throw error;
 
-  return (data[0] as ProductWithVariants) ?? null;
+  return (data[0] as Product) ?? null;
 }
 
 export async function getCategoryBySlug(slug: string) {

@@ -1,13 +1,13 @@
 "use client";
 
-import { ProductWithVariants } from "@/types/products.types";
+import { Product } from "@/types/products.types";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import ProductImage from "./ProductImage";
 
 interface Props {
-  product: ProductWithVariants;
+  product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
@@ -30,7 +30,7 @@ export default function ProductCard({ product }: Props) {
   });
 
   return (
-    <Link href={`/products/${product.product_type.slug}/${product.slug}`}>
+    <Link href={`/products/${product.product_type}/${product.slug}`}>
       <div className="rounded-xs">
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">

@@ -1,29 +1,53 @@
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 
-export interface Product {
+type ProductType = "glasses" | "accessories";
+interface SharedProductProperties {
   id: number;
   title: string;
   slug: string;
-  category: Pick<Category, "id" | "name">;
   description?: string;
-  product_type: {
-    id: number;
-    name: string;
-    slug: string;
-  };
   published: boolean;
-  [key: string]: any;
+  category: Pick<Category, "id" | "name">;
+  product_type: ProductType;
 }
-
-export interface ProductVariant {
+interface SharedProductVariantProperties<T> {
   id: number;
+  image_url: string;
   price: number;
   quantity_in_stock: number;
-  frame_color: string;
-  lense_color: string;
   product_id: number;
-  image_url: string;
+  attributes: T;
 }
-export interface ProductWithVariants extends Product {
-  variants: ProductVariant[];
+interface Glasses extends SharedProductProperties {
+  product_type: "glasses";
+  variants: GlassesVariant[];
 }
+
+type GlassesVariant = SharedProductVariantProperties<{
+  lense_color: string;
+  frame_color: string;
+}>;
+
+interface Accessory extends SharedProductProperties {
+  product_type: "accessories";
+  variants: AccessoryVariant[];
+}
+type AccessoryVariant = SharedProductVariantProperties<{
+  color: string;
+  model: string;
+}>;
+
+type VariantMap = {
+  glasses: GlassesVariant;
+  accessories: AccessoryVariant;
+};
+
+export type ProductVariant<T extends keyof VariantMap = keyof VariantMap> =
+  VariantMap[T];
+
+type ProductMap = {
+  glasses: Glasses;
+  accessories: Accessory;
+};
+
+export type Product<T extends ProductType = ProductType> = ProductMap[T];
