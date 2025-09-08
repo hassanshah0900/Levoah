@@ -4,24 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { cn } from "@/lib/utils";
-import { ProductVariant } from "@/types/products.types";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { notFound, useParams } from "next/navigation";
+import { Product, ProductVariant } from "@/types/products.types";
+import { notFound } from "next/navigation";
 import { useState } from "react";
-import { getProductWithVariants } from "../lib/queries";
 import ProductImage from "./ProductImage";
 
-export default function SingleProduct() {
-  const { slug } = useParams<{ slug: string }>();
-  const { data: product } = useSuspenseQuery({
-    queryKey: ["single product with variants", { slug }],
-    queryFn: () => getProductWithVariants(slug),
-  });
+interface Props {
+  product: Product | null;
+}
+export default function SingleProduct({ product }: Props) {
   const { addCartItem, setIsOpen, isInCart } = useShoppingCart();
 
   if (!product) notFound();
 
-  const [currentVariant, setCurrentVariant] = useState(product.variants[0]);
+  const [currentVariant, setCurrentVariant] = useState<
+    ProductVariant<"glasses">
+  >(product.variants[0] as ProductVariant<"glasses">);
   const isItemInCart = isInCart(product.id, currentVariant.id);
 
   return (
@@ -43,20 +41,20 @@ export default function SingleProduct() {
         <Separator />
         <Variants
           currentVariant={currentVariant}
-          variants={product.variants}
+          variants={product.variants as ProductVariant<"glasses">[]}
           onVariantSelect={(variant) => setCurrentVariant(variant)}
         />
         <div>
           <p className="font-semibold sm:text-lg">
             Frame{"   "}
             <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-              {currentVariant.frame_color}
+              {currentVariant.attributes.frame_color}
             </span>
           </p>
           <p className="font-semibold sm:text-lg">
             Lense{"   "}
             <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-              {currentVariant.lense_color}
+              {currentVariant.attributes.lense_color}
             </span>
           </p>
         </div>
@@ -71,8 +69,8 @@ export default function SingleProduct() {
               title: product.title,
               price: currentVariant.price,
               quantity: 1,
-              frame_color: currentVariant.frame_color,
-              lense_color: currentVariant.lense_color,
+              frame_color: currentVariant.attributes.frame_color,
+              lense_color: currentVariant.attributes.lense_color,
             });
             setIsOpen(true);
           }}
@@ -91,9 +89,9 @@ function Variants({
   onVariantSelect,
   currentVariant,
 }: {
-  variants: ProductVariant[];
-  onVariantSelect: (variant: ProductVariant) => void;
-  currentVariant: ProductVariant;
+  variants: ProductVariant<"glasses">[];
+  onVariantSelect: (variant: ProductVariant<"glasses">) => void;
+  currentVariant: ProductVariant<"glasses">;
 }) {
   return (
     <div className="space-y-2">
