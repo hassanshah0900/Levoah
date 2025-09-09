@@ -28,13 +28,6 @@ export async function editCategory(category: CategorySchemaType & Category) {
 
   let image_url = category.image_url;
   if (category.image) {
-    if (category.image_url) {
-      const { data, error } = await supabase.storage
-        .from("Product Images")
-        .remove([category.image_url]);
-      if (error) throw error;
-    }
-
     const { data, error: uploadError } = await supabase.storage
       .from("Product Images")
       .upload(crypto.randomUUID(), category.image);
@@ -56,10 +49,23 @@ export async function editCategory(category: CategorySchemaType & Category) {
     .eq("id", category.id);
 
   if (error) throw error;
+
+  if (category.image && category.image_url) {
+    const { data, error } = await supabase.storage
+      .from("Product Images")
+      .remove([category.image_url]);
+    if (error) throw error;
+  }
 }
 
 export async function deleteSingleCategory(category: Category) {
   const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("categories")
+    .delete()
+    .eq("id", category.id);
+  if (error) throw error;
 
   if (category.image_url) {
     const { error } = await supabase.storage
@@ -67,10 +73,4 @@ export async function deleteSingleCategory(category: Category) {
       .remove([category.image_url]);
     if (error) throw error;
   }
-
-  const { error } = await supabase
-    .from("categories")
-    .delete()
-    .eq("id", category.id);
-  if (error) throw error;
 }

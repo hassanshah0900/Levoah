@@ -66,11 +66,6 @@ export async function editProductVariant(
       .upload(crypto.randomUUID(), productVariant.image);
     if (error) throw error;
 
-    const { error: deleteError } = await supabase.storage
-      .from("Product Images")
-      .remove([productVariant.image_url]);
-    if (deleteError) throw deleteError;
-
     image_url = data.path;
   }
 
@@ -81,6 +76,13 @@ export async function editProductVariant(
     },
   });
   if (error) throw error;
+
+  if (productVariant.image) {
+    const { error } = await supabase.storage
+      .from("Product Images")
+      .remove([productVariant.image_url]);
+    if (error) throw error;
+  }
 }
 
 export async function deleteSingleProductVariant(
