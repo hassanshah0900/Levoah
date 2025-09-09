@@ -10,7 +10,7 @@ export async function getRelatedProductsWithVariants(
 
   const { data, error } = await supabase
     .rpc("get_related_products_with_variants", {
-      slug: productSlug,
+      p_slug: productSlug,
     })
     .select("*");
 
