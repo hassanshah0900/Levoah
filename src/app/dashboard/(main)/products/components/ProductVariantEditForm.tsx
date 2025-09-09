@@ -99,7 +99,10 @@ export default function ProductVariantEditForm({
                   <FormControl>
                     <ImageInput
                       onChange={onChange}
-                      imgUrl={getProductImageUrl(productVariant.image_url)}
+                      imgUrl={
+                        productVariant.image_url &&
+                        getProductImageUrl(productVariant.image_url)
+                      }
                       shouldReset={false}
                     />
                   </FormControl>
