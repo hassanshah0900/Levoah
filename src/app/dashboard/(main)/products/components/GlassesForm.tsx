@@ -27,7 +27,7 @@ import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
 import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
 
-export default function ProductForm() {
+export default function GlassesForm() {
   const [isPublished, setIsPublished] = useState(true);
 
   const { mutate } = useMutation({
