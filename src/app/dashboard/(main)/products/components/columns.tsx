@@ -4,7 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createColumnHelper } from "@tanstack/react-table";
 import Link from "next/link";
-import ProductTableRowActions from "./ProductTableRowActions";
+import GlassesTableRowActions from "./GlassesTableRowActions";
 import { Product } from "@/types/products.types";
 
 const columnHelper = createColumnHelper<Product>();
@@ -93,7 +93,7 @@ export const columns = [
   }),
   columnHelper.display({
     id: "actions",
-    cell: ({ row }) => <ProductTableRowActions row={row} />,
+    cell: ({ row }) => <GlassesTableRowActions row={row} />,
     enablePinning: true,
     enableHiding: false,
     minSize: 50,

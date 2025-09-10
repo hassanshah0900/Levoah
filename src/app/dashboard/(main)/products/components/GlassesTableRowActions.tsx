@@ -19,7 +19,7 @@ import GlassesEditForm from "./GlassesEditForm";
 interface Props {
   row: Row<Product>;
 }
-export default function ProductTableRowActions({ row }: Props) {
+export default function GlassesTableRowActions({ row }: Props) {
   const [openState, setOpenState] = useState<"DELETE" | "EDIT" | null>(null);
   const router = useRouter();
 
