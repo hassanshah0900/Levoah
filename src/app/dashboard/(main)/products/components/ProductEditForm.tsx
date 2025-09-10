@@ -34,9 +34,10 @@ import {
 } from "../lib/validation";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
+import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
 
 interface Props {
-  product: Product;
+  product: Product<"glasses">;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -52,6 +53,9 @@ export default function ProductEditForm({
       description: product.description ?? "",
       published: product.published,
       category_id: product.category.id,
+      bridge_and_nosepads: product.bridge_and_nosepads,
+      frame_material: product.frame_material,
+      frame_shape: product.frame_shape,
     },
     resolver: zodResolver(productEditFormSchema),
   });
@@ -69,6 +73,7 @@ export default function ProductEditForm({
     });
     onOpenChange?.(false);
   }
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="right" modal>
       <DrawerContent className="max-h-screen overflow-y-auto overflow-x-hidden">
@@ -143,6 +148,18 @@ export default function ProductEditForm({
                   <FormLabel>Frame Material</FormLabel>
                   <FormControl>
                     <FrameMaterialCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="bridge_and_nosepads"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Bridge & Nosepads</FormLabel>
+                  <FormControl>
+                    <BridgeAndNosepadsSelect {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -25,6 +25,7 @@ import { createProduct } from "../lib/actions";
 import { productFormSchema, ProductFormSchemaType } from "../lib/validation";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
+import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
 
 export default function ProductForm() {
   const [isPublished, setIsPublished] = useState(true);
@@ -134,6 +135,18 @@ export default function ProductForm() {
                 <FormLabel>Frame Material</FormLabel>
                 <FormControl>
                   <FrameMaterialCombobox {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="bridge_and_nosepads"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Frame Material</FormLabel>
+                <FormControl>
+                  <BridgeAndNosepadsSelect {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
