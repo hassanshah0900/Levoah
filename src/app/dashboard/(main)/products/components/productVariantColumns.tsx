@@ -5,7 +5,7 @@ import { ProductType, ProductVariant } from "@/types/products.types";
 import { createColumnHelper } from "@tanstack/react-table";
 import { AttributeColumnType, glassesColumns } from "../lib/data";
 import { parseProductAttribute } from "../lib/utils";
-import ProductVariantTableRowActions from "./ProductVariantTableRowActions";
+import GlassesVariantTableRowActions from "./GlassesVariantTableRowActions";
 
 const columnHelper = createColumnHelper<ProductVariant>();
 
@@ -61,7 +61,7 @@ export function createProductVariantColumns(productType: ProductType) {
         <DataTableColumnHeader title="Image" column={column} />
       ),
       cell: ({ getValue }) => (
-        <div className="relative w-10 aspect-square ml-4">
+        <div className="w-16">
           <ProductImage src={getValue()} alt="" />
         </div>
       ),
@@ -78,7 +78,7 @@ export function createProductVariantColumns(productType: ProductType) {
     ...makeAttributesColumns(productTypeAttributeMap[productType]),
     columnHelper.display({
       id: "actions",
-      cell: ({ row }) => <ProductVariantTableRowActions row={row} />,
+      cell: ({ row }) => <GlassesVariantTableRowActions row={row} />,
       enablePinning: true,
       enableHiding: false,
       minSize: 50,

@@ -19,7 +19,7 @@ import GlassesVariantEditForm from "./GlassesVariantEditForm";
 interface Props {
   row: Row<ProductVariant>;
 }
-export default function ProductVariantTableRowActions({ row }: Props) {
+export default function GlassesVariantTableRowActions({ row }: Props) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
