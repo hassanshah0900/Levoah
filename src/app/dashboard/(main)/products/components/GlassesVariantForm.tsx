@@ -38,7 +38,7 @@ interface Props {
   productId: number;
 }
 
-export default function ProductVariantForm({ productId }: Props) {
+export default function GlassesVariantForm({ productId }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const queryClient = useQueryClient();

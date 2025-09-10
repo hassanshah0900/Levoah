@@ -7,7 +7,7 @@ import { useDataTable } from "@/hooks/useDataTable";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProductVariants } from "../lib/queries";
 import { createProductVariantColumns } from "./productVariantColumns";
-import ProductVariantForm from "./ProductVariantForm";
+import GlassesVariantForm from "./GlassesVariantForm";
 import { useMemo } from "react";
 
 interface Props {
@@ -40,7 +40,7 @@ export default function ProductVariantsTable({ productId }: Props) {
       </div>
       <div className="flex justify-between items-center">
         <DataTableColumnVisibilityToggler table={table} />
-        <ProductVariantForm productId={productId} />
+        <GlassesVariantForm productId={productId} />
       </div>
       <DataTable table={table}></DataTable>
     </div>
