@@ -1,11 +1,9 @@
 "use client";
 
-import CategoryCarousel from "@/components/CategoryCarousel";
 import Container from "@/components/Container";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getNextPageIndex } from "@/lib/utils";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { Fragment } from "react";
 import { InView } from "react-intersection-observer";
 import { PAGE_SIZE } from "../lib/data";
@@ -16,10 +14,12 @@ import ProductsFilters from "./ProductsFilters";
 import ProductsSorter from "./ProductsSorter";
 
 export default function ProductsGrid() {
-  const { categorySlug, productType } = useParams<{
-    categorySlug: string;
-    productType: string;
+  const { categories } = useParams<{
+    categories: string[];
   }>();
+
+  const categorySlug = categories ? categories[categories.length - 1] : null;
+  const categoryPath = usePathname();
 
   const {
     data,
@@ -30,12 +30,12 @@ export default function ProductsGrid() {
     isFetchingNextPage,
     isFetching,
   } = useInfiniteQuery({
-    queryKey: ["products with variants", categorySlug, productType],
+    queryKey: ["products with variants", categoryPath],
     queryFn: ({ pageParam }) =>
       getProductsWithVariants({
         pageIndex: pageParam,
         pageSize: PAGE_SIZE,
-        categorySlug,
+        categoryPath,
       }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam) =>
@@ -50,32 +50,23 @@ export default function ProductsGrid() {
   return (
     <Container>
       <div className="py-10 space-y-10">
-        {/* <CategoryCarousel /> */}
         <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
-          {categoryStatus === "pending" ? (
-            <Skeleton className="h-8 w-1/4" />
-          ) : (
-            <h1 className="text-2xl md:text-4xl font-semibold">
-              {category?.name ?? "Shop"}
-            </h1>
-          )}
+          <h1 className="text-2xl md:text-4xl font-semibold">
+            {category?.name ?? "Shop"}
+          </h1>
           <div className="flex justify-between items-center gap-2">
             <ProductsFilters />
             <ProductsSorter />
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-2.5 xs:gap-x-4 md:gap-x-5 gap-y-10">
-          {status === "pending"
-            ? Array.from({ length: 4 }).map((_, idx) => (
-                <ProductCardSkeleton key={idx} />
-              ))
-            : data?.pages.map((page, idx) => (
-                <Fragment key={idx}>
-                  {page.products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </Fragment>
+          {data?.pages.map((page, idx) => (
+            <Fragment key={idx}>
+              {page.products.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
+            </Fragment>
+          ))}
           {isFetchingNextPage &&
             Array.from({ length: 4 }).map((_, idx) => (
               <ProductCardSkeleton key={idx} />
