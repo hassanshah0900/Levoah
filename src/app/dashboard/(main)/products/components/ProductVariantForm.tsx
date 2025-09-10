@@ -31,6 +31,8 @@ import { compressImage } from "@/lib/utils";
 import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import LenseWidthCombobox from "./LenseWidthCombobox";
 import TempleLengthCombobox from "./TempleLengthCombobox";
+import LenseColorCombobox from "./LenseColorCombobox";
+import FrameColorCombobox from "./FrameColorCombobox";
 
 interface Props {
   productId: number;
@@ -131,12 +133,24 @@ export default function ProductVariantForm({ productId }: Props) {
               )}
             />
             <FormField
+              name={`lense_color`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Lense Color</FormLabel>
+                  <FormControl>
+                    <LenseColorCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               name={`frame_color`}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Color</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <FrameColorCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

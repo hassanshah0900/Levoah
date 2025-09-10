@@ -30,6 +30,8 @@ import { compressImage } from "@/lib/utils";
 import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import LenseWidthCombobox from "./LenseWidthCombobox";
 import TempleLengthCombobox from "./TempleLengthCombobox";
+import FrameColorCombobox from "./FrameColorCombobox";
+import LenseColorCombobox from "./LenseColorCombobox";
 
 interface Props {
   open?: boolean;
@@ -138,24 +140,24 @@ export default function ProductVariantEditForm({
               )}
             />
             <FormField
-              name={`frame_color`}
-              render={({ field }) => (
+              name={`lense_color`}
+              render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Frame Color</FormLabel>
+                  <FormLabel>Lense Color</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <LenseColorCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
-              name={`lense_color`}
-              render={({ field }) => (
+              name={`frame_color`}
+              render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Lense Color</FormLabel>
+                  <FormLabel>Frame Color</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <FrameColorCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
