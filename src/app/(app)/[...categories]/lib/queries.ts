@@ -7,25 +7,24 @@ import { Product } from "@/types/products.types";
 interface GetProductsWithVariantsProps {
   pageIndex: number;
   pageSize: number;
-  categorySlug?: string;
+  categoryPath?: string;
 }
 export async function getProductsWithVariants({
   pageIndex,
   pageSize,
-  categorySlug,
+  categoryPath,
 }: GetProductsWithVariantsProps) {
   const supabase = await createClient();
 
-  let queryBuilder = supabase
-    .from("products_with_variants")
-    .select("*", { count: "exact" });
-
-  if (categorySlug) {
-    const categories = await getCategoryWithChildren(categorySlug);
-
-    const categoriesIds = categories.map((category) => category.id);
-
-    queryBuilder = queryBuilder.in("category_id", categoriesIds);
+  let queryBuilder;
+  if (categoryPath === "/") {
+    queryBuilder = supabase.from("products_with_variants").select("*");
+  } else {
+    queryBuilder = supabase
+      .rpc("get_products_by_category", {
+        p_category_path: categoryPath,
+      })
+      .select("*");
   }
 
   const rangeStart = pageIndex * pageSize;
