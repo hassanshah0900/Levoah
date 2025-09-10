@@ -1,8 +1,13 @@
 import FormCombobox from "@/components/FormCombobox";
-import React from "react";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 
-const frameMaterials = ["Acetate", "Metal", "Titanium", "Plastic", "Mixed"];
+export const frameMaterials = [
+  "Acetate",
+  "Metal",
+  "Titanium",
+  "Plastic",
+  "Mixed",
+] as const;
 export default function FrameMaterialCombobox({
   ...props
 }: ControllerRenderProps & Pick<ControllerFieldState, "invalid">) {

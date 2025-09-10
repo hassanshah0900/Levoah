@@ -1,8 +1,7 @@
 import FormCombobox from "@/components/FormCombobox";
-import React from "react";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 
-const frameShapes = [
+export const frameShapes = [
   "Rectangle",
   "Round",
   "Square",
@@ -10,7 +9,7 @@ const frameShapes = [
   "Oval",
   "Aviator",
   "Browline",
-];
+] as const;
 
 export default function FrameShapeCombobox({
   ...props
