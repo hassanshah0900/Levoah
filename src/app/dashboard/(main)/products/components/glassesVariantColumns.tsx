@@ -29,7 +29,7 @@ function makeAttributesColumns(keys: AttributeColumnType[]) {
   });
 }
 
-export function createProductVariantColumns(productType: ProductType) {
+export function createGlassesVariantColumns(productType: ProductType) {
   const columns = [
     columnHelper.display({
       id: "select",

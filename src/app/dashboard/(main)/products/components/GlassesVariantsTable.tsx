@@ -6,7 +6,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProductVariants } from "../lib/queries";
-import { createProductVariantColumns } from "./productVariantColumns";
+import { createGlassesVariantColumns } from "./glassesVariantColumns";
 import GlassesVariantForm from "./GlassesVariantForm";
 import { useMemo } from "react";
 
@@ -15,7 +15,7 @@ interface Props {
 }
 export default function GlassesVariantsTable({ productId }: Props) {
   const columns = useMemo(
-    () => createProductVariantColumns("glasses"),
+    () => createGlassesVariantColumns("glasses"),
     [productId]
   );
 
