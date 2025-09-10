@@ -5,28 +5,29 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import React from "react";
-import { getCategoryBySlug, getProductsWithVariants } from "./lib/queries";
 import ProductsGrid from "./components/ProductsGrid";
 import { PAGE_SIZE } from "./lib/data";
+import { getCategoryBySlug, getProductsWithVariants } from "./lib/queries";
 
 export default async function CategoryPage({
   params,
 }: {
-  params: Promise<{ categorySlug: string; productType: string }>;
+  params: Promise<{ categories: string[] }>;
 }) {
-  const { categorySlug, productType } = await params;
+  const { categories } = await params;
+  const categoryPath = categories.reduce((acc, curr) => acc + `/${curr}`, "");
+  const categorySlug = categories[categories.length - 1];
 
   const queryClient = new QueryClient();
 
   await Promise.all([
     queryClient.prefetchInfiniteQuery({
-      queryKey: ["products with variants", categorySlug, productType],
+      queryKey: ["products with variants", categoryPath],
       queryFn: ({ pageParam }) =>
         getProductsWithVariants({
           pageIndex: pageParam,
           pageSize: PAGE_SIZE,
-          categorySlug,
+          categoryPath,
         }),
       initialPageParam: 0,
     }),
