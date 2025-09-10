@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useDataTable } from "@/hooks/useDataTable";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import ProductTableActionBar from "./ProductTableActionBar";
+import GlassesTableActionBar from "./GlassesTableActionBar";
 import { columns } from "./columns";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Product } from "@/types/products.types";
@@ -62,7 +62,7 @@ export default function GlassesTable({ products, rowCount }: Props) {
         </div>
       </div>
       <DataTable table={table}></DataTable>
-      <ProductTableActionBar table={table} />
+      <GlassesTableActionBar table={table} />
     </div>
   );
 }

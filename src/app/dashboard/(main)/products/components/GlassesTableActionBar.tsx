@@ -22,7 +22,7 @@ import DeleteDialog from "@/components/DeleteDialog";
 interface Props {
   table: Table<Product>;
 }
-export default function ProductTableActionBar({ table }: Props) {
+export default function GlassesTableActionBar({ table }: Props) {
   const router = useRouter();
 
   function deleteProducts() {
