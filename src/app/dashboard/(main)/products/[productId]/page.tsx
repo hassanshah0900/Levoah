@@ -5,7 +5,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import ProductVariantsTable from "../components/ProductVariantsTable";
+import GlassesVariantsTable from "../components/GlassesVariantsTable";
 import { getAllProductVariants } from "../lib/queries";
 
 export default async function DashboardProductPage({
@@ -27,7 +27,7 @@ export default async function DashboardProductPage({
 
   return (
     <HydrationBoundary state={state}>
-      <ProductVariantsTable productId={productId} />
+      <GlassesVariantsTable productId={productId} />
     </HydrationBoundary>
   );
 }

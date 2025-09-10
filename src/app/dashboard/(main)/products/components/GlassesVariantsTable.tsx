@@ -13,7 +13,7 @@ import { useMemo } from "react";
 interface Props {
   productId: number;
 }
-export default function ProductVariantsTable({ productId }: Props) {
+export default function GlassesVariantsTable({ productId }: Props) {
   const columns = useMemo(
     () => createProductVariantColumns("glasses"),
     [productId]
