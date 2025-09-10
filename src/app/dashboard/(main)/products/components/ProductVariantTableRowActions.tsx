@@ -7,14 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";
-import React, { useState } from "react";
-import ProductVariantEditForm from "./ProductVariantEditForm";
-import { Row } from "@tanstack/react-table";
 import { ProductVariant } from "@/types/products.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSingleProductVariant } from "../lib/actions";
+import { Row } from "@tanstack/react-table";
+import { EllipsisVertical } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { deleteSingleProductVariant } from "../lib/actions";
+import GlassesVariantEditForm from "./GlassesVariantEditForm";
 
 interface Props {
   row: Row<ProductVariant>;
@@ -70,10 +70,10 @@ export default function ProductVariantTableRowActions({ row }: Props) {
         onOpenChange={() => setOpenState(null)}
         onDelete={handleDelete}
       />
-      <ProductVariantEditForm
+      <GlassesVariantEditForm
         open={openState === "EDIT"}
         onOpenChange={() => setOpenState(null)}
-        productVariant={row.original}
+        productVariant={row.original as ProductVariant<"glasses">}
       />
     </div>
   );

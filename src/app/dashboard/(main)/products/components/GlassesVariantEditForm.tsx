@@ -39,7 +39,7 @@ interface Props {
   productVariant: ProductVariant<"glasses">;
 }
 
-export default function ProductVariantEditForm({
+export default function GlassesVariantEditForm({
   open,
   onOpenChange,
   productVariant,
