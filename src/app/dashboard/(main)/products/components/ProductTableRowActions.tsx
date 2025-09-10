@@ -10,11 +10,11 @@ import { Row } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 import ProductDeleteDialog from "./ProductDeleteDialog";
-import ProductEditForm from "./ProductEditForm";
 import { toast } from "sonner";
 import { deleteSingleProduct } from "../lib/actions";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types/products.types";
+import GlassesEditForm from "./GlassesEditForm";
 
 interface Props {
   row: Row<Product>;
@@ -58,8 +58,8 @@ export default function ProductTableRowActions({ row }: Props) {
         open={openState === "DELETE"}
         onOpenChange={() => setOpenState(null)}
       />
-      <ProductEditForm
-        product={row.original}
+      <GlassesEditForm
+        product={row.original as Product<"glasses">}
         open={openState === "EDIT"}
         onOpenChange={() => setOpenState(null)}
       />

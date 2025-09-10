@@ -41,7 +41,7 @@ interface Props {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
-export default function ProductEditForm({
+export default function GlassesEditForm({
   product,
   open,
   onOpenChange,
