@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,7 +23,8 @@ import { Input } from "../../../../../components/ui/input";
 import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
 import { createProduct } from "../lib/actions";
 import { productFormSchema, ProductFormSchemaType } from "../lib/validation";
-import { useMutation } from "@tanstack/react-query";
+import FrameMaterialCombobox from "./FrameMaterialCombobox";
+import FrameShapeCombobox from "./FrameShapeCombobox";
 
 export default function ProductForm() {
   const [isPublished, setIsPublished] = useState(true);
@@ -108,6 +110,30 @@ export default function ProductForm() {
                 <FormLabel>Category</FormLabel>
                 <FormControl>
                   <CategoriesCombobox {...field} placeholder="No Category" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="frame_shape"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Frame Shape</FormLabel>
+                <FormControl>
+                  <FrameShapeCombobox {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="frame_material"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Frame Material</FormLabel>
+                <FormControl>
+                  <FrameMaterialCombobox {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

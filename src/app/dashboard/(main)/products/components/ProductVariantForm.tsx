@@ -28,6 +28,9 @@ import { addProductVariant } from "../lib/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { compressImage } from "@/lib/utils";
+import BridgeWidthCombobox from "./BridgeWidthCombobox";
+import LenseWidthCombobox from "./LenseWidthCombobox";
+import TempleLengthCombobox from "./TempleLengthCombobox";
 
 interface Props {
   productId: number;
@@ -57,6 +60,9 @@ export default function ProductVariantForm({ productId }: Props) {
       quantity_in_stock: "",
       frame_color: "",
       lense_color: "",
+      lense_width: "",
+      bridge_width: "",
+      temple_length: "",
     },
     resolver: zodResolver(productVariantSchema),
   });
@@ -137,12 +143,36 @@ export default function ProductVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`lense_color`}
-              render={({ field }) => (
+              name={`lense_width`}
+              render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Lense Color</FormLabel>
+                  <FormLabel>Lense Width</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <LenseWidthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`bridge_width`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Bridge Width</FormLabel>
+                  <FormControl>
+                    <BridgeWidthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`temple_length`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Temple Length</FormLabel>
+                  <FormControl>
+                    <TempleLengthCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

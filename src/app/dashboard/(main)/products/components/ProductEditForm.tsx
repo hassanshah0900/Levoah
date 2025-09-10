@@ -1,5 +1,6 @@
 "use client";
 
+import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -25,13 +26,14 @@ import {
   FormMessage,
 } from "../../../../../components/ui/form";
 import { Input } from "../../../../../components/ui/input";
+import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
 import { editProduct } from "../lib/actions";
 import {
   productEditFormSchema,
   ProductEditFormSchemaType,
 } from "../lib/validation";
-import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
-import SlugInput from "@/components/SlugInput";
+import FrameMaterialCombobox from "./FrameMaterialCombobox";
+import FrameShapeCombobox from "./FrameShapeCombobox";
 
 interface Props {
   product: Product;
@@ -110,7 +112,6 @@ export default function ProductEditForm({
                 </FormItem>
               )}
             />
-
             <FormField
               name="category_id"
               render={({ field }) => (
@@ -118,6 +119,30 @@ export default function ProductEditForm({
                   <FormLabel>Category</FormLabel>
                   <FormControl>
                     <CategoriesCombobox {...field} placeholder="No Category" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="frame_shape"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Frame Shape</FormLabel>
+                  <FormControl>
+                    <FrameShapeCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="frame_material"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Frame Material</FormLabel>
+                  <FormControl>
+                    <FrameMaterialCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

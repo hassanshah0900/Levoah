@@ -27,6 +27,9 @@ import { editProductVariant } from "../lib/actions";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { compressImage } from "@/lib/utils";
+import BridgeWidthCombobox from "./BridgeWidthCombobox";
+import LenseWidthCombobox from "./LenseWidthCombobox";
+import TempleLengthCombobox from "./TempleLengthCombobox";
 
 interface Props {
   open?: boolean;
@@ -153,6 +156,42 @@ export default function ProductVariantEditForm({
                   <FormLabel>Lense Color</FormLabel>
                   <FormControl>
                     <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`lense_width`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Lense Width</FormLabel>
+                  <FormControl>
+                    <LenseWidthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`bridge_width`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Bridge Width</FormLabel>
+                  <FormControl>
+                    <BridgeWidthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`temple_length`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Temple Length</FormLabel>
+                  <FormControl>
+                    <TempleLengthCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
