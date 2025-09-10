@@ -30,22 +30,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { compressImage } from "@/lib/utils";
 
 export default function NewCategoryForm() {
-  const queryClient = useQueryClient();
-
-  const { mutate } = useMutation({
-    mutationFn: createCategory,
-    onSuccess() {
-      toast.success("New category successfully created.", {
-        id: "new_category",
-      });
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-    },
-    onError(error) {
-      toast.error(error.message, { id: "new_category" });
-    },
-  });
-
-  const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
       name: "",
@@ -55,6 +39,24 @@ export default function NewCategoryForm() {
     },
     resolver: zodResolver(categorySchema),
   });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: createCategory,
+    onSuccess() {
+      toast.success("New category successfully created.", {
+        id: "new_category",
+      });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      form.reset();
+    },
+    onError(error) {
+      toast.error(error.message, { id: "new_category" });
+    },
+  });
+
+  const [open, setOpen] = useState(false);
 
   async function onSubmit(category: CategorySchemaType) {
     let image = category.image;
