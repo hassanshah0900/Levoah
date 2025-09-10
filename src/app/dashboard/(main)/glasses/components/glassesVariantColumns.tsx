@@ -1,4 +1,4 @@
-import ProductImage from "@/app/(app)/products/components/ProductImage";
+import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ProductType, ProductVariant } from "@/types/products.types";

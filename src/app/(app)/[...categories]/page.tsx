@@ -6,12 +6,9 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import React from "react";
-import {
-  getCategoryBySlug,
-  getProductsWithVariants,
-} from "../../../lib/queries";
-import ProductsGrid from "../../../components/ProductsGrid";
-import { PAGE_SIZE } from "../../../lib/data";
+import { getCategoryBySlug, getProductsWithVariants } from "./lib/queries";
+import ProductsGrid from "./components/ProductsGrid";
+import { PAGE_SIZE } from "./lib/data";
 
 export default async function CategoryPage({
   params,

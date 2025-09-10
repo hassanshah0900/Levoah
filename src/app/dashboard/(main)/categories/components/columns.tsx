@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createColumnHelper } from "@tanstack/react-table";
 import CategoriesTableRowActions from "./CategoriesTableRowActions";
 import { Category } from "../lib/types";
-import ProductImage from "@/app/(app)/products/components/ProductImage";
+import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
 
 const columnHelper = createColumnHelper<Category>();
 

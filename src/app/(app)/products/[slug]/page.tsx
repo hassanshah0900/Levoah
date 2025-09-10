@@ -2,11 +2,11 @@ export const runtime = "edge";
 
 import Container from "@/components/Container";
 import { Suspense } from "react";
-import RelatedProducts from "../../components/RelatedProducts";
-import RelatedProductsSectionSkeleton from "../../components/RelatedProductsSkeleton";
-import SingleProduct from "../../components/SingleProduct";
-import SingleProductPageSkeleton from "../../components/SingleProductSkeleton";
-import { getProductWithVariants } from "../../lib/queries";
+import RelatedProducts from "../../../[...categories]/components/RelatedProducts";
+import RelatedProductsSectionSkeleton from "../../../[...categories]/components/RelatedProductsSkeleton";
+import SingleProduct from "../../../[...categories]/components/SingleProduct";
+import SingleProductPageSkeleton from "../../../[...categories]/components/SingleProductSkeleton";
+import { getProductWithVariants } from "../../../[...categories]/lib/queries";
 import { getRelatedProductsWithVariants } from "./lib/queries";
 
 export default async function ProductPage({
@@ -21,8 +21,9 @@ export default async function ProductPage({
       <Suspense fallback={<SingleProductPageSkeleton />}>
         <SingleProductServer slug={slug} />
       </Suspense>
-      <Suspense fallback={<RelatedProductsSectionSkeleton />}></Suspense>
-      <RelatedProductsServer slug={slug} />
+      <Suspense fallback={<RelatedProductsSectionSkeleton />}>
+        <RelatedProductsServer slug={slug} />
+      </Suspense>
     </Container>
   );
 }
@@ -36,5 +37,5 @@ async function SingleProductServer({ slug }: { slug: string }) {
 async function RelatedProductsServer({ slug }: { slug: string }) {
   const relatedProducts = await getRelatedProductsWithVariants(slug);
 
-  return <div></div>;
+  return <RelatedProducts products={relatedProducts} />;
 }

@@ -50,7 +50,7 @@ export default function ProductsGrid() {
   return (
     <Container>
       <div className="py-10 space-y-10">
-        <CategoryCarousel />
+        {/* <CategoryCarousel /> */}
         <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
           {categoryStatus === "pending" ? (
             <Skeleton className="h-8 w-1/4" />
