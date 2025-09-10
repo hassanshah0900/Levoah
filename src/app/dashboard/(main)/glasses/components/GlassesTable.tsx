@@ -54,7 +54,7 @@ export default function GlassesTable({ products, rowCount }: Props) {
             className="hidden @lg:flex"
             align="end"
           />
-          <Link href={"/dashboard/products/new"}>
+          <Link href={"/dashboard/glasses/new"}>
             <Button size={"sm"}>
               <Plus /> New
             </Button>

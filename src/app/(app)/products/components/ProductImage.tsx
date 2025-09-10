@@ -1,4 +1,4 @@
-import { getProductImageUrl } from "@/app/dashboard/(main)/products/lib/utils";
+import { getImagePublicUrl } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { ComponentProps } from "react";
@@ -13,7 +13,7 @@ export default function ProductImage({ src, className, ...props }: Props) {
     >
       <Image
         {...props}
-        src={src ? getProductImageUrl(src) : "/images/image-placeholder.webp"}
+        src={src ? getImagePublicUrl(src) : "/images/image-placeholder.webp"}
         fill
         className="object-cover object-center"
       />

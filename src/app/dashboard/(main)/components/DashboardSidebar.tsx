@@ -43,26 +43,14 @@ export default function DashboardSidebar() {
           <SidebarGroupLabel>Main Links</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarCollapsibleMenuItem>
-                <SidebarCollapsibleMenuItemButton>
-                  <Glasses />
-                  <span>Products</span>
-                </SidebarCollapsibleMenuItemButton>
-                <SidebarCollapsibleMenuItemContent>
-                  <SidebarMenuSub>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild>
-                        <Link href={"/dashboard/products"}>List</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton asChild>
-                        <Link href={"/dashboard/products/new"}>New</Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  </SidebarMenuSub>
-                </SidebarCollapsibleMenuItemContent>
-              </SidebarCollapsibleMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href={"/dashboard/glasses"}>
+                    <Glasses />
+                    <span>Glasses </span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href={"/dashboard/categories"}>

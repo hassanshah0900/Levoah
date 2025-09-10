@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { getProductImageUrl } from "../../products/lib/utils";
+import { getImagePublicUrl } from "@/lib/utils";
 import { editCategory } from "../lib/actions";
 import { Category } from "../lib/types";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
@@ -101,7 +101,7 @@ export default function EditCategoryForm({
                         shouldReset={false}
                         imgUrl={
                           category.image_url &&
-                          getProductImageUrl(category.image_url)
+                          getImagePublicUrl(category.image_url)
                         }
                       />
                     </FormControl>

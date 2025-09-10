@@ -81,7 +81,7 @@ export const columns = [
     id: "variants_link",
     cell: ({ row }) => (
       <Link
-        href={`/dashboard/products/${row.original.id}`}
+        href={`/dashboard/glasses/${row.original.id}`}
         className={buttonVariants({ variant: "link" })}
       >
         Variants
