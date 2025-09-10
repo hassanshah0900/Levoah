@@ -16,8 +16,8 @@ import {
   changeProductsPublishedStatus,
   deleteMultipleProducts,
 } from "../lib/actions";
-import ProductDeleteDialog from "./ProductDeleteDialog";
 import { Product } from "@/types/products.types";
+import DeleteDialog from "@/components/DeleteDialog";
 
 interface Props {
   table: Table<Product>;
@@ -73,7 +73,7 @@ export default function ProductTableActionBar({ table }: Props) {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ProductDeleteDialog
+      <DeleteDialog
         dialogTrigger={
           <DataTableActionBarAction tooltip="Delete All">
             <Trash />
