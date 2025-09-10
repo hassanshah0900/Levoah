@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
+import { createClient } from "@/supabase/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -38,4 +39,12 @@ export async function compressImage(file: File) {
   } catch (error) {
     toast.error("Coudn't compress image.");
   }
+}
+
+export function getImagePublicUrl(url: string) {
+  const supabase = createClient();
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("Product Images").getPublicUrl(url);
+  return publicUrl;
 }

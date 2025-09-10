@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { ProductVariant } from "@/types/products.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { getProductImageUrl, parseProductAttribute } from "../lib/utils";
+import { parseProductAttribute } from "../lib/utils";
 import {
   productVariantEditSchema,
   ProductVariantEditSchemaType,
@@ -26,7 +26,7 @@ import {
 import { editProductVariant } from "../lib/actions";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { compressImage } from "@/lib/utils";
+import { compressImage, getImagePublicUrl } from "@/lib/utils";
 import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import LenseWidthCombobox from "./LenseWidthCombobox";
 import TempleLengthCombobox from "./TempleLengthCombobox";
@@ -106,7 +106,7 @@ export default function GlassesVariantEditForm({
                       onChange={onChange}
                       imgUrl={
                         productVariant.image_url &&
-                        getProductImageUrl(productVariant.image_url)
+                        getImagePublicUrl(productVariant.image_url)
                       }
                       shouldReset={false}
                     />
