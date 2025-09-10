@@ -1,4 +1,9 @@
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
+import { bridgeAndNosepads } from "@/app/dashboard/(main)/products/components/BridgeAndNosepadsSelect";
+import { frameColors } from "@/app/dashboard/(main)/products/components/FrameColorCombobox";
+import { frameMaterials } from "@/app/dashboard/(main)/products/components/FrameMaterialCombobox";
+import { frameShapes } from "@/app/dashboard/(main)/products/components/FrameShapeCombobox";
+import { lenseColors } from "@/app/dashboard/(main)/products/components/LenseColorCombobox";
 
 export type ProductType = "glasses" | "accessories";
 interface SharedProductProperties {
@@ -18,14 +23,27 @@ interface SharedProductVariantProperties<T> {
   product_id: number;
   attributes: T;
 }
+
+type FrameMaterial = (typeof frameMaterials)[number];
+type FrameShape = (typeof frameShapes)[number];
+type BridgeAndNosepads = (typeof bridgeAndNosepads)[number];
 interface Glasses extends SharedProductProperties {
+  frame_shape: FrameShape;
+  frame_material: FrameMaterial;
+  bridge_and_nosepads: BridgeAndNosepads;
   product_type: "glasses";
   variants: GlassesVariant[];
 }
 
+type FrameColor = (typeof frameColors)[number];
+type LenseColor = (typeof lenseColors)[number];
+
 type GlassesVariant = SharedProductVariantProperties<{
-  lense_color: string;
-  frame_color: string;
+  lense_color: LenseColor;
+  frame_color: FrameColor;
+  bridge_width: number;
+  lense_width: number;
+  temple_length: number;
 }>;
 
 interface Accessory extends SharedProductProperties {
