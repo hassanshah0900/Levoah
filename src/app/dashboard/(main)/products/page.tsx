@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 import { SearchParams } from "nuqs/server";
 import { getAllProducts } from "./lib/queries";
-import ProductsTable from "./components/ProductsTable";
+import GlassesTable from "./components/GlassesTable";
 import { productsPageSearchParamsCache } from "./lib/validation";
 
 export default async function ProductsPage({
@@ -20,7 +20,7 @@ export default async function ProductsPage({
 
   return (
     <div>
-      <ProductsTable products={products} rowCount={count ?? 0} />
+      <GlassesTable products={products} rowCount={count ?? 0} />
     </div>
   );
 }

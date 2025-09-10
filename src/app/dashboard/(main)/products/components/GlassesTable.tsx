@@ -16,7 +16,7 @@ interface Props {
   products: Product[];
   rowCount: number;
 }
-export default function ProductsTable({ products, rowCount }: Props) {
+export default function GlassesTable({ products, rowCount }: Props) {
   const { table } = useDataTable<Product>({
     columns,
     data: products,
