@@ -3,6 +3,7 @@
 import { createClient } from "@/supabase/server";
 import { Product, ProductVariant } from "@/types/products.types";
 import {
+  GlassesEditFormSchemaType,
   GlassesFormSchemaType,
   ProductVariantEditSchemaType,
   ProductVariantSchemaType,
@@ -135,11 +136,13 @@ export async function deleteMultipleProducts(productIds: Product["id"][]) {
   if (error) throw error;
 }
 
-export async function editProduct(product: Product) {
+export async function editGlasses(
+  glasses: GlassesEditFormSchemaType & { id: number }
+) {
   const supabase = await createClient();
 
-  const { error } = await supabase.rpc("update_product", {
-    product,
+  const { error } = await supabase.rpc("update_glasses", {
+    product: glasses,
   });
   if (error) {
     console.log(error.code);
