@@ -5,9 +5,9 @@ import {
   parseAsString,
 } from "nuqs/server";
 import z from "zod";
+import { bridgeAndNosepads } from "../components/BridgeAndNosepadsSelect";
 import { frameMaterials } from "../components/FrameMaterialCombobox";
 import { frameShapes } from "../components/FrameShapeCombobox";
-import { bridgeAndNosepads } from "../components/BridgeAndNosepadsSelect";
 
 export const productVariantSchema = z.object({
   image: z.instanceof(File, { error: "Image is required" }),
@@ -32,10 +32,9 @@ export type ProductVariantEditSchemaType = z.infer<
   typeof productVariantEditSchema
 >;
 
-export const productFormSchema = z.object({
+export const glassesFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required."),
-  category_id: z.coerce.number().min(1, "Category is required"),
   frame_material: z.enum(frameMaterials, {
     error: "Frame material is required.",
   }),
@@ -45,12 +44,16 @@ export const productFormSchema = z.object({
   bridge_and_nosepads: z.enum(bridgeAndNosepads, {
     error: "Bride & nosepads is required.",
   }),
+  type: z.coerce.number().min(1, "Type is required"),
+  categories: z
+    .array(z.coerce.number())
+    .min(1, "At least one category is required"),
   description: z.string(),
 });
 
-export type ProductFormSchemaType = z.infer<typeof productFormSchema>;
+export type GlassesFormSchemaType = z.infer<typeof glassesFormSchema>;
 
-export const productEditFormSchema = productFormSchema.extend({
+export const productEditFormSchema = glassesFormSchema.extend({
   published: z.boolean().default(true),
 });
 
