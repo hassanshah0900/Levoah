@@ -18,6 +18,8 @@ export default function FormSelect({
   items,
   ...props
 }: Props) {
+  console.log(props.value);
+
   return (
     <Select {...props} onValueChange={onChange}>
       <SelectTrigger asChild>
@@ -29,7 +31,7 @@ export default function FormSelect({
             invalid && "border-destructive"
           )}
         >
-          {items.find(({ value }) => value === props.value)?.label ||
+          {items.find(({ value }) => value === String(props.value))?.label ||
             placeholder ||
             "Select an item"}
         </Button>
