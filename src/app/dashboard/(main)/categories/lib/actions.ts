@@ -2,7 +2,7 @@
 
 import { createClient } from "@/supabase/server";
 import { Category } from "./types";
-import { CategorySchemaType } from "./validation";
+import { CategorySchemaType, SubcategorySchemaType } from "./validation";
 
 export async function createCategory(category: CategorySchemaType) {
   const supabase = await createClient();
@@ -16,10 +16,15 @@ export async function createCategory(category: CategorySchemaType) {
     image_url = data.path;
   }
 
-  const { name, slug, description, parent_category } = category;
-  const { error } = await supabase
-    .from("categories")
-    .insert({ name, slug, description, parent_category, image_url });
+  const { name, slug, description, parent_category, product_type } = category;
+  const { error } = await supabase.from("categories").insert({
+    name,
+    slug,
+    description,
+    parent_category,
+    image_url,
+    product_type,
+  });
   if (error) throw error;
 }
 
@@ -80,7 +85,7 @@ export async function createSubcategory({
   category,
 }: {
   slug: string;
-  category: CategorySchemaType;
+  category: SubcategorySchemaType;
 }) {
   const supabase = await createClient();
 
