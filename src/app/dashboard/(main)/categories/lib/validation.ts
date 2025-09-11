@@ -11,6 +11,7 @@ export const categorySchema = z.object({
     .min(1, "Slug is required.")
     .max(100, "Slug can be at max 100 characters"),
   parent_category: z.coerce.number().nullable(),
+  product_type: z.string().min(1, "Product type is required."),
   description: z
     .string()
     .max(2000, "Description can be maximum 2000 words.")

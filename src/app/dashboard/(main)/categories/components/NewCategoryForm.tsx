@@ -1,4 +1,5 @@
 import ImageInput from "@/components/ImageInput";
+import ProductTypeSelect from "@/components/ProductTypeSelect";
 import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,23 +21,41 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { compressImage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { createCategory } from "../lib/actions";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
 
-interface Props {
-  onCreate: (category: CategorySchemaType) => void;
-}
-export default function NewCategoryForm({ onCreate }: Props) {
+export default function NewCategoryForm() {
   const form = useForm({
     defaultValues: {
       name: "",
       slug: "",
-      parent_category: null,
       description: "",
+      product_type: "",
     },
     resolver: zodResolver(categorySchema),
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: createCategory,
+    onSuccess() {
+      toast.success("New category successfully created.", {
+        id: "new_category",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["base categories"],
+      });
+      form.reset();
+    },
+    onError(error) {
+      toast.error(error.message, { id: "new_category" });
+    },
   });
 
   const [open, setOpen] = useState(false);
@@ -47,7 +66,7 @@ export default function NewCategoryForm({ onCreate }: Props) {
       image = await compressImage(image);
     }
     form.reset();
-    onCreate({ ...category, image });
+    mutate({ ...category, image });
     setOpen(false);
   }
   return (
@@ -99,6 +118,18 @@ export default function NewCategoryForm({ onCreate }: Props) {
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
                       <SlugInput {...field} slugSourceFieldName="name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="product_type"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel>Product Type</FormLabel>
+                    <FormControl>
+                      <ProductTypeSelect {...field} {...fieldState} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
