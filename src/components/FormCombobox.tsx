@@ -52,7 +52,11 @@ export default function FormCombobox({
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
-          className={cn("justify-center", invalid && "border-destructive")}
+          className={cn(
+            "justify-start",
+            valueState || "text-muted-foreground font-normal",
+            invalid && "border-destructive"
+          )}
         >
           {getButtonText()}
         </Button>
