@@ -1,20 +1,25 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
+import { Product, ProductVariant } from "@/types/products.types";
 import {
-  ProductEditFormSchemaType,
-  ProductFormSchemaType,
+  GlassesFormSchemaType,
   ProductVariantEditSchemaType,
   ProductVariantSchemaType,
 } from "./validation";
-import { Product, ProductVariant } from "@/types/products.types";
 
-export async function createProduct(
-  product: ProductFormSchemaType & { published: boolean }
+export async function createGlasses(
+  glasses: GlassesFormSchemaType & { published: boolean }
 ) {
   const supabase = await createClient();
-  const { error } = await supabase.rpc("create_product", {
-    product,
+
+  const p_glasses = {
+    ...glasses,
+    categories: [...glasses.categories, glasses.type],
+    product_type: "glasses",
+  };
+  const { error } = await supabase.rpc("create_glasses", {
+    p_glasses,
   });
   if (error) throw error;
 }
