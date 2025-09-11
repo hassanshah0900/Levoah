@@ -1,11 +1,11 @@
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
-import { bridgeAndNosepads } from "@/app/dashboard/(main)/products/components/BridgeAndNosepadsSelect";
-import { frameColors } from "@/app/dashboard/(main)/products/components/FrameColorCombobox";
-import { frameMaterials } from "@/app/dashboard/(main)/products/components/FrameMaterialCombobox";
-import { frameShapes } from "@/app/dashboard/(main)/products/components/FrameShapeCombobox";
-import { lenseColors } from "@/app/dashboard/(main)/products/components/LenseColorCombobox";
+import { bridgeAndNosepads } from "@/app/dashboard/(main)/glasses/components/BridgeAndNosepadsSelect";
+import { frameColors } from "@/app/dashboard/(main)/glasses/components/FrameColorCombobox";
+import { frameMaterials } from "@/app/dashboard/(main)/glasses/components/FrameMaterialCombobox";
+import { frameShapes } from "@/app/dashboard/(main)/glasses/components/FrameShapeCombobox";
+import { lenseColors } from "@/app/dashboard/(main)/glasses/components/LenseColorCombobox";
 
-export type ProductType = "glasses" | "accessories";
+export type ProductType = "glasses" | "accessories" | "lenses";
 interface SharedProductProperties {
   id: number;
   title: string;
@@ -74,6 +74,7 @@ export type ProductVariant<T extends keyof VariantMap = keyof VariantMap> =
 type ProductMap = {
   glasses: Glasses;
   accessories: Accessory;
+  lenses: never;
 };
 
 export type Product<T extends ProductType = ProductType> = ProductMap[T];
