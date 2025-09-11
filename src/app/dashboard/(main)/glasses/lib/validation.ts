@@ -55,12 +55,12 @@ export const glassesFormSchema = z.object({
 
 export type GlassesFormSchemaType = z.infer<typeof glassesFormSchema>;
 
-export const productEditFormSchema = glassesFormSchema.extend({
+export const glassesEditFormSchema = glassesFormSchema.extend({
   published: z.boolean().default(true),
 });
 
-export type ProductEditFormSchemaType = z.infer<
-  typeof productEditFormSchema
+export type GlassesEditFormSchemaType = z.infer<
+  typeof glassesEditFormSchema
 > & { [key: string]: any };
 
 export const productsPageSearchParamsCache = createSearchParamsCache({
