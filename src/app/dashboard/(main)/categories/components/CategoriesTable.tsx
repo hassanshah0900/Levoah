@@ -6,19 +6,19 @@ import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCategories } from "../lib/queries";
+import { getBaseCategories } from "../lib/queries";
 import CategoriesTableActionBar from "./CategoriesTableActionBar";
 import { columns } from "./columns";
 import NewCategoryForm from "./NewCategoryForm";
 
 export default function CategoriesTable() {
-  const { data, status } = useQuery({
-    queryKey: ["categories"],
-    queryFn: getAllCategories,
+  const { data: categories, status } = useQuery({
+    queryKey: ["base categories"],
+    queryFn: getBaseCategories,
   });
 
   const { table } = useDataTable({
-    data: data ? data.categories : [],
+    data: categories ? categories : [],
     columns,
     initialState: {
       columnPinning: {
