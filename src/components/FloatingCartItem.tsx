@@ -1,5 +1,5 @@
+import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
 import QuantitySelector from "@/app/(app)/checkout/components/QuantitySelector";
-import ProductImage from "@/app/(app)/products/components/ProductImage";
 import {
   ShoppingCartItem,
   useShoppingCart,
