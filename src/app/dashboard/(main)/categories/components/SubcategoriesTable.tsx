@@ -16,7 +16,7 @@ export default function SubcategoriesTable() {
   const { slug } = useParams<{ slug: string }>();
 
   const { data: categories, status } = useQuery({
-    queryKey: ["subcategories", slug],
+    queryKey: ["categories", "sub", slug],
     queryFn: () => getSubcategories(slug),
   });
 

@@ -50,7 +50,7 @@ export default function NewSubcategoryForm({ parentCategorySlug }: Props) {
         id: "new_subcategory",
       });
       queryClient.invalidateQueries({
-        queryKey: ["subcategories", parentCategorySlug],
+        queryKey: ["categories", "sub", parentCategorySlug],
       });
       form.reset();
     },
