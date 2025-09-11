@@ -21,7 +21,15 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useClerk } from "@clerk/nextjs";
-import { ChevronDown, Glasses, LogOut, Package, Tags } from "lucide-react";
+import {
+  Badge,
+  ChevronDown,
+  Glasses,
+  LogOut,
+  Package,
+  Star,
+  Tags,
+} from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, PropsWithChildren } from "react";
 import { toast } from "sonner";
@@ -56,6 +64,14 @@ export default function DashboardSidebar() {
                   <Link href={"/dashboard/categories"}>
                     <Tags />
                     <span>Categories</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href={"/dashboard/brands"}>
+                    <Star />
+                    <span>Brands</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
