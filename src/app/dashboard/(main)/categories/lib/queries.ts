@@ -44,3 +44,17 @@ export async function getOtherCategories(categorySlug: "all" | string) {
 
   return { categories, count: categories.length };
 }
+
+export async function getSubcategories(slug: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .rpc("get_subcategories", {
+      parent_category_slug: slug,
+    })
+    .select("*");
+
+  if (error) throw error;
+
+  return data as Category[];
+}

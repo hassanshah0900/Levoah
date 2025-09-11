@@ -4,6 +4,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import CategoriesTableRowActions from "./CategoriesTableRowActions";
 import { Category } from "../lib/types";
 import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const columnHelper = createColumnHelper<Category>();
 
@@ -65,15 +68,8 @@ export const columns = [
       <DataTableColumnHeader column={column} title="Parent Category" />
     ),
     cell: ({ getValue, table }) => {
-      const parent_category = table
-        .getCoreRowModel()
-        .rows.map((row) => row.original)
-        .find((category) => category.id === getValue());
-      return (
-        <div className="ml-3">
-          {parent_category ? parent_category.name : "No Parent"}
-        </div>
-      );
+      const { slug } = useParams<{ slug: string }>();
+      return <div className="ml-3 capitalize">{slug ? slug : "No Parent"}</div>;
     },
   }),
   columnHelper.accessor("description", {
@@ -85,6 +81,20 @@ export const columns = [
       <div className="ml-3 line-clamp-3">{getValue()}</div>
     ),
     size: 250,
+  }),
+  columnHelper.display({
+    id: "Subcategories",
+    cell: ({ row }) => (
+      <Link
+        href={`/dashboard/categories/${row.original.slug}`}
+        className={buttonVariants({ variant: "link" })}
+      >
+        Subcategories
+      </Link>
+    ),
+    enableColumnFilter: false,
+    enableHiding: false,
+    enableSorting: false,
   }),
   columnHelper.display({
     id: "actions",

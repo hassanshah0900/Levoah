@@ -133,7 +133,7 @@ export default function EditCategoryForm({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 name="parent_category"
                 render={({ field }) => (
                   <FormItem>
@@ -144,7 +144,7 @@ export default function EditCategoryForm({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
                 name="description"
                 render={({ field }) => (

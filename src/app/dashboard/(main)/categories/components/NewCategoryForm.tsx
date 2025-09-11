@@ -18,18 +18,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { compressImage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { createCategory } from "../lib/actions";
 import { categorySchema, CategorySchemaType } from "../lib/validation";
-import CategoriesCombobox from "./CategoriesCombobox";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { compressImage } from "@/lib/utils";
 
-export default function NewCategoryForm() {
+interface Props {
+  onCreate: (category: CategorySchemaType) => void;
+}
+export default function NewCategoryForm({ onCreate }: Props) {
   const form = useForm({
     defaultValues: {
       name: "",
@@ -40,22 +39,6 @@ export default function NewCategoryForm() {
     resolver: zodResolver(categorySchema),
   });
 
-  const queryClient = useQueryClient();
-
-  const { mutate } = useMutation({
-    mutationFn: createCategory,
-    onSuccess() {
-      toast.success("New category successfully created.", {
-        id: "new_category",
-      });
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      form.reset();
-    },
-    onError(error) {
-      toast.error(error.message, { id: "new_category" });
-    },
-  });
-
   const [open, setOpen] = useState(false);
 
   async function onSubmit(category: CategorySchemaType) {
@@ -63,8 +46,8 @@ export default function NewCategoryForm() {
     if (image) {
       image = await compressImage(image);
     }
-    mutate({ ...category, image });
-    toast.loading("Creating new category...", { id: "new_category" });
+    form.reset();
+    onCreate({ ...category, image });
     setOpen(false);
   }
   return (
@@ -116,18 +99,6 @@ export default function NewCategoryForm() {
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
                       <SlugInput {...field} slugSourceFieldName="name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="parent_category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent Category</FormLabel>
-                    <FormControl>
-                      <CategoriesCombobox {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

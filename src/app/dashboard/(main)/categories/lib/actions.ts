@@ -74,3 +74,29 @@ export async function deleteSingleCategory(category: Category) {
     if (error) throw error;
   }
 }
+
+export async function createSubcategory({
+  slug,
+  category,
+}: {
+  slug: string;
+  category: CategorySchemaType;
+}) {
+  const supabase = await createClient();
+
+  let image_url = null;
+  if (category.image) {
+    const { data, error } = await supabase.storage
+      .from("Product Images")
+      .upload(crypto.randomUUID(), category.image);
+    if (error) throw error;
+    image_url = data.path;
+  }
+
+  const { error } = await supabase.rpc("create_subcategory", {
+    parent_category_slug: slug,
+    category: { ...category, image_url },
+  });
+
+  if (error) throw error;
+}
