@@ -120,7 +120,7 @@ export default function GlassesForm() {
             )}
           />
           <FormField
-            name="frame_shape"
+            name="attributes.frame_shape"
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>Frame Shape</FormLabel>
@@ -132,7 +132,7 @@ export default function GlassesForm() {
             )}
           />
           <FormField
-            name="frame_material"
+            name="attributes.frame_material"
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>Frame Material</FormLabel>
@@ -144,7 +144,7 @@ export default function GlassesForm() {
             )}
           />
           <FormField
-            name="bridge_and_nosepads"
+            name="attributes.bridge_and_nosepads"
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>Bridge & Nosepads</FormLabel>
