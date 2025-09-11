@@ -24,7 +24,7 @@ interface Props {
   invalid: boolean;
 }
 export default function FormCombobox({
-  align,
+  align = "start",
   notFoundMessage,
   searchInputPlaceholder,
   placeholder,
