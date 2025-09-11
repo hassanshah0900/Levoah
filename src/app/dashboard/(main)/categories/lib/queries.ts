@@ -45,6 +45,19 @@ export async function getOtherCategories(categorySlug: "all" | string) {
   return { categories, count: categories.length };
 }
 
+export async function getBaseCategories() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .is("parent_category", null);
+
+  if (error) throw error;
+
+  return data as Category[];
+}
+
 export async function getSubcategories(slug: string) {
   const supabase = await createClient();
 
