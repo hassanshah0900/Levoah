@@ -49,7 +49,7 @@ export default function NewCategoryForm() {
         id: "new_category",
       });
       queryClient.invalidateQueries({
-        queryKey: ["base categories"],
+        queryKey: ["categories", "base"],
       });
       form.reset();
     },
@@ -65,7 +65,6 @@ export default function NewCategoryForm() {
     if (image) {
       image = await compressImage(image);
     }
-    form.reset();
     mutate({ ...category, image });
     setOpen(false);
   }

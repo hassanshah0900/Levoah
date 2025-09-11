@@ -13,7 +13,7 @@ import NewCategoryForm from "./NewCategoryForm";
 
 export default function CategoriesTable() {
   const { data: categories, status } = useQuery({
-    queryKey: ["base categories"],
+    queryKey: ["categories", "base"],
     queryFn: getBaseCategories,
   });
 
