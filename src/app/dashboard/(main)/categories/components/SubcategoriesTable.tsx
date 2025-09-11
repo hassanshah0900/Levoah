@@ -5,37 +5,19 @@ import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableCo
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { toast } from "sonner";
-import { createSubcategory } from "../lib/actions";
 import { getSubcategories } from "../lib/queries";
-import { CategorySchemaType } from "../lib/validation";
 import CategoriesTableActionBar from "./CategoriesTableActionBar";
-import NewCategoryForm from "./NewCategoryForm";
+import NewSubcategoryForm from "./NewSubcategoryForm";
 import { subcategoriesColumns } from "./subcategoriesColumns";
 
 export default function SubcategoriesTable() {
   const { slug } = useParams<{ slug: string }>();
 
-  const queryClient = useQueryClient();
-
   const { data: categories, status } = useQuery({
     queryKey: ["subcategories", slug],
     queryFn: () => getSubcategories(slug),
-  });
-
-  const { mutate } = useMutation({
-    mutationFn: createSubcategory,
-    onSuccess() {
-      toast.success("New category successfully created.", {
-        id: "new_subcategory",
-      });
-      queryClient.invalidateQueries({ queryKey: ["subcategories", slug] });
-    },
-    onError(error) {
-      toast.error(error.message, { id: "new_subcategory" });
-    },
   });
 
   const { table } = useDataTable({
@@ -47,11 +29,6 @@ export default function SubcategoriesTable() {
       },
     },
   });
-
-  function handleCreate(category: CategorySchemaType) {
-    mutate({ slug, category });
-    toast.loading("Creating new category...", { id: "new_subcategory" });
-  }
 
   if (status === "error") return <div>An Error Occured.</div>;
 
@@ -77,7 +54,7 @@ export default function SubcategoriesTable() {
             className="hidden @lg:flex"
             align="end"
           />
-          <NewCategoryForm onCreate={handleCreate} />
+          <NewSubcategoryForm parentCategorySlug={slug} />
         </div>
       </div>
       <DataTable table={table}></DataTable>
