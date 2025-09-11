@@ -67,11 +67,20 @@ export const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Parent Category" />
     ),
-    cell: ({ getValue, table }) => {
+    cell: () => {
       const { slug } = useParams<{ slug: string }>();
       return <div className="ml-3 capitalize">{slug ? slug : "No Parent"}</div>;
     },
   }),
+  columnHelper.accessor("product_type", {
+    id: "Product Type",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Product Type" />
+    ),
+    cell: ({ getValue }) => <div className="ml-3 capitalize">{getValue()}</div>,
+    size: 250,
+  }),
+
   columnHelper.accessor("description", {
     id: "Description",
     header: ({ column }) => (
