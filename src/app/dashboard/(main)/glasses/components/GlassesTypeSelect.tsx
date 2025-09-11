@@ -1,7 +1,7 @@
-import { getCategoriesByProductType } from "@/app/(app)/[...categories]/lib/queries";
 import FormSelect from "@/components/FormSelect";
 import { useQuery } from "@tanstack/react-query";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
+import { getCategoriesByProductType } from "../lib/queries";
 
 export default function GlassesTypeSelect({
   ...props
