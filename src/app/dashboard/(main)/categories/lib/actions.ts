@@ -16,12 +16,11 @@ export async function createCategory(category: CategorySchemaType) {
     image_url = data.path;
   }
 
-  const { name, slug, description, parent_category, product_type } = category;
+  const { name, slug, description, product_type } = category;
   const { error } = await supabase.from("categories").insert({
     name,
     slug,
     description,
-    parent_category,
     image_url,
     product_type,
   });
