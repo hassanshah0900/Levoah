@@ -20,18 +20,19 @@ import {
   FormMessage,
 } from "../../../../../components/ui/form";
 import { Input } from "../../../../../components/ui/input";
-import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
-import { createProduct } from "../lib/actions";
-import { productFormSchema, ProductFormSchemaType } from "../lib/validation";
+import { createGlasses } from "../lib/actions";
+import { glassesFormSchema, GlassesFormSchemaType } from "../lib/validation";
+import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
-import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
+import GlassesTypeSelect from "./GlassesTypeSelect";
+import CategoriesMultiselect from "./CategoriesMultiselect";
 
 export default function GlassesForm() {
   const [isPublished, setIsPublished] = useState(true);
 
   const { mutate } = useMutation({
-    mutationFn: createProduct,
+    mutationFn: createGlasses,
     onSuccess() {
       toast.success("Successfully created Product", { id: "new_product" });
       form.reset();
@@ -45,13 +46,15 @@ export default function GlassesForm() {
     defaultValues: {
       title: "",
       slug: "",
-      category_id: "",
       description: "",
+      categories: [],
     },
-    resolver: zodResolver(productFormSchema),
+    resolver: zodResolver(glassesFormSchema),
   });
 
-  function onSubmit(data: ProductFormSchemaType) {
+  console.log(form.formState.errors);
+
+  function onSubmit(data: GlassesFormSchemaType) {
     const product = { ...data, published: isPublished };
     mutate(product);
     toast.loading("Creating product...", { id: "new_product" });
@@ -105,12 +108,12 @@ export default function GlassesForm() {
             )}
           />
           <FormField
-            name="category_id"
-            render={({ field }) => (
+            name="type"
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Category</FormLabel>
+                <FormLabel>Type</FormLabel>
                 <FormControl>
-                  <CategoriesCombobox {...field} placeholder="No Category" />
+                  <GlassesTypeSelect {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -144,9 +147,21 @@ export default function GlassesForm() {
             name="bridge_and_nosepads"
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Frame Material</FormLabel>
+                <FormLabel>Bridge & Nosepads</FormLabel>
                 <FormControl>
                   <BridgeAndNosepadsSelect {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="categories"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Categories</FormLabel>
+                <FormControl>
+                  <CategoriesMultiselect {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
