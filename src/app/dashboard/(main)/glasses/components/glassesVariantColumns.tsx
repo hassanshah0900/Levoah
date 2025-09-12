@@ -3,31 +3,9 @@ import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader"
 import { Checkbox } from "@/components/ui/checkbox";
 import { ProductType, ProductVariant } from "@/types/products.types";
 import { createColumnHelper } from "@tanstack/react-table";
-import { AttributeColumnType, glassesColumns } from "../lib/data";
-import { parseProductAttribute } from "../lib/utils";
 import GlassesVariantTableRowActions from "./GlassesVariantTableRowActions";
 
-const columnHelper = createColumnHelper<ProductVariant>();
-
-const productTypeAttributeMap = {
-  glasses: glassesColumns,
-  accessories: [],
-};
-
-function makeAttributesColumns(keys: AttributeColumnType[]) {
-  return keys.map((key) => {
-    return columnHelper.accessor(`attributes.${key.propertyName}`, {
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title={key.label} />
-      ),
-      cell: ({ getValue }) => (
-        <div className="ml-3">
-          {parseProductAttribute(getValue() as string).value}
-        </div>
-      ),
-    });
-  });
-}
+const columnHelper = createColumnHelper<ProductVariant<"glasses">>();
 
 export function createGlassesVariantColumns(productType: ProductType) {
   const columns = [
@@ -75,7 +53,46 @@ export function createGlassesVariantColumns(productType: ProductType) {
       ),
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
     }),
-    ...makeAttributesColumns(productTypeAttributeMap[productType]),
+    columnHelper.accessor("quantity_in_stock", {
+      id: "Stock",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Stock" column={column} />
+      ),
+      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+    }),
+    columnHelper.accessor("attributes.frame_color", {
+      id: "Frame Color",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Frame Color" column={column} />
+      ),
+      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      enableSorting: false,
+    }),
+    columnHelper.accessor("attributes.lense_color", {
+      id: "Lense Color",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Lense Color" column={column} />
+      ),
+      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      enableSorting: false,
+    }),
+    columnHelper.accessor("attributes.temple_length", {
+      id: "Temple Length",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Temple Length" column={column} />
+      ),
+      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      enableSorting: false,
+    }),
+    columnHelper.accessor("attributes.bridge_width", {
+      id: "Bridge Width",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Bridge Width" column={column} />
+      ),
+      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      enableSorting: false,
+    }),
+
     columnHelper.display({
       id: "actions",
       cell: ({ row }) => <GlassesVariantTableRowActions row={row} />,
