@@ -13,14 +13,13 @@ export default async function ProductsPage({
   const { pageIndex, pageSize, sorting, title } =
     await productsPageSearchParamsCache.parse(searchParams);
 
-  const { products, count } = await getAllProducts({
+  const { glasses, count } = await getAllProducts({
     filters: { pageIndex, pageSize, sorting, title },
   });
-  console.log(products);
 
   return (
     <div>
-      <GlassesTable products={products} rowCount={count ?? 0} />
+      <GlassesTable glasses={glasses} rowCount={count ?? 0} />
     </div>
   );
 }
