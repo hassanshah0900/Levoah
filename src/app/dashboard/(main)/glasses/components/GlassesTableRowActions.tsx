@@ -59,7 +59,7 @@ export default function GlassesTableRowActions({ row }: Props) {
         onOpenChange={() => setOpenState(null)}
       />
       <GlassesEditForm
-        product={row.original as Product<"glasses">}
+        glasses={row.original as Product<"glasses">}
         open={openState === "EDIT"}
         onOpenChange={() => setOpenState(null)}
       />
