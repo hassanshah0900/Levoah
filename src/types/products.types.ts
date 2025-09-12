@@ -6,14 +6,16 @@ import { frameShapes } from "@/app/dashboard/(main)/glasses/components/FrameShap
 import { lenseColors } from "@/app/dashboard/(main)/glasses/components/LenseColorCombobox";
 
 export type ProductType = "glasses" | "accessories" | "lenses";
-interface SharedProductProperties {
+interface SharedProductProperties<T extends Record<string, any>> {
   id: number;
   title: string;
   slug: string;
   description?: string;
   published: boolean;
-  category: Pick<Category, "id" | "name">;
+  type: Category;
+  categories: Category[];
   product_type: ProductType;
+  attributes: T;
 }
 interface SharedProductVariantProperties<T> {
   id: number;
@@ -27,10 +29,12 @@ interface SharedProductVariantProperties<T> {
 type FrameMaterial = (typeof frameMaterials)[number];
 type FrameShape = (typeof frameShapes)[number];
 type BridgeAndNosepads = (typeof bridgeAndNosepads)[number];
-interface Glasses extends SharedProductProperties {
-  frame_shape: FrameShape;
-  frame_material: FrameMaterial;
-  bridge_and_nosepads: BridgeAndNosepads;
+interface Glasses
+  extends SharedProductProperties<{
+    frame_shape: FrameShape;
+    frame_material: FrameMaterial;
+    bridge_and_nosepads: BridgeAndNosepads;
+  }> {
   product_type: "glasses";
   variants: GlassesVariant[];
 }
@@ -46,7 +50,7 @@ type GlassesVariant = SharedProductVariantProperties<{
   temple_length: number;
 }>;
 
-interface Accessory extends SharedProductProperties {
+interface Accessory extends SharedProductProperties<{}> {
   product_type: "accessories";
   variants: AccessoryVariant[];
 }
