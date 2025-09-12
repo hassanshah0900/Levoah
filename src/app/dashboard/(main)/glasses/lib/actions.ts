@@ -25,91 +25,22 @@ export async function createGlasses(
   if (error) throw error;
 }
 
-export async function addProductVariant(
-  productVariant: ProductVariantSchemaType & { product_id: number }
+export async function editGlasses(
+  glasses: GlassesEditFormSchemaType & { id: number }
 ) {
   const supabase = await createClient();
 
-  const { data: variant, error } = await supabase
-    .from("product_variants")
-    .insert({
-      price: productVariant.price,
-      quantity_in_stock: productVariant.quantity_in_stock,
-      product_id: productVariant.product_id,
-      attributes: {
-        frame_color: productVariant.frame_color,
-        lense_color: productVariant.lense_color,
-      },
-    })
-    .select("id")
-    .single();
+  const p_glasses = {
+    ...glasses,
+    categories: [...glasses.categories, glasses.type],
+  };
 
-  if (error) throw error;
-
-  const { data, error: storageError } = await supabase.storage
-    .from("Product Images")
-    .upload(crypto.randomUUID(), productVariant.image);
-  if (storageError) throw storageError;
-
-  const { error: imageError } = await supabase.from("images").insert({
-    product_id: productVariant.product_id,
-    variant_id: variant.id,
-    path: data.path,
+  const { error } = await supabase.rpc("update_glasses", {
+    p_glasses,
   });
-
-  if (imageError) throw imageError;
-}
-
-export async function editProductVariant(
-  productVariant: ProductVariant & Pick<ProductVariantEditSchemaType, "image">
-) {
-  const supabase = await createClient();
-
-  let image_url = productVariant.image_url;
-  if (productVariant.image) {
-    const { data, error } = await supabase.storage
-      .from("Product Images")
-      .upload(crypto.randomUUID(), productVariant.image);
-    if (error) throw error;
-
-    image_url = data.path;
+  if (error) {
+    throw error;
   }
-
-  const { error } = await supabase.rpc("update_product_variant", {
-    variant: {
-      ...productVariant,
-      image_url,
-    },
-  });
-  if (error) throw error;
-
-  if (productVariant.image) {
-    const { error } = await supabase.storage
-      .from("Product Images")
-      .remove([productVariant.image_url]);
-    if (error) throw error;
-  }
-}
-
-export async function deleteSingleProductVariant(
-  productVariant: ProductVariant
-) {
-  const supabase = await createClient();
-
-  const { error: storageError } = await supabase.storage
-    .from("Product Images")
-    .remove([productVariant.image_url]);
-  if (storageError) throw storageError;
-
-  const { data, error } = await supabase
-    .from("product_variants")
-    .delete()
-    .eq("id", productVariant.id)
-    .eq("product_id", productVariant.product_id)
-    .select("id");
-  if (error) throw error;
-
-  return data.map((item) => item.id as ProductVariant["id"]);
 }
 
 export async function deleteSingleProduct(productId: number) {
@@ -136,27 +67,96 @@ export async function deleteMultipleProducts(productIds: Product["id"][]) {
   if (error) throw error;
 }
 
-export async function editGlasses(
-  glasses: GlassesEditFormSchemaType & { id: number }
+export async function createGlassesVariant(
+  glassesVariant: ProductVariantSchemaType & { product_id: number }
 ) {
   const supabase = await createClient();
 
-  const p_glasses = {
-    ...glasses,
-    categories: [...glasses.categories, glasses.type],
-  };
+  const { data: variant, error } = await supabase
+    .from("product_variants")
+    .insert({
+      price: glassesVariant.price,
+      quantity_in_stock: glassesVariant.quantity_in_stock,
+      product_id: glassesVariant.product_id,
+      attributes: {
+        frame_color: glassesVariant.frame_color,
+        lense_color: glassesVariant.lense_color,
+      },
+    })
+    .select("id")
+    .single();
 
-  const { error } = await supabase.rpc("update_glasses", {
-    p_glasses,
+  if (error) throw error;
+
+  const { data, error: storageError } = await supabase.storage
+    .from("Product Images")
+    .upload(crypto.randomUUID(), glassesVariant.image);
+  if (storageError) throw storageError;
+
+  const { error: imageError } = await supabase.from("images").insert({
+    product_id: glassesVariant.product_id,
+    variant_id: variant.id,
+    path: data.path,
   });
-  if (error) {
-    console.log(error.code);
-    throw error;
+
+  if (imageError) throw imageError;
+}
+
+export async function editGlassesVariant(
+  glassesVariant: ProductVariant<"glasses"> &
+    Pick<ProductVariantEditSchemaType, "image">
+) {
+  const supabase = await createClient();
+
+  let image_url = glassesVariant.image_url;
+  if (glassesVariant.image) {
+    const { data, error } = await supabase.storage
+      .from("Product Images")
+      .upload(crypto.randomUUID(), glassesVariant.image);
+    if (error) throw error;
+
+    image_url = data.path;
+  }
+
+  const { error } = await supabase.rpc("update_product_variant", {
+    variant: {
+      ...glassesVariant,
+      image_url,
+    },
+  });
+  if (error) throw error;
+
+  if (glassesVariant.image) {
+    const { error } = await supabase.storage
+      .from("Product Images")
+      .remove([glassesVariant.image_url]);
+    if (error) throw error;
   }
 }
 
-export async function changeProductsPublishedStatus(
-  productIds: Product["id"][],
+export async function deleteSingleGlassesVariant(
+  glassesVariant: ProductVariant<"glasses">
+) {
+  const supabase = await createClient();
+
+  const { error: storageError } = await supabase.storage
+    .from("Product Images")
+    .remove([glassesVariant.image_url]);
+  if (storageError) throw storageError;
+
+  const { data, error } = await supabase
+    .from("product_variants")
+    .delete()
+    .eq("id", glassesVariant.id)
+    .eq("product_id", glassesVariant.product_id)
+    .select("id");
+  if (error) throw error;
+
+  return data.map((item) => item.id as ProductVariant["id"]);
+}
+
+export async function changeGlassesPublishedStatus(
+  glassesIds: Product<"glasses">["id"][],
   published: boolean
 ) {
   const supabase = await createClient();
@@ -164,7 +164,7 @@ export async function changeProductsPublishedStatus(
   const { error } = await supabase
     .from("products")
     .update({ published })
-    .in("id", [productIds]);
+    .in("id", [glassesIds]);
 
   if (error) throw error;
 }

@@ -23,7 +23,7 @@ import {
   productVariantEditSchema,
   ProductVariantEditSchemaType,
 } from "../lib/validation";
-import { editProductVariant } from "../lib/actions";
+import { editGlassesVariant } from "../lib/actions";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { compressImage, getImagePublicUrl } from "@/lib/utils";
@@ -47,7 +47,7 @@ export default function GlassesVariantEditForm({
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: editProductVariant,
+    mutationFn: editGlassesVariant,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: ["product_variants", productVariant.product_id],

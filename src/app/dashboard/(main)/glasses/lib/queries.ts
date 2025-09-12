@@ -39,7 +39,7 @@ export async function getAllProducts({
   return { glasses: data, count };
 }
 
-export async function getAllProductVariants({
+export async function getAllGlassesVariants({
   productId,
 }: {
   productId: number;
@@ -53,7 +53,7 @@ export async function getAllProductVariants({
 
   if (error) throw error;
 
-  return { productVariants: data as ProductVariant[], count };
+  return { productVariants: data as ProductVariant<"glasses">[], count };
 }
 
 export async function getCategoriesByProductType(

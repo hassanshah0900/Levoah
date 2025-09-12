@@ -5,7 +5,7 @@ import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableCo
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
 import { useQuery } from "@tanstack/react-query";
-import { getAllProductVariants } from "../lib/queries";
+import { getAllGlassesVariants } from "../lib/queries";
 import { createGlassesVariantColumns } from "./glassesVariantColumns";
 import GlassesVariantForm from "./GlassesVariantForm";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ export default function GlassesVariantsTable({ productId }: Props) {
 
   const { data } = useQuery({
     queryKey: ["product_variants", productId],
-    queryFn: () => getAllProductVariants({ productId }),
+    queryFn: () => getAllGlassesVariants({ productId }),
   });
 
   const { table } = useDataTable({

@@ -13,7 +13,7 @@ import { CircleCheckBig, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  changeProductsPublishedStatus,
+  changeGlassesPublishedStatus,
   deleteMultipleProducts,
 } from "../lib/actions";
 import { Product } from "@/types/products.types";
@@ -45,7 +45,7 @@ export default function GlassesTableActionBar({ table }: Props) {
       .getFilteredSelectedRowModel()
       .rows.map((row) => row.original.id);
 
-    toast.promise(changeProductsPublishedStatus(productIds, published), {
+    toast.promise(changeGlassesPublishedStatus(productIds, published), {
       loading: "Changing status...",
       success: () => {
         router.refresh();

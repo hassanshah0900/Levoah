@@ -24,7 +24,7 @@ import {
   ProductVariantSchemaType,
 } from "../lib/validation";
 import { toast } from "sonner";
-import { addProductVariant } from "../lib/actions";
+import { createGlassesVariant } from "../lib/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { compressImage } from "@/lib/utils";
@@ -43,7 +43,7 @@ export default function GlassesVariantForm({ productId }: Props) {
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: addProductVariant,
+    mutationFn: createGlassesVariant,
     onSuccess() {
       toast.success("Success", { id: "new_variant" });
       queryClient.invalidateQueries({

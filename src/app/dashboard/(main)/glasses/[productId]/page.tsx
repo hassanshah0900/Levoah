@@ -6,7 +6,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import GlassesVariantsTable from "../components/GlassesVariantsTable";
-import { getAllProductVariants } from "../lib/queries";
+import { getAllGlassesVariants } from "../lib/queries";
 
 export default async function DashboardProductPage({
   params,
@@ -20,7 +20,7 @@ export default async function DashboardProductPage({
 
   await queryClient.prefetchQuery({
     queryKey: ["product_variants", productId],
-    queryFn: () => getAllProductVariants({ productId }),
+    queryFn: () => getAllGlassesVariants({ productId }),
   });
 
   const state = dehydrate(queryClient);

@@ -13,17 +13,17 @@ import { Row } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteSingleProductVariant } from "../lib/actions";
+import { deleteSingleGlassesVariant } from "../lib/actions";
 import GlassesVariantEditForm from "./GlassesVariantEditForm";
 
 interface Props {
-  row: Row<ProductVariant>;
+  row: Row<ProductVariant<"glasses">>;
 }
 export default function GlassesVariantTableRowActions({ row }: Props) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: deleteSingleProductVariant,
+    mutationFn: deleteSingleGlassesVariant,
     onSuccess: () => {
       toast.success("Successfully delete product variant", {
         id: "delete_variant",
