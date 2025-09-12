@@ -13,13 +13,13 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Product } from "@/types/products.types";
 
 interface Props {
-  products: Product[];
+  glasses: Product<"glasses">[];
   rowCount: number;
 }
-export default function GlassesTable({ products, rowCount }: Props) {
-  const { table } = useDataTable<Product>({
+export default function GlassesTable({ glasses, rowCount }: Props) {
+  const { table } = useDataTable({
     columns,
-    data: products,
+    data: glasses,
     rowCount,
     initialState: {
       columnPinning: {
