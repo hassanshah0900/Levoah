@@ -1,8 +1,9 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
-import { ProductVariant } from "@/types/products.types";
+import { ProductType, ProductVariant } from "@/types/products.types";
 import { SortingState } from "@tanstack/react-table";
+import { Category } from "../../categories/lib/types";
 
 interface GetAllProductsProps {
   filters: {
@@ -18,9 +19,7 @@ export async function getAllProducts({
 }: GetAllProductsProps) {
   const supabase = await createClient();
 
-  let filterBuilder = supabase
-    .from("products_view")
-    .select("*", { count: "exact" });
+  let filterBuilder = supabase.from("glasses").select("*", { count: "exact" });
 
   if (title) filterBuilder = filterBuilder.ilike("title", `%${title}%`);
 
@@ -37,7 +36,7 @@ export async function getAllProducts({
   const { data, error, count } = await filterBuilder;
 
   if (error) throw error;
-  return { products: data, count };
+  return { glasses: data, count };
 }
 
 export async function getAllProductVariants({
@@ -55,4 +54,39 @@ export async function getAllProductVariants({
   if (error) throw error;
 
   return { productVariants: data as ProductVariant[], count };
+}
+
+export async function getCategoriesByProductType(
+  productType: ProductType,
+  onlyBaseCategories?: boolean
+) {
+  const supabase = await createClient();
+
+  let queryBuilder = supabase
+    .from("categories")
+    .select("*")
+    .eq("product_type", productType);
+
+  queryBuilder = onlyBaseCategories
+    ? queryBuilder.is("parent_category", null)
+    : queryBuilder;
+
+  const { data, error } = await queryBuilder;
+
+  if (error) throw error;
+
+  return data as Category[];
+}
+
+export async function getChildCategories(parentCategoryId: number) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("parent_category", parentCategoryId);
+
+  if (error) throw error;
+
+  return data as Category[];
 }
