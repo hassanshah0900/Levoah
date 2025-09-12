@@ -13,6 +13,7 @@ import {
   ControllerFieldState,
   ControllerRenderProps,
   useFormContext,
+  useWatch,
 } from "react-hook-form";
 import { getChildCategories } from "../lib/queries";
 import {
@@ -23,7 +24,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-
+import { useFormState } from "react-hook-form";
 interface Props
   extends ControllerRenderProps,
     Pick<ControllerFieldState, "invalid"> {
@@ -35,8 +36,10 @@ export default function CategoriesMultiselect({
   onChange,
   invalid,
 }: Props) {
-  const { watch } = useFormContext();
-  const parentCategoryId = watch("type");
+  const { isDirty } = useFormState({ name: "type" });
+  const parentCategoryId = useWatch({
+    name: "type",
+  });
 
   const { data: categories, isPending } = useQuery({
     queryKey: ["categories", "children", parentCategoryId],
@@ -90,7 +93,7 @@ export default function CategoriesMultiselect({
   }, [selectedIds]);
 
   useEffect(() => {
-    setSelectedIds([]);
+    isDirty && setSelectedIds([]);
   }, [parentCategoryId]);
   return (
     <Popover>
