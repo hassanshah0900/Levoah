@@ -141,8 +141,13 @@ export async function editGlasses(
 ) {
   const supabase = await createClient();
 
+  const p_glasses = {
+    ...glasses,
+    categories: [...glasses.categories, glasses.type],
+  };
+
   const { error } = await supabase.rpc("update_glasses", {
-    product: glasses,
+    p_glasses,
   });
   if (error) {
     console.log(error.code);
