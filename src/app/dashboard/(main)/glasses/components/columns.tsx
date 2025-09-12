@@ -7,7 +7,7 @@ import Link from "next/link";
 import GlassesTableRowActions from "./GlassesTableRowActions";
 import { Product } from "@/types/products.types";
 
-const columnHelper = createColumnHelper<Product>();
+const columnHelper = createColumnHelper<Product<"glasses">>();
 
 export const columns = [
   columnHelper.display({
@@ -70,12 +70,58 @@ export const columns = [
     ),
     enableSorting: false,
   }),
-  columnHelper.accessor("category", {
-    id: "Category",
+
+  columnHelper.accessor("attributes.frame_shape", {
+    id: "Frame Shape",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
+      <DataTableColumnHeader column={column} title="Frame Shape" />
     ),
-    cell: ({ getValue }) => <div className="ml-3">{getValue().name}</div>,
+    cell: ({ getValue }) => (
+      <Badge className="ml-3">{getValue() ?? "No Value"}</Badge>
+    ),
+    enableSorting: false,
+  }),
+  columnHelper.accessor("attributes.frame_material", {
+    id: "Frame Material",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Frame Material" />
+    ),
+    cell: ({ getValue }) => (
+      <Badge className="ml-3">{getValue() ?? "No Value"}</Badge>
+    ),
+    enableSorting: false,
+  }),
+  columnHelper.accessor("attributes.bridge_and_nosepads", {
+    id: "Bridge & Nosepads",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Bridge & Nosepads" />
+    ),
+    cell: ({ getValue }) => (
+      <Badge className="ml-3">{getValue() ?? "No Value"}</Badge>
+    ),
+    enableSorting: false,
+  }),
+  columnHelper.accessor("type", {
+    id: "Type",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" />
+    ),
+    cell: ({ getValue }) => <div className="ml-3">{getValue()?.name}</div>,
+  }),
+  columnHelper.accessor("categories", {
+    id: "categories",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Categories" />
+    ),
+    cell: ({ getValue }) => (
+      <div className="ml-3 space-y-1">
+        {getValue().map((category) => (
+          <Badge variant={"secondary"} key={category.id}>
+            {category.name}
+          </Badge>
+        ))}
+      </div>
+    ),
   }),
   columnHelper.display({
     id: "variants_link",
