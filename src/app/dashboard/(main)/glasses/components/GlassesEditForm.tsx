@@ -26,45 +26,43 @@ import {
   FormMessage,
 } from "../../../../../components/ui/form";
 import { Input } from "../../../../../components/ui/input";
-import CategoriesCombobox from "../../categories/components/CategoriesCombobox";
-import { editProduct } from "../lib/actions";
+import { editGlasses } from "../lib/actions";
 import {
-  productEditFormSchema,
-  ProductEditFormSchemaType,
+  glassesEditFormSchema,
+  GlassesEditFormSchemaType,
 } from "../lib/validation";
+import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
+import CategoriesMultiselect from "./CategoriesMultiselect";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
-import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
+import GlassesTypeSelect from "./GlassesTypeSelect";
 
 interface Props {
-  product: Product<"glasses">;
+  glasses: Product<"glasses">;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 export default function GlassesEditForm({
-  product,
+  glasses,
   open,
   onOpenChange,
 }: Props) {
   const form = useForm({
     defaultValues: {
-      title: product.title,
-      slug: product.slug,
-      description: product.description ?? "",
-      published: product.published,
-      category_id: product.category.id,
-      bridge_and_nosepads: product.bridge_and_nosepads,
-      frame_material: product.frame_material,
-      frame_shape: product.frame_shape,
+      title: glasses.title,
+      slug: glasses.slug,
+      description: glasses.description ?? "",
+      published: glasses.published,
+      attributes: glasses.attributes,
+      type: glasses.type?.id ?? "",
+      categories: glasses.categories.map((category) => category.id) ?? [],
     },
-    resolver: zodResolver(productEditFormSchema),
+    resolver: zodResolver(glassesEditFormSchema),
   });
-
   const router = useRouter();
-
-  async function onSubmit(edittedProduct: ProductEditFormSchemaType) {
-    toast.promise(editProduct({ ...product, ...edittedProduct }), {
-      loading: "Editing product...",
+  async function onSubmit(edittedGlasses: GlassesEditFormSchemaType) {
+    toast.promise(editGlasses({ ...glasses, ...edittedGlasses }), {
+      loading: "Editing glasses...",
       success: () => {
         router.refresh();
         return "Successfully edited.";
@@ -79,13 +77,13 @@ export default function GlassesEditForm({
       <DrawerContent className="max-h-screen overflow-y-auto overflow-x-hidden">
         <DrawerHeader>
           <DrawerTitle className="flex justify-between items-center">
-            Edit Product{" "}
+            Edit Glasses{" "}
             <DrawerClose>
               <X className="text-xl" />
             </DrawerClose>
           </DrawerTitle>
           <DrawerDescription>
-            This is the product editing area
+            This is the glasses editing area
           </DrawerDescription>
         </DrawerHeader>
         <form
@@ -118,19 +116,7 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="category_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <CategoriesCombobox {...field} placeholder="No Category" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="frame_shape"
+              name="attributes.frame_shape"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Shape</FormLabel>
@@ -142,7 +128,7 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="frame_material"
+              name="attributes.frame_material"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Material</FormLabel>
@@ -154,12 +140,36 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="bridge_and_nosepads"
+              name="attributes.bridge_and_nosepads"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Bridge & Nosepads</FormLabel>
                   <FormControl>
                     <BridgeAndNosepadsSelect {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="type"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <GlassesTypeSelect {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="categories"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Categories</FormLabel>
+                  <FormControl>
+                    <CategoriesMultiselect {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -177,7 +187,6 @@ export default function GlassesEditForm({
                 </FormItem>
               )}
             />
-
             <Button type="submit" className="w-full">
               Edit
             </Button>
