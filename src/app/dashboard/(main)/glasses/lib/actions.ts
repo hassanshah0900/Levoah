@@ -5,8 +5,7 @@ import { Product, ProductVariant } from "@/types/products.types";
 import {
   GlassesEditFormSchemaType,
   GlassesFormSchemaType,
-  ProductVariantEditSchemaType,
-  ProductVariantSchemaType,
+  GlassesVariantSchemaType,
 } from "./validation";
 
 export async function createGlasses(
@@ -68,7 +67,7 @@ export async function deleteMultipleProducts(productIds: Product["id"][]) {
 }
 
 export async function createGlassesVariant(
-  glassesVariant: ProductVariantSchemaType & { product_id: number }
+  glassesVariant: GlassesVariantSchemaType & { product_id: number }
 ) {
   const supabase = await createClient();
 
@@ -104,7 +103,7 @@ export async function createGlassesVariant(
 
 export async function editGlassesVariant(
   glassesVariant: ProductVariant<"glasses"> &
-    Pick<ProductVariantEditSchemaType, "image">
+    Pick<GlassesEditFormSchemaType, "image">
 ) {
   const supabase = await createClient();
 
