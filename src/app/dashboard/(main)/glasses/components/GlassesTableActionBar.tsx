@@ -20,7 +20,7 @@ import { Product } from "@/types/products.types";
 import DeleteDialog from "@/components/DeleteDialog";
 
 interface Props {
-  table: Table<Product>;
+  table: Table<Product<"glasses">>;
 }
 export default function GlassesTableActionBar({ table }: Props) {
   const router = useRouter();
