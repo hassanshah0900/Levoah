@@ -30,7 +30,7 @@ export default function ProductCard({ product }: Props) {
   });
 
   return (
-    <Link href={`/products/${product.product_type}/${product.slug}`}>
+    <Link href={`/products/${product.slug}`}>
       <div className="rounded-xs">
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
