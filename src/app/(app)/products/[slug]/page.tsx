@@ -2,12 +2,12 @@ export const runtime = "edge";
 
 import Container from "@/components/Container";
 import { Suspense } from "react";
-import RelatedProducts from "../../../[...categories]/components/RelatedProducts";
-import RelatedProductsSectionSkeleton from "../../../[...categories]/components/RelatedProductsSkeleton";
-import SingleProduct from "../../../[...categories]/components/SingleProduct";
-import SingleProductPageSkeleton from "../../../[...categories]/components/SingleProductSkeleton";
-import { getProductWithVariants } from "../../../[...categories]/lib/queries";
 import { getRelatedProductsWithVariants } from "./lib/queries";
+import SingleProduct from "../../[...categories]/components/SingleProduct";
+import RelatedProducts from "../../[...categories]/components/RelatedProducts";
+import { getProductWithVariants } from "../../[...categories]/lib/queries";
+import RelatedProductsSectionSkeleton from "../../[...categories]/components/RelatedProductsSkeleton";
+import SingleProductSkeleton from "../../[...categories]/components/SingleProductSkeleton";
 
 export default async function ProductPage({
   params,
@@ -18,7 +18,7 @@ export default async function ProductPage({
 
   return (
     <Container>
-      <Suspense fallback={<SingleProductPageSkeleton />}>
+      <Suspense fallback={<SingleProductSkeleton />}>
         <SingleProductServer slug={slug} />
       </Suspense>
       <Suspense fallback={<RelatedProductsSectionSkeleton />}>
