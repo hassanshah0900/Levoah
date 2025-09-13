@@ -1,20 +1,18 @@
 "use client";
 
-import { Hamburger, Menu, Search, ShoppingBag } from "lucide-react";
-import Link from "next/link";
-import Container from "./Container";
+import { getSubcategories } from "@/app/dashboard/(main)/categories/lib/queries";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { cn } from "@/lib/utils";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "./ui/drawer";
+import { useQuery } from "@tanstack/react-query";
+import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import levoah from "../../public/images/Levoah.png";
+import Container from "./Container";
+import MobileNavbar from "./MobileNavbar";
+import NavbarHoverItem from "./NavbarHoverItem";
+import NavbarSubmenuItem from "./NavbarSubmenuItem";
 
 export default function Navbar() {
   const { cartItems, setIsOpen } = useShoppingCart();
@@ -27,32 +25,9 @@ export default function Navbar() {
             <Image src={levoah} alt="Logo" />
           </div>
           <nav className="justify-center items-center gap-4 hidden sm:flex">
-            <Link
-              href={""}
-              className="font-semibold hover:text-secondary transition-all"
-            >
-              Home
-            </Link>
-            <Link
-              href={""}
-              className="font-semibold hover:text-secondary transition-all"
-            >
-              Shop
-            </Link>
-            <Link
-              href={""}
-              className="font-semibold hover:text-secondary transition-all"
-            >
-              Categories
-            </Link>
-            <Link
-              href={""}
-              className="font-semibold hover:text-secondary transition-all"
-            >
-              About
-            </Link>
+            <NavbarCategoryItem label="Sunglasses" slug="sunglasses" />
+            <NavbarCategoryItem label="Eyeglasses" slug="eyeglasses" />
           </nav>
-
           <div className="space-x-4 flex justify-center items-center">
             <button
               className="relative text-secondary [&_svg]:size-5 cursor-pointer"
@@ -76,38 +51,23 @@ export default function Navbar() {
   );
 }
 
-function MobileNavbar() {
+function NavbarCategoryItem({ slug, label }: { slug: string; label: string }) {
+  const [open, setOpen] = useState(false);
+  const { data: categories } = useQuery({
+    queryKey: ["categories", "sub", slug],
+    queryFn: () => getSubcategories(slug),
+  });
+
   return (
-    <div className="sm:hidden flex justify-center items-center">
-      <Drawer direction="left">
-        <DrawerTrigger aria-label="Open menu">
-          <Menu />
-        </DrawerTrigger>
-        <DrawerContent className="bg-primary">
-          <DrawerHeader className="hidden">
-            <DrawerTitle>Menu</DrawerTitle>
-            <DrawerDescription>
-              Choose a link below to navigate.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="p-5">
-            <nav className="flex flex-col text-primary-foreground font-semibold">
-              <Link href={""} className="hover:text-secondary transition-all">
-                Home
-              </Link>
-              <Link href={""} className="hover:text-secondary transition-all">
-                Shop
-              </Link>
-              <Link href={""} className="hover:text-secondary transition-all">
-                Categories
-              </Link>
-              <Link href={""} className="hover:text-secondary transition-all">
-                About
-              </Link>
-            </nav>
-          </div>
-        </DrawerContent>
-      </Drawer>
-    </div>
+    <NavbarHoverItem open={open} onOpenChange={setOpen} label={label}>
+      {categories?.map((category) => (
+        <Link href={category.path} key={category.id}>
+          <NavbarSubmenuItem
+            label={category.name}
+            imgUrl={category.image_url}
+          />
+        </Link>
+      ))}
+    </NavbarHoverItem>
   );
 }
