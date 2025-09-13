@@ -33,6 +33,9 @@ export default function GlassesVariantsTable({ productId }: Props) {
       },
     },
   });
+
+  console.log(data);
+
   return (
     <div className="space-y-5 mt-5">
       <div>

@@ -5,6 +5,7 @@ import { Product, ProductVariant } from "@/types/products.types";
 import {
   GlassesEditFormSchemaType,
   GlassesFormSchemaType,
+  GlassesVariantEditSchemaType,
   GlassesVariantSchemaType,
 } from "./validation";
 
@@ -77,10 +78,7 @@ export async function createGlassesVariant(
       price: glassesVariant.price,
       quantity_in_stock: glassesVariant.quantity_in_stock,
       product_id: glassesVariant.product_id,
-      attributes: {
-        frame_color: glassesVariant.frame_color,
-        lense_color: glassesVariant.lense_color,
-      },
+      attributes: glassesVariant.attributes,
     })
     .select("id")
     .single();
@@ -102,8 +100,11 @@ export async function createGlassesVariant(
 }
 
 export async function editGlassesVariant(
-  glassesVariant: ProductVariant<"glasses"> &
-    Pick<GlassesEditFormSchemaType, "image">
+  glassesVariant: Pick<
+    ProductVariant<"glasses">,
+    "id" | "product_id" | "image_url"
+  > &
+    GlassesVariantEditSchemaType
 ) {
   const supabase = await createClient();
 
@@ -117,11 +118,8 @@ export async function editGlassesVariant(
     image_url = data.path;
   }
 
-  const { error } = await supabase.rpc("update_product_variant", {
-    variant: {
-      ...glassesVariant,
-      image_url,
-    },
+  const { error } = await supabase.rpc("update_glasses_variant", {
+    p_variant: { ...glassesVariant, image_url },
   });
   if (error) throw error;
 
@@ -138,11 +136,6 @@ export async function deleteSingleGlassesVariant(
 ) {
   const supabase = await createClient();
 
-  const { error: storageError } = await supabase.storage
-    .from("Product Images")
-    .remove([glassesVariant.image_url]);
-  if (storageError) throw storageError;
-
   const { data, error } = await supabase
     .from("product_variants")
     .delete()
@@ -150,6 +143,11 @@ export async function deleteSingleGlassesVariant(
     .eq("product_id", glassesVariant.product_id)
     .select("id");
   if (error) throw error;
+
+  const { error: storageError } = await supabase.storage
+    .from("Product Images")
+    .remove([glassesVariant.image_url]);
+  if (storageError) throw storageError;
 
   return data.map((item) => item.id as ProductVariant["id"]);
 }
