@@ -1,7 +1,6 @@
 "use client";
 
 import SlugInput from "@/components/SlugInput";
-import { ThemeToggler } from "@/components/ThemeToggler";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -66,7 +65,6 @@ export default function GlassesForm() {
         <div className="flex justify-between items-center bg-background p-1.5">
           <div className="space-x-4">
             <SidebarTrigger />
-            <ThemeToggler />
           </div>
           <div className="space-x-4">
             <Button
