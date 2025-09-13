@@ -70,10 +70,10 @@ export interface ProductAttribute {
 type VariantMap = {
   glasses: GlassesVariant;
   accessories: AccessoryVariant;
+  lenses: never;
 };
 
-export type ProductVariant<T extends keyof VariantMap = keyof VariantMap> =
-  VariantMap[T];
+export type ProductVariant<T extends ProductType = ProductType> = VariantMap[T];
 
 type ProductMap = {
   glasses: Glasses;
