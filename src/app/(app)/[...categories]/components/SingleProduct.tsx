@@ -17,9 +17,9 @@ export default function SingleProduct({ product }: Props) {
 
   if (!product) notFound();
 
-  const [currentVariant, setCurrentVariant] = useState<
-    ProductVariant<"glasses">
-  >(product.variants[0] as ProductVariant<"glasses">);
+  const [currentVariant, setCurrentVariant] = useState<ProductVariant>(
+    product.variants[0] as ProductVariant
+  );
   const isItemInCart = isInCart(product.id, currentVariant.id);
 
   return (
@@ -44,35 +44,20 @@ export default function SingleProduct({ product }: Props) {
           variants={product.variants as ProductVariant<"glasses">[]}
           onVariantSelect={(variant) => setCurrentVariant(variant)}
         />
+
         <div>
-          <p className="font-semibold sm:text-lg">
-            Frame{"   "}
-            <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-              {currentVariant.attributes.frame_color}
-            </span>
-          </p>
-          <p className="font-semibold sm:text-lg">
-            Lense{"   "}
-            <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-              {currentVariant.attributes.lense_color}
-            </span>
-          </p>
+          {product.product_type === "glasses" && (
+            <GlassesRelatedDetails
+              variant={currentVariant as ProductVariant<"glasses">}
+            />
+          )}
         </div>
+
         <p className="text-sm sm:text-base">{product.description}</p>
         <Separator />
         <Button
           onClick={() => {
-            addCartItem({
-              productId: product.id,
-              variantId: currentVariant.id,
-              image_url: currentVariant.image_url,
-              title: product.title,
-              price: currentVariant.price,
-              quantity: 1,
-              attributes: currentVariant.attributes,
-              frame_color: currentVariant.attributes.frame_color,
-              lense_color: currentVariant.attributes.lense_color,
-            });
+            addCartItem({ product, variant: currentVariant, quantity: 1 });
             setIsOpen(true);
           }}
           className={"w-full"}
@@ -90,9 +75,9 @@ function Variants({
   onVariantSelect,
   currentVariant,
 }: {
-  variants: ProductVariant<"glasses">[];
-  onVariantSelect: (variant: ProductVariant<"glasses">) => void;
-  currentVariant: ProductVariant<"glasses">;
+  variants: ProductVariant[];
+  onVariantSelect: (variant: ProductVariant) => void;
+  currentVariant: ProductVariant;
 }) {
   return (
     <div className="space-y-2">
@@ -114,6 +99,35 @@ function Variants({
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function GlassesRelatedDetails({
+  variant,
+}: {
+  variant: ProductVariant<"glasses">;
+}) {
+  return (
+    <div>
+      <p className="font-semibold sm:text-lg">
+        Frame
+        <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
+          {variant.attributes.frame_color}
+        </span>
+      </p>
+      <p className="font-semibold sm:text-lg">
+        Lense
+        <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
+          {variant.attributes.lense_color}
+        </span>
+      </p>
+      <p className="font-semibold sm:text-lg">
+        Size
+        <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
+          {variant.attributes.lense_width} {variant.attributes.bridge_width}
+        </span>
+      </p>
     </div>
   );
 }

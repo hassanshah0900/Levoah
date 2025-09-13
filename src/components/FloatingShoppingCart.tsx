@@ -39,7 +39,7 @@ export default function FloatingShoppingCart() {
           <div className="space-y-2 sm:space-y-3 p-2">
             {cartItems.length ? (
               cartItems.map((item) => (
-                <FloatingCartItem key={`${item.variantId}`} cartItem={item} />
+                <FloatingCartItem key={`${item.variant.id}`} cartItem={item} />
               ))
             ) : (
               <div className="text-center h-40 flex justify-center items-center text-lg">

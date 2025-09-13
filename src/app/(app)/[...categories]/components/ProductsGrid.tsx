@@ -47,6 +47,8 @@ export default function ProductsGrid() {
     queryFn: () => getCategoryBySlug(categorySlug ?? ""),
   });
 
+  console.log(data?.pages);
+
   return (
     <Container>
       <div className="py-10 space-y-10">

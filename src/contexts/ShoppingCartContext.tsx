@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { Product } from "@/types/products.types";
+import { Product, ProductType, ProductVariant } from "@/types/products.types";
 import {
   createContext,
   PropsWithChildren,
@@ -9,29 +9,21 @@ import {
   useEffect,
   useState,
 } from "react";
-
-export interface ShoppingCartItem {
-  id?: string;
-  image_url: string;
-  productId: Product["id"];
-  variantId: Product["id"];
-  title: string;
-  price: number;
+export interface ShoppingCartItem<T extends ProductType = ProductType> {
+  product: Product<T>;
+  variant: ProductVariant<T>;
   quantity: number;
-  attributes: { [key: string]: string };
-  frame_color: string;
-  lense_color: string;
 }
 
 interface ShoppingCartContextType {
   cartItems: ShoppingCartItem[];
   addCartItem: (item: ShoppingCartItem) => void;
-  deleteCartItem: (id: ShoppingCartItem["id"]) => void;
-  incrementQuantity: (id: ShoppingCartItem["id"]) => void;
-  decrementQuantity: (id: ShoppingCartItem["id"]) => void;
+  deleteCartItem: (item: ShoppingCartItem) => void;
+  incrementQuantity: (item: ShoppingCartItem) => void;
+  decrementQuantity: (item: ShoppingCartItem) => void;
   isInCart: (
-    productId: ShoppingCartItem["productId"],
-    variantId: ShoppingCartItem["variantId"]
+    productId: Product["id"],
+    variantId: ProductVariant["id"]
   ) => boolean;
   reset: () => void;
   isOpen: boolean;
@@ -41,7 +33,7 @@ interface ShoppingCartContextType {
 const ShoppingCartContext = createContext<ShoppingCartContextType | null>(null);
 
 export function ShoppingCartProvider({ children }: PropsWithChildren) {
-  const { getItem, setItem, removeItem } = useLocalStorage("shopping cart");
+  const { getItem, setItem } = useLocalStorage("shopping cart");
   const [cartItems, setCartItems] = useState<ShoppingCartItem[]>(
     () => getItem() || []
   );
@@ -49,60 +41,60 @@ export function ShoppingCartProvider({ children }: PropsWithChildren) {
 
   function addCartItem(item: ShoppingCartItem) {
     setCartItems((cartItems) => {
-      const existingCartItem = cartItems.find(
-        (cartItem) =>
-          cartItem.productId == item.productId &&
-          cartItem.variantId == item.variantId
+      const existingCartItem = cartItems.find((cartItem) =>
+        areCartItemsEqual(cartItem, item)
       );
 
-      if (existingCartItem) {
+      if (existingCartItem)
         return cartItems.map((item) =>
-          item.productId === existingCartItem.productId &&
-          item.variantId === existingCartItem.variantId
+          areCartItemsEqual(item, existingCartItem)
             ? { ...existingCartItem, quantity: existingCartItem.quantity + 1 }
             : item
         );
-      }
-      return [{ ...item, id: crypto.randomUUID() }, ...cartItems];
+      return [item, ...cartItems];
     });
   }
 
-  function deleteCartItem(id: ShoppingCartItem["id"]) {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+  function deleteCartItem(item: ShoppingCartItem) {
+    setCartItems(
+      cartItems.filter((cartItem) => !areCartItemsEqual(cartItem, item))
+    );
   }
 
-  function incrementQuantity(id: ShoppingCartItem["id"]) {
-    const cartItem = cartItems.find((item) => item.id === id);
-    if (cartItem)
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : item
-        )
-      );
+  function incrementQuantity(item: ShoppingCartItem) {
+    setCartItems(
+      cartItems.map((cartItem) =>
+        areCartItemsEqual(cartItem, item)
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      )
+    );
   }
 
-  function decrementQuantity(id: ShoppingCartItem["id"]) {
+  function decrementQuantity(item: ShoppingCartItem) {
     setCartItems((cartItems) => {
-      const cartItem = cartItems.find((item) => item.id === id);
+      const cartItem = cartItems.find((cartItem) =>
+        areCartItemsEqual(cartItem, item)
+      );
       if (cartItem) {
-        if (cartItem.quantity <= 1)
-          return cartItems.filter((item) => item.id !== id);
-        return cartItems.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        if (cartItem.quantity > 1)
+          return cartItems.map((cartItem) =>
+            areCartItemsEqual(cartItem, item)
+              ? { ...cartItem, quantity: cartItem.quantity - 1 }
+              : cartItem
+          );
+        return cartItems.filter(
+          (cartItem) => !areCartItemsEqual(cartItem, item)
         );
       }
       return cartItems;
     });
   }
 
-  function isInCart(
-    productId: ShoppingCartItem["productId"],
-    variantId: ShoppingCartItem["variantId"]
-  ) {
+  function isInCart(productId: Product["id"], variantId: ProductVariant["id"]) {
     return !!cartItems.find(
-      (item) => item.productId === productId && item.variantId === variantId
+      (cartItem) =>
+        cartItem.product.id === productId && cartItem.variant.id === variantId
     );
   }
 
@@ -140,4 +132,11 @@ export function useShoppingCart() {
       "useShoppingCart hook can only be used inside its Provider."
     );
   return context;
+}
+
+function areCartItemsEqual(item1: ShoppingCartItem, item2: ShoppingCartItem) {
+  return (
+    item1.product.id === item2.product.id &&
+    item1.variant.id === item2.variant.id
+  );
 }

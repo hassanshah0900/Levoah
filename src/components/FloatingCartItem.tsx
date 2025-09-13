@@ -13,44 +13,66 @@ export default function FloatingCartItem({ cartItem }: Props) {
   const { deleteCartItem } = useShoppingCart();
 
   return (
-    <div className="flex flex-col justify-between items-stretch rounded-xs bg-secondary text-secondary-foreground p-2 gap-5">
+    <div className="flex flex-col justify-between items-stretch rounded-xs bg-secondary text-secondary-foreground p-2 gap-4">
       <div className="flex gap-2">
         <div className="relative">
           <button
-            onClick={() => deleteCartItem(cartItem.id)}
+            onClick={() => deleteCartItem(cartItem)}
             className="absolute top-0 left-0 -translate-1/2 bg-destructive p-0.5 flex justify-center items-center z-10 [&_svg]:size-4 rounded-full"
           >
             <X />
           </button>
-          <ProductImage src={cartItem.image_url} alt="" className="w-20" />
+          <ProductImage
+            src={cartItem.variant.image_url}
+            alt=""
+            className="w-20"
+          />
         </div>
-        <div className="flex flex-col justify-between items-start">
-          <h4 className="leading-tight sm:text-lg">
-            {cartItem.title} another thing
-          </h4>
-          <div className="text-xs xs:text-sm font-semibold">
-            <p>
-              Frame{" "}
-              <span className="font-normal text-muted-foreground">
-                {cartItem.frame_color}
-              </span>
-            </p>
-            <p>
-              Lense{" "}
-              <span className="font-normal text-muted-foreground">
-                {cartItem.lense_color}
-              </span>
-            </p>
-          </div>
+        <div className="flex flex-col items-start gap-1">
+          <h4 className="leading-tight sm:text-lg">{cartItem.product.title}</h4>
+          {cartItem.product.product_type === "glasses" && (
+            <GlassesRelatedDetails
+              cartItem={cartItem as ShoppingCartItem<"glasses">}
+            />
+          )}
         </div>
       </div>
-      <QuantitySelector cartItem={cartItem} className="hidden" />
       <div className="flex justify-between items-center">
         <QuantitySelector cartItem={cartItem} orientation="HORIZONTAL" />
         <span className="font-semibold sm:text-lg whitespace-nowrap">
-          Rs {cartItem.quantity * cartItem.price}
+          Rs {cartItem.quantity * cartItem.variant.price}
         </span>
       </div>
+    </div>
+  );
+}
+
+function GlassesRelatedDetails({
+  cartItem,
+}: {
+  cartItem: ShoppingCartItem<"glasses">;
+}) {
+  return (
+    <div className="text-xs xs:text-sm">
+      <p className="flex gap-1">
+        Frame
+        <span className="font-normal text-muted-foreground">
+          {cartItem.variant.attributes.frame_color}
+        </span>
+      </p>
+      <p className="flex gap-1">
+        Lense
+        <span className="font-normal text-muted-foreground">
+          {cartItem.variant.attributes.lense_color}
+        </span>
+      </p>
+      <p className="flex gap-1">
+        Size
+        <span className="font-normal text-muted-foreground">
+          {cartItem.variant.attributes.lense_width}{" "}
+          {cartItem.variant.attributes.bridge_width}
+        </span>
+      </p>
     </div>
   );
 }

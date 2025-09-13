@@ -30,7 +30,7 @@ export default function QuantitySelector({
         variant={"outline"}
         size={"icon"}
         className="size-6"
-        onClick={() => incrementQuantity(cartItem.id)}
+        onClick={() => incrementQuantity(cartItem)}
       >
         <Plus className="size-3" />
       </Button>
@@ -39,7 +39,7 @@ export default function QuantitySelector({
         variant={"outline"}
         size={"icon"}
         className="size-6"
-        onClick={() => decrementQuantity(cartItem.id)}
+        onClick={() => decrementQuantity(cartItem)}
       >
         <Minus className="size-3" />
       </Button>
