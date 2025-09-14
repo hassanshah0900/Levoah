@@ -32,7 +32,8 @@ const paymentOptions = [
 
 export default function PaymentOptions() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-2">
+      <h2 className="text-xl">3. Select Payment Method</h2>
       <FormField
         name="payment_method"
         render={({ field }) => (
