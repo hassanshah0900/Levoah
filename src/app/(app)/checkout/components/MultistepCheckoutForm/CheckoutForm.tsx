@@ -9,13 +9,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { createOrder } from "../lib/actions";
-import { MultistepFormStep } from "../lib/types";
-import { checkoutFormSchema } from "../lib/validation";
-import CustomerAddressFields from "./CustomerAddressFields";
+import { createOrder } from "../../lib/actions";
+import { MultistepFormStep } from "../../lib/types";
+import { checkoutFormSchema } from "../../lib/validation";
+import CustomerAddressFields from "../CustomerAddressFields";
 import MultistepFormProgressBar from "./MultistepFormProgressBar";
 import OrderSummary from "./OrderSummary";
-import PaymentOptions from "./PaymentOptions";
+import PaymentOptions from "../PaymentOptions";
 
 const steps: MultistepFormStep[] = [
   {
