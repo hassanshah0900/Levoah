@@ -66,7 +66,7 @@ const formFields: FormField[] = [
   {
     name: "city",
     title: "City",
-    component: ({ field }) => <Input {...field} required />,
+    component: ({ field }) => <Input {...field} />,
   },
   {
     name: "phone",
