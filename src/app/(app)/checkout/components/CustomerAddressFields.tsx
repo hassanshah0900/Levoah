@@ -98,17 +98,14 @@ const formFields: FormField[] = [
 
 export default function CustomerAddressFields() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4">
+      <h2 className="text-xl">2. Delivery Address</h2>
       {formFields.map((formField) => (
         <FormField
           key={formField.name}
           name={`shipping_address.${formField.name}`}
           render={({ field }) => (
-            <FormItem
-              className={
-                formField.isFullWidth ? `sm:col-span-2` : "sm:col-span-1"
-              }
-            >
+            <FormItem>
               <FormLabel>{formField.title}</FormLabel>
               <FormControl>
                 <formField.component field={field} />
