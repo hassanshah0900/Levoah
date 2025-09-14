@@ -1,3 +1,5 @@
+import { ShoppingCartItem } from "@/contexts/ShoppingCartContext";
+
 const CODE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 
 export function generateOrderTrackingCode() {
@@ -9,4 +11,11 @@ export function generateOrderTrackingCode() {
   const currentYear = new Date(Date.now()).getFullYear();
 
   return `LEVOAH-${currentYear}-${code}`;
+}
+
+export function calculateSubtotal(cartItems: ShoppingCartItem[]) {
+  return cartItems.reduce(
+    (acc, curr) => acc + curr.quantity * curr.variant.price,
+    0
+  );
 }
