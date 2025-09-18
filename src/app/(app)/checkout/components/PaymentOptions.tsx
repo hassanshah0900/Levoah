@@ -6,27 +6,23 @@ import {
 import { FormField } from "@/components/ui/form";
 import { AccordionHeader, AccordionTrigger } from "@radix-ui/react-accordion";
 import { Check } from "lucide-react";
+import { PaymentMethod } from "../lib/types";
 
-const paymentOptions = [
+const paymentOptions: {
+  label: string;
+  value: PaymentMethod;
+  description: string;
+}[] = [
   {
-    label: "Bank Transfer",
+    label: "Payfast",
+    value: "PAYFAST",
     description:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur nostrum enim adipisci, animi at, eveniet minima doloremque illo eiuscommodi vitae? Eos inventore aspernatur quidem molestias alias. Vero,omnis cupiditate.",
-  },
-  {
-    label: "Easypaisa",
-    description:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur nostrum enim adipisci, animi at, eveniet minima doloremque illo eiuscommodi vitae? Eos inventore aspernatur quidem molestias alias. Vero,omnis cupiditate.",
-  },
-  {
-    label: "Jazz Cash",
-    description:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur nostrum enim adipisci, animi at, eveniet minima doloremque illo eiuscommodi vitae? Eos inventore aspernatur quidem molestias alias. Vero,omnis cupiditate.",
+      "Pay safely online with PayFast using your card, bank transfer, or mobile wallet – instant confirmation and fully secure checkout.",
   },
   {
     label: "Cash on delivery",
-    description:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur nostrum enim adipisci, animi at, eveniet minima doloremque illo eiuscommodi vitae? Eos inventore aspernatur quidem molestias alias. Vero,omnis cupiditate.",
+    value: "CASHONDELIVERY",
+    description: "Pay in cash when your order is delivered to you.",
   },
 ];
 
@@ -43,7 +39,7 @@ export default function PaymentOptions() {
             onValueChange={field.onChange}
           >
             {paymentOptions.map((option) => (
-              <AccordionItem key={option.label} value={option.label}>
+              <AccordionItem key={option.label} value={option.value}>
                 <AccordionHeader>
                   <AccordionTrigger className="flex justify-between items-center w-full [&[data-state=open]>svg]:opacity-100 py-3 px-2">
                     <span className="text-base sm:text-lg font-semibold uppercase">
@@ -53,10 +49,7 @@ export default function PaymentOptions() {
                   </AccordionTrigger>
                 </AccordionHeader>
                 <AccordionContent className="px-2 text-sm sm:text-base">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Consectetur nostrum enim adipisci, animi at, eveniet minima
-                  doloremque illo eius commodi vitae? Eos inventore aspernatur
-                  quidem molestias alias. Vero, omnis cupiditate.
+                  {option.description}
                 </AccordionContent>
               </AccordionItem>
             ))}
