@@ -59,7 +59,6 @@ export default function EditCategoryForm({
     defaultValues: {
       name: category.name,
       slug: category.slug,
-      parent_category: category.parent_category,
       description: category.description,
     },
     resolver: zodResolver(categorySchema),
@@ -72,7 +71,7 @@ export default function EditCategoryForm({
       image = await compressImage(image);
     }
 
-    mutate({ ...category, ...data, image });
+    mutate({ ...category, ...categorySchema, image });
     toast.loading("Editing category...", { id: "edit_category" });
     onOpenChange(false);
   }
