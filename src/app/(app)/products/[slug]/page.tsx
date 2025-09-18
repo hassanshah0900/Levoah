@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 import Container from "@/components/Container";
 import { Suspense } from "react";
 import { getRelatedProductsWithVariants } from "./lib/queries";
@@ -37,5 +35,6 @@ async function SingleProductServer({ slug }: { slug: string }) {
 async function RelatedProductsServer({ slug }: { slug: string }) {
   const relatedProducts = await getRelatedProductsWithVariants(slug);
 
-  return <RelatedProducts products={relatedProducts} />;
+  // return <RelatedProducts products={relatedProducts} />;
+  return <div></div>;
 }

@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 import Container from "@/components/Container";
 import Link from "next/link";
 

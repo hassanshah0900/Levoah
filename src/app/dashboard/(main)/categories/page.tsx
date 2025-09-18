@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 import React from "react";
 import CategoriesTable from "./components/CategoriesTable";
 import { getAllCategories } from "./lib/queries";

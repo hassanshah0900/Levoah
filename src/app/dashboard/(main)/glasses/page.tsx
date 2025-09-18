@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 import { SearchParams } from "nuqs/server";
 import { getAllProducts } from "./lib/queries";
 import GlassesTable from "./components/GlassesTable";
