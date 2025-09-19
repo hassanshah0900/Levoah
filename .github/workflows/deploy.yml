@@ -9,9 +9,17 @@ on:
       - main
 
 jobs:
-  # Preview deployment for feature branches
   deploy-preview:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_TEST }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY_TEST }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,22 +29,30 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Build OpenNext.js Worker
-        run: npx opennextjs-cloudflare build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build OpenNext.js Worker (Preview)
+        run: pnpm exec opennextjs-cloudflare build
 
       - name: Deploy preview
-        run: npx opennextjs-cloudflare deploy --branch ${{ github.head_ref }}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec opennextjs-cloudflare deploy -e preview
 
-  # Production deployment for main branch
   deploy-production:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_PROD }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY_PROD }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,14 +62,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Build OpenNext.js Worker
-        run: npx opennextjs-cloudflare build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build OpenNext.js Worker (Production)
+        run: pnpm exec opennextjs-cloudflare build
 
       - name: Deploy production
-        run: npx opennextjs-cloudflare deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec opennextjs-cloudflare deploy -e production
