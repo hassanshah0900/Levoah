@@ -6,5 +6,13 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "env": {
+    "preview": {
+      "name": "levoah-preview"
+    },
+    "production": {
+      "name": "levoah"
+    }
   }
 }
