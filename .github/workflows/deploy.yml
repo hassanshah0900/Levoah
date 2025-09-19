@@ -1,15 +1,16 @@
 name: OpenNext.js Cloudflare Deploy
 
 on:
-  push:
-    branches-ignore:
-      - main
   pull_request:
     branches:
-      - main
+      - main # trigger preview deploy for PRs targeting main
+  push:
+    branches:
+      - main # trigger production deploy on merges to main
 
 jobs:
   deploy-preview:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -32,6 +33,14 @@ jobs:
       - name: Setup pnpm
         run: corepack enable && corepack prepare pnpm@latest --activate
 
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -42,7 +51,7 @@ jobs:
         run: pnpm exec opennextjs-cloudflare deploy -e preview
 
   deploy-production:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -64,6 +73,14 @@ jobs:
 
       - name: Setup pnpm
         run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
