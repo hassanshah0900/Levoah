@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { products, productVariants, categories, images, orders, orderItems, productCategories, permissions, rolePermissions, roles } from "./schema";
+import { products, productVariants, categories, collections, conditions, images, orders, orderItems, collectionProducts, productCategories, permissions, rolePermissions, roles } from "./schema";
 
 export const productVariantsRelations = relations(productVariants, ({one, many}) => ({
 	product: one(products, {
@@ -12,6 +12,7 @@ export const productVariantsRelations = relations(productVariants, ({one, many})
 export const productsRelations = relations(products, ({many}) => ({
 	productVariants: many(productVariants),
 	images: many(images),
+	collectionProducts: many(collectionProducts),
 	productCategories: many(productCategories),
 }));
 
@@ -25,6 +26,18 @@ export const categoriesRelations = relations(categories, ({one, many}) => ({
 		relationName: "categories_parentCategory_categories_id"
 	}),
 	productCategories: many(productCategories),
+}));
+
+export const conditionsRelations = relations(conditions, ({one}) => ({
+	collection: one(collections, {
+		fields: [conditions.collectionId],
+		references: [collections.id]
+	}),
+}));
+
+export const collectionsRelations = relations(collections, ({many}) => ({
+	conditions: many(conditions),
+	collectionProducts: many(collectionProducts),
 }));
 
 export const imagesRelations = relations(images, ({one}) => ({
@@ -47,6 +60,17 @@ export const orderItemsRelations = relations(orderItems, ({one}) => ({
 
 export const ordersRelations = relations(orders, ({many}) => ({
 	orderItems: many(orderItems),
+}));
+
+export const collectionProductsRelations = relations(collectionProducts, ({one}) => ({
+	collection: one(collections, {
+		fields: [collectionProducts.collectionId],
+		references: [collections.id]
+	}),
+	product: one(products, {
+		fields: [collectionProducts.productId],
+		references: [products.id]
+	}),
 }));
 
 export const productCategoriesRelations = relations(productCategories, ({one}) => ({
