@@ -14,12 +14,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { getAllCategories } from "../lib/queries";
 import { Category } from "../lib/types";
-import { useForm, useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
 
 type ParentCategory = Category["parent_category"];
 interface Props {
@@ -34,7 +34,11 @@ export default function CategoriesCombobox({
   value,
   placeholder = "No Parent",
 }: Props) {
-  const { data, isPending, isError } = useQuery({
+  const {
+    data: categories,
+    isPending,
+    isError,
+  } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
   });
@@ -54,8 +58,7 @@ export default function CategoriesCombobox({
 
   function getButtonText() {
     if (!categoryId) return placeholder;
-    return data?.categories.find((category) => category.id === categoryId)
-      ?.name;
+    return categories?.find((category) => category.id === categoryId)?.name;
   }
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -82,7 +85,7 @@ export default function CategoriesCombobox({
               <>
                 <CommandEmpty>No categories found.</CommandEmpty>
                 <CommandGroup>
-                  {data?.categories.map((category) => (
+                  {categories.map((category) => (
                     <CommandItem
                       key={category.id}
                       onSelect={() => handleSelect(category.id)}
