@@ -1,10 +1,15 @@
 "use server";
 
 import { db } from "@/db";
-import { productCategories, products } from "@/db/drizzle/schema";
+import {
+  images,
+  productCategories,
+  products,
+  productVariants,
+} from "@/db/drizzle/schema";
 import { createClient } from "@/supabase/server";
 import { Product, ProductVariant } from "@/types/products.types";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
   GlassesEditFormSchemaType,
   GlassesFormSchemaType,
@@ -76,47 +81,38 @@ export async function deleteMultipleProducts(productIds: Product["id"][]) {
 }
 
 export async function createGlassesVariant(
-  glassesVariant: GlassesVariantSchemaType & { product_id: number }
+  glassesVariant: GlassesVariantSchemaType & { productId: number }
 ) {
   const supabase = await createClient();
-
-  const { data: variant, error } = await supabase
-    .from("product_variants")
-    .insert({
-      price: glassesVariant.price,
-      quantity_in_stock: glassesVariant.quantity_in_stock,
-      product_id: glassesVariant.product_id,
-      attributes: glassesVariant.attributes,
-    })
-    .select("id")
-    .single();
-
-  if (error) throw error;
+  const insertedVariant = (
+    await db
+      .insert(productVariants)
+      .values({ ...glassesVariant })
+      .returning()
+  )[0];
 
   const { data, error: storageError } = await supabase.storage
     .from("Product Images")
     .upload(crypto.randomUUID(), glassesVariant.image);
   if (storageError) throw storageError;
 
-  const { error: imageError } = await supabase.from("images").insert({
-    product_id: glassesVariant.product_id,
-    variant_id: variant.id,
+  await db.insert(images).values({
+    productId: glassesVariant.productId,
+    variantId: insertedVariant.id,
     path: data.path,
   });
-
-  if (imageError) throw imageError;
 }
 
 export async function editGlassesVariant(
   glassesVariant: Pick<
     ProductVariant<"glasses">,
-    "id" | "product_id" | "image_url"
+    "id" | "productId" | "imageUrl"
   > &
     GlassesVariantEditSchemaType
 ) {
   const supabase = await createClient();
 
-  let image_url = glassesVariant.image_url;
+  let image_url = glassesVariant.imageUrl;
   if (glassesVariant.image) {
     const { data, error } = await supabase.storage
       .from("Product Images")
@@ -134,7 +130,7 @@ export async function editGlassesVariant(
   if (glassesVariant.image) {
     const { error } = await supabase.storage
       .from("Product Images")
-      .remove([glassesVariant.image_url]);
+      .remove([glassesVariant.imageUrl]);
     if (error) throw error;
   }
 }
@@ -143,21 +139,19 @@ export async function deleteSingleGlassesVariant(
   glassesVariant: ProductVariant<"glasses">
 ) {
   const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("product_variants")
-    .delete()
-    .eq("id", glassesVariant.id)
-    .eq("product_id", glassesVariant.product_id)
-    .select("id");
-  if (error) throw error;
+  await db
+    .delete(productVariants)
+    .where(
+      and(
+        eq(productVariants.id, glassesVariant.id),
+        eq(productVariants.productId, glassesVariant.productId!)
+      )
+    );
 
   const { error: storageError } = await supabase.storage
     .from("Product Images")
-    .remove([glassesVariant.image_url]);
+    .remove([glassesVariant.imageUrl]);
   if (storageError) throw storageError;
-
-  return data.map((item) => item.id as ProductVariant["id"]);
 }
 
 export async function changeGlassesPublishedStatus(
