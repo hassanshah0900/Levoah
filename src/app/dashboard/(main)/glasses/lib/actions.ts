@@ -113,11 +113,22 @@ export async function editGlassesVariant(
     image_url = data.path;
   }
 
-  const { error } = await supabase.rpc("update_glasses_variant", {
-    p_variant: { ...glassesVariant, image_url },
-  });
-  if (error) throw error;
-
+  await Promise.all([
+    db
+      .update(productVariants)
+      .set({ ...glassesVariant })
+      .where(eq(productVariants.id, glassesVariant.id)),
+    db
+      .update(images)
+      .set({ path: image_url })
+      .where(
+        and(
+          eq(images.variantId, glassesVariant.id),
+          eq(images.productId, glassesVariant.productId!)
+        )
+      ),
+  ]);
+  // Delete old image from storage if a new image was uploaded
   if (glassesVariant.image) {
     const { error } = await supabase.storage
       .from("Product Images")
