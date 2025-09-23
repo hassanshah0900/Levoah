@@ -8,21 +8,32 @@ import {
   GlassesVariantEditSchemaType,
   GlassesVariantSchemaType,
 } from "./validation";
+import { db } from "@/db";
+import { sql } from "drizzle-orm";
+import { productCategories, products } from "@/db/drizzle/schema";
 
 export async function createGlasses(
   glasses: GlassesFormSchemaType & { published: boolean }
 ) {
-  const supabase = await createClient();
+  const insertedGlasses = (
+    await db
+      .insert(products)
+      .values({
+        ...glasses,
+        productType: "glasses",
+      })
+      .returning()
+  )[0];
 
-  const p_glasses = {
-    ...glasses,
-    categories: [...glasses.categories, glasses.type],
-    product_type: "glasses",
-  };
-  const { error } = await supabase.rpc("create_glasses", {
-    p_glasses,
-  });
-  if (error) throw error;
+  await db
+    .insert(productCategories)
+    .values({
+      productId: insertedGlasses.id,
+      categoryId: glasses.category,
+    })
+    .onConflictDoNothing({
+      target: [productCategories.productId, productCategories.categoryId],
+    });
 }
 
 export async function editGlasses(
