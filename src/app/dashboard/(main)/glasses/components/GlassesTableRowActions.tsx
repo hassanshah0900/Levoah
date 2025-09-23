@@ -1,3 +1,4 @@
+import DeleteDialog from "@/components/DeleteDialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -6,15 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Product } from "@/types/products.types";
 import { Row } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteSingleProduct } from "../lib/actions";
-import { useRouter } from "next/navigation";
-import { Product } from "@/types/products.types";
+import { deleteSingleGlassesPair } from "../lib/actions";
 import GlassesEditForm from "./GlassesEditForm";
-import DeleteDialog from "@/components/DeleteDialog";
 
 interface Props {
   row: Row<Product>;
@@ -24,7 +24,7 @@ export default function GlassesTableRowActions({ row }: Props) {
   const router = useRouter();
 
   function deleteProduct() {
-    toast.promise(deleteSingleProduct(row.original.id), {
+    toast.promise(deleteSingleGlassesPair(row.original.id), {
       loading: "Deleting product...",
       success: () => {
         router.refresh();

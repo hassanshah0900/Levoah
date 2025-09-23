@@ -56,17 +56,8 @@ export async function editGlasses(
   ]);
 }
 
-export async function deleteSingleProduct(productId: number) {
-  console.log("action Id: ", productId);
-
-  const supabase = await createClient();
-
-  const { error } = await supabase
-    .from("products")
-    .delete()
-    .eq("id", productId);
-
-  if (error) throw error;
+export async function deleteSingleGlassesPair(productId: number) {
+  await db.delete(products).where(eq(products.id, productId));
 }
 
 export async function deleteMultipleProducts(productIds: Product["id"][]) {
