@@ -265,6 +265,18 @@ export const rolePermissions = pgTable("role_permissions", {
 		}).onUpdate("cascade").onDelete("cascade"),
 	primaryKey({ columns: [table.roleId, table.permissionId], name: "role_permissions_pkey"}),
 ]);
+export const glasses = pgView("glasses", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	id: bigint({ mode: "number" }),
+	title: text(),
+	description: text(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
+	published: boolean(),
+	slug: text(),
+	attributes: jsonb(),
+	productType: productType("product_type"),
+	category: jsonb(),
+}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id`);
+
 export const productVariantsWithImages = pgView("product_variants_with_images", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }),
 	imageUrl: text("image_url"),
@@ -285,16 +297,3 @@ export const productsWithVariants = pgView("products_with_variants", {	// You ca
 	productType: productType("product_type"),
 	variants: json(),
 }).as(sql`SELECT p.id, p.title, p.description, p.published, p.slug, p.created_at, p.product_type, json_agg(json_build_object('id', pv.id, 'image_url', pv.image_url, 'price', pv.price, 'quantity_in_stock', pv.quantity_in_stock, 'attributes', pv.attributes)) AS variants FROM products p LEFT JOIN product_variants_with_images pv ON pv.product_id = p.id GROUP BY p.id HAVING count(pv.*) > 0`);
-
-export const glasses = pgView("glasses", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	id: bigint({ mode: "number" }),
-	title: text(),
-	description: text(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
-	published: boolean(),
-	slug: text(),
-	attributes: jsonb(),
-	productType: productType("product_type"),
-	type: jsonb(),
-	categories: jsonb(),
-}).with({"securityInvoker":"on"}).as(sql`SELECT id, title, description, created_at, published, slug, attributes, product_type, ( SELECT jsonb_build_object('id', c.id, 'name', c.name) AS jsonb_build_object FROM categories c JOIN product_categories pc ON pc.category_id = c.id WHERE pc.product_id = p.id AND c.parent_category IS NULL LIMIT 1) AS type, COALESCE(( SELECT jsonb_agg(jsonb_build_object('id', c.id, 'name', c.name)) AS jsonb_agg FROM categories c JOIN product_categories pc ON pc.category_id = c.id WHERE pc.product_id = p.id AND c.parent_category IS NOT NULL), '[]'::jsonb) AS categories FROM products p`);
