@@ -15,23 +15,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { compressImage, getImagePublicUrl } from "@/lib/utils";
 import { ProductVariant } from "@/types/products.types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { parseProductAttribute } from "../lib/utils";
+import { toast } from "sonner";
+import { editGlassesVariant } from "../lib/actions";
 import {
   glassesVariantEditSchema,
   GlassesVariantEditSchemaType,
 } from "../lib/validation";
-import { editGlassesVariant } from "../lib/actions";
-import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { compressImage, getImagePublicUrl } from "@/lib/utils";
 import BridgeWidthCombobox from "./BridgeWidthCombobox";
-import LenseWidthCombobox from "./LenseWidthCombobox";
-import TempleLengthCombobox from "./TempleLengthCombobox";
 import FrameColorCombobox from "./FrameColorCombobox";
 import LenseColorCombobox from "./LenseColorCombobox";
+import LenseWidthCombobox from "./LenseWidthCombobox";
+import TempleLengthCombobox from "./TempleLengthCombobox";
 
 interface Props {
   open?: boolean;
@@ -50,7 +49,7 @@ export default function GlassesVariantEditForm({
     mutationFn: editGlassesVariant,
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: ["product_variants", productVariant.product_id],
+        queryKey: ["product_variants", productVariant.productId],
       });
       toast.success("Success", { id: "edit_variant" });
     },
@@ -58,13 +57,10 @@ export default function GlassesVariantEditForm({
       toast.error(err.message, { id: "edit_variant" });
     },
   });
+  console.log(productVariant);
 
   const form = useForm({
-    defaultValues: {
-      price: productVariant.price,
-      quantity_in_stock: productVariant.quantity_in_stock,
-      attributes: productVariant.attributes,
-    },
+    defaultValues: { ...productVariant },
     resolver: zodResolver(glassesVariantEditSchema),
   });
 
@@ -103,8 +99,8 @@ export default function GlassesVariantEditForm({
                     <ImageInput
                       onChange={onChange}
                       imgUrl={
-                        productVariant.image_url &&
-                        getImagePublicUrl(productVariant.image_url)
+                        productVariant.imageUrl &&
+                        getImagePublicUrl(productVariant.imageUrl)
                       }
                       shouldReset={false}
                     />
@@ -126,7 +122,7 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`quantity_in_stock`}
+              name={`quantityInStock`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity In Stock</FormLabel>
@@ -138,7 +134,7 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`attributes.lense_color`}
+              name={`attributes.lenseColor`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Lense Color</FormLabel>
@@ -150,7 +146,7 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`attributes.frame_color`}
+              name={`attributes.frameColor`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Color</FormLabel>
@@ -162,7 +158,7 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`attributes.lense_width`}
+              name={`attributes.lenseWidth`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Lense Width</FormLabel>
@@ -174,7 +170,7 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`attributes.bridge_width`}
+              name={`attributes.bridgeWidth`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Bridge Width</FormLabel>
@@ -186,7 +182,7 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`attributes.temple_length`}
+              name={`attributes.templeLength`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Temple Length</FormLabel>
@@ -197,7 +193,7 @@ export default function GlassesVariantEditForm({
                 </FormItem>
               )}
             />
-            <Button className="w-full">Submit</Button>
+            <Button className="w-full">Edit Variant</Button>
           </form>
         </Form>
       </DrawerContent>
