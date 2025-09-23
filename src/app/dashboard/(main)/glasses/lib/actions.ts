@@ -1,16 +1,16 @@
 "use server";
 
+import { db } from "@/db";
+import { productCategories, products } from "@/db/drizzle/schema";
 import { createClient } from "@/supabase/server";
 import { Product, ProductVariant } from "@/types/products.types";
+import { eq } from "drizzle-orm";
 import {
   GlassesEditFormSchemaType,
   GlassesFormSchemaType,
   GlassesVariantEditSchemaType,
   GlassesVariantSchemaType,
 } from "./validation";
-import { db } from "@/db";
-import { sql } from "drizzle-orm";
-import { productCategories, products } from "@/db/drizzle/schema";
 
 export async function createGlasses(
   glasses: GlassesFormSchemaType & { published: boolean }
@@ -39,19 +39,16 @@ export async function createGlasses(
 export async function editGlasses(
   glasses: GlassesEditFormSchemaType & { id: number }
 ) {
-  const supabase = await createClient();
-
-  const p_glasses = {
-    ...glasses,
-    categories: [...glasses.categories, glasses.type],
-  };
-
-  const { error } = await supabase.rpc("update_glasses", {
-    p_glasses,
-  });
-  if (error) {
-    throw error;
-  }
+  await Promise.all([
+    db
+      .update(products)
+      .set({ ...glasses })
+      .where(eq(products.id, glasses.id)),
+    db
+      .update(productCategories)
+      .set({ categoryId: glasses.category })
+      .where(eq(productCategories.productId, glasses.id)),
+  ]);
 }
 
 export async function deleteSingleProduct(productId: number) {
