@@ -9,7 +9,7 @@ import {
 } from "@/db/drizzle/schema";
 import { createClient } from "@/supabase/server";
 import { Product, ProductVariant } from "@/types/products.types";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import {
   GlassesEditFormSchemaType,
   GlassesFormSchemaType,
@@ -149,12 +149,8 @@ export async function changeGlassesPublishedStatus(
   glassesIds: Product<"glasses">["id"][],
   published: boolean
 ) {
-  const supabase = await createClient();
-
-  const { error } = await supabase
-    .from("products")
-    .update({ published })
-    .in("id", [glassesIds]);
-
-  if (error) throw error;
+  await db
+    .update(products)
+    .set({ published })
+    .where(inArray(products.id, glassesIds));
 }
