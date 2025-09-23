@@ -23,11 +23,8 @@ export const glassesFormSchema = z.object({
       error: "Bride & nosepads is required.",
     }),
   }),
-  type: z.coerce.number().min(1, "Type is required"),
-  categories: z
-    .array(z.coerce.number())
-    .min(1, "At least one category is required"),
   description: z.string(),
+  category: z.coerce.number().min(1, "Category is required"),
 });
 
 export type GlassesFormSchemaType = z.infer<typeof glassesFormSchema>;
