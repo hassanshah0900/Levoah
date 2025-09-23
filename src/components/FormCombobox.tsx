@@ -37,7 +37,7 @@ export default function FormCombobox({
   const [valueState, setValueState] = useState(value);
 
   function getButtonText() {
-    const selectedItem = items.find(({ value }) => value === valueState);
+    const selectedItem = items.find(({ value }) => value == valueState);
     return selectedItem ? selectedItem.label : placeholder ?? "Select an item";
   }
 

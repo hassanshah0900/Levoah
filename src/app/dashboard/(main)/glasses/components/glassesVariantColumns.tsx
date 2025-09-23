@@ -33,7 +33,7 @@ export function createGlassesVariantColumns(productType: ProductType) {
       ),
       enableHiding: false,
     }),
-    columnHelper.accessor("image_url", {
+    columnHelper.accessor("imageUrl", {
       id: "image_url",
       header: ({ column }) => (
         <DataTableColumnHeader title="Image" column={column} />
@@ -53,14 +53,14 @@ export function createGlassesVariantColumns(productType: ProductType) {
       ),
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
     }),
-    columnHelper.accessor("quantity_in_stock", {
+    columnHelper.accessor("quantityInStock", {
       id: "Stock",
       header: ({ column }) => (
         <DataTableColumnHeader title="Stock" column={column} />
       ),
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
     }),
-    columnHelper.accessor("attributes.frame_color", {
+    columnHelper.accessor("attributes.frameColor", {
       id: "Frame Color",
       header: ({ column }) => (
         <DataTableColumnHeader title="Frame Color" column={column} />
@@ -68,7 +68,7 @@ export function createGlassesVariantColumns(productType: ProductType) {
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
       enableSorting: false,
     }),
-    columnHelper.accessor("attributes.lense_color", {
+    columnHelper.accessor("attributes.lenseColor", {
       id: "Lense Color",
       header: ({ column }) => (
         <DataTableColumnHeader title="Lense Color" column={column} />
@@ -76,7 +76,7 @@ export function createGlassesVariantColumns(productType: ProductType) {
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
       enableSorting: false,
     }),
-    columnHelper.accessor("attributes.temple_length", {
+    columnHelper.accessor("attributes.templeLength", {
       id: "Temple Length",
       header: ({ column }) => (
         <DataTableColumnHeader title="Temple Length" column={column} />
@@ -84,7 +84,7 @@ export function createGlassesVariantColumns(productType: ProductType) {
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
       enableSorting: false,
     }),
-    columnHelper.accessor("attributes.bridge_width", {
+    columnHelper.accessor("attributes.bridgeWidth", {
       id: "Bridge Width",
       header: ({ column }) => (
         <DataTableColumnHeader title="Bridge Width" column={column} />

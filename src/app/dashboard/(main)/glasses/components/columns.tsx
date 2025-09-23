@@ -71,7 +71,7 @@ export const columns = [
     enableSorting: false,
   }),
 
-  columnHelper.accessor("attributes.frame_shape", {
+  columnHelper.accessor("attributes.frameShape", {
     id: "Frame Shape",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Frame Shape" />
@@ -81,7 +81,7 @@ export const columns = [
     ),
     enableSorting: false,
   }),
-  columnHelper.accessor("attributes.frame_material", {
+  columnHelper.accessor("attributes.frameMaterial", {
     id: "Frame Material",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Frame Material" />
@@ -91,7 +91,7 @@ export const columns = [
     ),
     enableSorting: false,
   }),
-  columnHelper.accessor("attributes.bridge_and_nosepads", {
+  columnHelper.accessor("attributes.bridgeAndNosepads", {
     id: "Bridge & Nosepads",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Bridge & Nosepads" />
@@ -101,27 +101,12 @@ export const columns = [
     ),
     enableSorting: false,
   }),
-  columnHelper.accessor("type", {
-    id: "Type",
+  columnHelper.accessor("category", {
+    id: "Category",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
+      <DataTableColumnHeader column={column} title="Category" />
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()?.name}</div>,
-  }),
-  columnHelper.accessor("categories", {
-    id: "categories",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Categories" />
-    ),
-    cell: ({ getValue }) => (
-      <div className="ml-3 space-y-1">
-        {getValue().map((category) => (
-          <Badge variant={"secondary"} key={category.id}>
-            {category.name}
-          </Badge>
-        ))}
-      </div>
-    ),
   }),
   columnHelper.display({
     id: "variants_link",

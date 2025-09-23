@@ -4,6 +4,9 @@ import { createClient } from "@/supabase/server";
 import { ProductType, ProductVariant } from "@/types/products.types";
 import { SortingState } from "@tanstack/react-table";
 import { Category } from "../../categories/lib/types";
+import { db } from "@/db";
+import { productVariantsWithImages } from "@/db/drizzle/schema";
+import { and, eq } from "drizzle-orm";
 
 interface GetAllProductsProps {
   filters: {
@@ -44,16 +47,14 @@ export async function getAllGlassesVariants({
 }: {
   productId: number;
 }) {
-  const supabase = await createClient();
+  const productVariants = await db
+    .select()
+    .from(productVariantsWithImages)
+    .where(eq(productVariantsWithImages.productId, productId));
 
-  const { data, count, error } = await supabase
-    .from("product_variants_with_images")
-    .select("*", { count: "exact" })
-    .eq("product_id", productId);
-
-  if (error) throw error;
-
-  return { productVariants: data as ProductVariant<"glasses">[], count };
+  return {
+    productVariants: productVariants as ProductVariant<"glasses">[],
+  };
 }
 
 export async function getCategoriesByProductType(

@@ -4,38 +4,30 @@ import { frameColors } from "@/app/dashboard/(main)/glasses/components/FrameColo
 import { frameMaterials } from "@/app/dashboard/(main)/glasses/components/FrameMaterialCombobox";
 import { frameShapes } from "@/app/dashboard/(main)/glasses/components/FrameShapeCombobox";
 import { lenseColors } from "@/app/dashboard/(main)/glasses/components/LenseColorCombobox";
+import { products, productVariants } from "@/db/drizzle/schema";
 
 export type ProductType = "glasses" | "accessories" | "lenses";
-interface SharedProductProperties<T extends Record<string, any>> {
-  id: number;
-  title: string;
-  slug: string;
-  description?: string;
-  published: boolean;
-  type: Category;
-  categories: Category[];
-  product_type: ProductType;
+type SharedProductProperties<T extends Record<string, any>> =
+  typeof products.$inferSelect & {
+    attributes: T;
+    category: Category;
+  };
+
+type SharedProductVariantProperties<T> = typeof productVariants.$inferSelect & {
+  imageUrl: string;
   attributes: T;
-}
-interface SharedProductVariantProperties<T> {
-  id: number;
-  image_url: string;
-  price: number;
-  quantity_in_stock: number;
-  product_id: number;
-  attributes: T;
-}
+};
 
 type FrameMaterial = (typeof frameMaterials)[number];
 type FrameShape = (typeof frameShapes)[number];
 type BridgeAndNosepads = (typeof bridgeAndNosepads)[number];
 interface Glasses
   extends SharedProductProperties<{
-    frame_shape: FrameShape;
-    frame_material: FrameMaterial;
-    bridge_and_nosepads: BridgeAndNosepads;
+    frameShape: FrameShape;
+    frameMaterial: FrameMaterial;
+    bridgeAndNosepads: BridgeAndNosepads;
   }> {
-  product_type: "glasses";
+  productType: "glasses";
   variants: GlassesVariant[];
 }
 
@@ -43,15 +35,15 @@ type FrameColor = (typeof frameColors)[number];
 type LenseColor = (typeof lenseColors)[number];
 
 type GlassesVariant = SharedProductVariantProperties<{
-  lense_color: LenseColor;
-  frame_color: FrameColor;
-  bridge_width: number;
-  lense_width: number;
-  temple_length: number;
+  lenseColor: LenseColor;
+  frameColor: FrameColor;
+  bridgeWidth: number;
+  lenseWidth: number;
+  templeLength: number;
 }>;
 
 interface Accessory extends SharedProductProperties<{}> {
-  product_type: "accessories";
+  productType: "accessories";
   variants: AccessoryVariant[];
 }
 type AccessoryVariant = SharedProductVariantProperties<{

@@ -26,16 +26,15 @@ import {
   FormMessage,
 } from "../../../../../components/ui/form";
 import { Input } from "../../../../../components/ui/input";
+import CategorySelector from "../../categories/components/CategorySelector";
 import { editGlasses } from "../lib/actions";
 import {
   glassesEditFormSchema,
   GlassesEditFormSchemaType,
 } from "../lib/validation";
 import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
-import CategoriesMultiselect from "./CategoriesMultiselect";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
-import GlassesTypeSelect from "./GlassesTypeSelect";
 
 interface Props {
   glasses: Product<"glasses">;
@@ -54,8 +53,7 @@ export default function GlassesEditForm({
       description: glasses.description ?? "",
       published: glasses.published,
       attributes: glasses.attributes,
-      type: glasses.type?.id ?? "",
-      categories: glasses.categories.map((category) => category.id) ?? [],
+      category: glasses.category.id,
     },
     resolver: zodResolver(glassesEditFormSchema),
   });
@@ -116,7 +114,7 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="attributes.frame_shape"
+              name="attributes.frameShape"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Shape</FormLabel>
@@ -128,7 +126,7 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="attributes.frame_material"
+              name="attributes.frameMaterial"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Material</FormLabel>
@@ -140,7 +138,7 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="attributes.bridge_and_nosepads"
+              name="attributes.bridgeAndNosepads"
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Bridge & Nosepads</FormLabel>
@@ -152,24 +150,12 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="type"
-              render={({ field, fieldState }) => (
+              name="category"
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <GlassesTypeSelect {...field} {...fieldState} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="categories"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Categories</FormLabel>
-                  <FormControl>
-                    <CategoriesMultiselect {...field} {...fieldState} />
+                    <CategorySelector {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -188,7 +174,7 @@ export default function GlassesEditForm({
               )}
             />
             <Button type="submit" className="w-full">
-              Edit
+              Edit Glasses
             </Button>
           </Form>
         </form>
