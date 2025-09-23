@@ -59,13 +59,13 @@ export default function GlassesVariantForm({ productId }: Props) {
   const form = useForm({
     defaultValues: {
       price: "",
-      quantity_in_stock: "",
+      quantityInStock: "",
       attributes: {
-        lense_color: "",
-        frame_color: "",
-        lense_width: "",
-        bridge_width: "",
-        temple_length: "",
+        lenseColor: "",
+        frameColor: "",
+        lenseWidth: "",
+        bridgeWidth: "",
+        templeLength: "",
       },
     },
     resolver: zodResolver(glassesVariantSchema),
@@ -75,11 +75,10 @@ export default function GlassesVariantForm({ productId }: Props) {
     const image = await compressImage(data.image);
     if (!image) return;
 
-    const productVariant = { ...data, product_id: productId, image };
+    const productVariant = { ...data, productId: productId, image };
     mutate(productVariant);
     toast.loading("Creating variant...", { id: "new_variant" });
     setIsOpen(false);
-    console.log(data);
   }
 
   return (
@@ -123,7 +122,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`quantity_in_stock`}
+              name={`quantityInStock`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity In Stock</FormLabel>
@@ -135,7 +134,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.lense_color`}
+              name={`attributes.lenseColor`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Lense Color</FormLabel>
@@ -147,7 +146,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.frame_color`}
+              name={`attributes.frameColor`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Frame Color</FormLabel>
@@ -159,7 +158,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.lense_width`}
+              name={`attributes.lenseWidth`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Lense Width</FormLabel>
@@ -171,7 +170,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.bridge_width`}
+              name={`attributes.bridgeWidth`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Bridge Width</FormLabel>
@@ -183,7 +182,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.temple_length`}
+              name={`attributes.templeLength`}
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Temple Length</FormLabel>
@@ -194,7 +193,7 @@ export default function GlassesVariantForm({ productId }: Props) {
                 </FormItem>
               )}
             />
-            <Button className="w-full">Submit</Button>
+            <Button className="w-full">Create Variant</Button>
           </form>
         </Form>
       </DrawerContent>
