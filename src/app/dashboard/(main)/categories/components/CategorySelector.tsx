@@ -22,14 +22,10 @@ export default function CategorySelector({
   name,
   onChange,
   ref,
-}: ControllerRenderProps) {
+  selectValueType = "id",
+}: ControllerRenderProps & { selectValueType?: "id" | "path" }) {
   const [open, setOpen] = useState(false);
-  const {
-    data: categories,
-    status,
-    isPending,
-    isError,
-  } = useQuery({
+  const { data: categories, status } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
   });
@@ -66,11 +62,27 @@ export default function CategorySelector({
   function handleCategorySelect(e: MouseEvent, category: Category) {
     e.stopPropagation();
     setSelectedCategory(category);
-    onChange(category.id);
+    switch (selectValueType) {
+      case "id":
+        onChange(category.id);
+        break;
+      case "path":
+        onChange(category.path);
+        break;
+    }
     setOpen(false);
   }
   function getSelectedCategory() {
     if (!categories || !value) return null;
+    categories.find((c) => {
+      switch (selectValueType) {
+        case "id":
+          return c.id === value;
+        case "path":
+          return c.path === value;
+      }
+    });
+
     return categories.find((c) => c.id === value) ?? null;
   }
 
