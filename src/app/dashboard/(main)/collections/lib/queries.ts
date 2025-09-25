@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { collections } from "@/db/drizzle/schema";
+import { collections, conditions } from "@/db/drizzle/schema";
+import { and, eq, getTableColumns } from "drizzle-orm";
 
 export async function getCollections() {
   const [collectionsList, count] = await Promise.all([
@@ -10,4 +11,18 @@ export async function getCollections() {
   ]);
 
   return { collections: collectionsList, count };
+}
+
+export async function getCollectionBySlug(slug: string) {
+  const [collectionsList, conditionsList] = await Promise.all([
+    db.select().from(collections).where(eq(collections.slug, slug)),
+    db
+      .select(getTableColumns(conditions))
+      .from(conditions)
+      .innerJoin(collections, eq(collections.id, conditions.collectionId))
+      .where(
+        and(eq(collections.slug, slug), eq(collections.type, "automatic"))
+      ),
+  ]);
+  return { ...collectionsList[0], conditions: conditionsList, products: [] };
 }
