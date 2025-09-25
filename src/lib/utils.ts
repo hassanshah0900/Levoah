@@ -48,3 +48,14 @@ export function getImagePublicUrl(url: string) {
   } = supabase.storage.from("Product Images").getPublicUrl(url);
   return publicUrl;
 }
+
+const dateFormatter = new Intl.DateTimeFormat("en-PK", {
+  hourCycle: "h12",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+export function formatDate(date: Date) {
+  return dateFormatter.format(date);
+}
