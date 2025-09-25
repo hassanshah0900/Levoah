@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { filters, variantOperators } from "../lib/data";
 
@@ -12,6 +12,7 @@ interface Props {
   onConditionDelete: () => void;
 }
 export default function Condition({ id, onConditionDelete }: Props) {
+  const initialRender = useRef<boolean>(true);
   const fieldValue = useWatch({
     name: `conditions.${id}.field`,
   });
@@ -25,7 +26,8 @@ export default function Condition({ id, onConditionDelete }: Props) {
   const ValueComponent = filterItem?.value;
 
   useEffect(() => {
-    resetField(`conditions.${id}.value`, { defaultValue: "" });
+    if (!initialRender.current)
+      resetField(`conditions.${id}.value`, { defaultValue: "" });
     setValue(`conditions.${id}.variant`, variant);
   }, [fieldValue]);
 
@@ -75,7 +77,7 @@ export default function Condition({ id, onConditionDelete }: Props) {
                 {ValueComponent ? (
                   <ValueComponent field={field} fieldState={fieldState} />
                 ) : (
-                  <Input />
+                  <Input {...field} />
                 )}
               </FormControl>
             </FormItem>
