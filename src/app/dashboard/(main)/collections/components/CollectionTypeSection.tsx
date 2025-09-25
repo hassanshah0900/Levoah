@@ -33,7 +33,7 @@ export default function CollectionTypeSection() {
                     className="space-y-2"
                   >
                     <div className="flex justify-start items-center gap-2">
-                      <RadioGroupItem value="manual" id="manual" />
+                      <RadioGroupItem value="manual" id="manual" disabled />
                       <Label htmlFor="manual">Manual</Label>
                     </div>
                     <div className="flex justify-start items-center gap-2">
