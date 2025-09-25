@@ -13,12 +13,13 @@ import { columns } from "./columns";
 
 interface Props {
   collections: Collection[];
+  rowCount: number;
 }
-export default function CollectionsTable({ collections }: Props) {
+export default function CollectionsTable({ collections, rowCount }: Props) {
   const { table } = useDataTable({
     columns,
-    data: collections ?? [],
-    rowCount: 0,
+    data: collections,
+    rowCount,
     initialState: {
       columnPinning: {
         right: ["actions"],
