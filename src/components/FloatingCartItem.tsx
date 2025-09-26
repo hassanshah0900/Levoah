@@ -23,14 +23,14 @@ export default function FloatingCartItem({ cartItem }: Props) {
             <X />
           </button>
           <ProductImage
-            src={cartItem.variant.image_url}
+            src={cartItem.variant.imageUrl}
             alt=""
             className="w-20"
           />
         </div>
         <div className="flex flex-col items-start gap-1">
           <h4 className="leading-tight sm:text-lg">{cartItem.product.title}</h4>
-          {cartItem.product.product_type === "glasses" && (
+          {cartItem.product.productType === "glasses" && (
             <GlassesRelatedDetails
               cartItem={cartItem as ShoppingCartItem<"glasses">}
             />
@@ -57,20 +57,20 @@ function GlassesRelatedDetails({
       <p className="flex gap-1">
         Frame
         <span className="font-normal text-muted-foreground">
-          {cartItem.variant.attributes.frame_color}
+          {cartItem.variant.attributes.frameColor}
         </span>
       </p>
       <p className="flex gap-1">
         Lense
         <span className="font-normal text-muted-foreground">
-          {cartItem.variant.attributes.lense_color}
+          {cartItem.variant.attributes.lenseColor}
         </span>
       </p>
       <p className="flex gap-1">
         Size
         <span className="font-normal text-muted-foreground">
-          {cartItem.variant.attributes.lense_width}{" "}
-          {cartItem.variant.attributes.bridge_width}
+          {cartItem.variant.attributes.lenseWidth}{" "}
+          {cartItem.variant.attributes.bridgeWidth}
         </span>
       </p>
     </div>
