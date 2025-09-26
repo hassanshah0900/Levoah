@@ -1,6 +1,6 @@
 import Container from "@/components/Container";
 import { Suspense } from "react";
-import RelatedProductsSectionSkeleton from "../../[...categories]/components/RelatedProductsSkeleton";
+import RelatedProductsSectionSkeleton from "../components/RelatedProductsSkeleton";
 import SingleProduct from "../components/SingleProduct";
 import SingleProductSkeleton from "../components/SingleProductSkeleton";
 import { getProductWithVariants } from "../../[...categories]/lib/queries";
