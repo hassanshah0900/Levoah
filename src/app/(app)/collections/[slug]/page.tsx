@@ -27,6 +27,7 @@ export async function generateMetadata(
   };
 }
 
+const COLLECTION_PAGE_SIZE = 10;
 export default async function CollectionsPage({
   params,
 }: {
@@ -36,15 +37,13 @@ export default async function CollectionsPage({
 
   const queryClient = new QueryClient();
 
-  const promise = new Promise((res, rej) => {
-    setTimeout(() => {
-      res("hello");
-    }, 2090);
-  });
-  await promise;
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["products with variants"],
-    queryFn: () => getProductsByCollection(slug),
+    queryKey: ["products with variants", slug],
+    queryFn: ({ pageParam }) =>
+      getProductsByCollection(slug, {
+        pageIndex: pageParam,
+        pageSize: COLLECTION_PAGE_SIZE,
+      }),
     initialPageParam: 0,
   });
 
@@ -66,7 +65,7 @@ export default async function CollectionsPage({
                 {collection.title}
               </h1>
             </div>
-            <CollectionProductsGrid />
+            <CollectionProductsGrid pageSize={COLLECTION_PAGE_SIZE} />
             <p className="text-muted-foreground overflow-ellipsis overflow-hidden mt-10">
               {collection.description}
             </p>
