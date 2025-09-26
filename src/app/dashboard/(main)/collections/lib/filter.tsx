@@ -28,6 +28,8 @@ export function filter(
 
   const filters = conditions.map((condition) => {
     const { key, property } = parseJsonColumnName(condition.field);
+    console.log("Property: ", property);
+
     const column = getColumn(table, key);
 
     switch (condition.relation) {
@@ -104,13 +106,13 @@ export function filter(
       case "c":
         return column
           ? column.dataType === "json"
-            ? sql`${column} ->> ${property} ILIKE %${condition.value}%`
+            ? sql`${column} ->> ${property} ILIKE ${`%${condition.value}%`}`
             : ilike(column, `%${condition.value}%`)
           : undefined;
       case "nc":
         return column
           ? column.dataType === "json"
-            ? sql`${column} ->> ${property} NOT ILIKE %${condition.value}%`
+            ? sql`${column} ->> ${property} NOT ILIKE ${`%${condition.value}%`}`
             : not(ilike(column, `%${condition.value}%`))
           : undefined;
     }
