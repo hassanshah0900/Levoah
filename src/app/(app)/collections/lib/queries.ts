@@ -4,19 +4,32 @@ import { filter } from "@/app/dashboard/(main)/collections/lib/filter";
 import { getCollectionBySlug } from "@/app/dashboard/(main)/collections/lib/queries";
 import { db } from "@/db";
 import { productsWithVariants } from "@/db/drizzle/schema";
+import { Product } from "@/types/products.types";
 
-export async function getProductsByCollection(slug: string) {
+interface Filters {
+  pageSize: number;
+  pageIndex: number;
+}
+export async function getProductsByCollection(
+  slug: string,
+  { pageSize, pageIndex }: Filters
+) {
   const collection = await getCollectionBySlug(slug);
   const filters = filter(
     collection.conditions,
     collection.matchType!,
     productsWithVariants
   );
-
+  const offsetValue = pageIndex * pageSize;
   const [products, count] = await Promise.all([
-    db.select().from(productsWithVariants).where(filters),
+    db
+      .select()
+      .from(productsWithVariants)
+      .where(filters)
+      .offset(offsetValue)
+      .limit(pageSize),
     db.$count(productsWithVariants, filters),
   ]);
 
-  return { products, count };
+  return { products: products as Product[], count };
 }
