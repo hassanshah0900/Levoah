@@ -1,4 +1,4 @@
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate, isValidDate } from "@/lib/utils";
 import { useState } from "react";
 import { ControllerRenderProps, useFormContext } from "react-hook-form";
 import { Button } from "./ui/button";
@@ -12,9 +12,11 @@ export default function DateInput({
   name,
 }: ControllerRenderProps) {
   const [open, setOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    value instanceof Date ? value : undefined
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(() => {
+    const date = new Date(value);
+    return isValidDate(date) ? date : undefined;
+  });
+
   const {
     formState: { errors },
   } = useFormContext();
