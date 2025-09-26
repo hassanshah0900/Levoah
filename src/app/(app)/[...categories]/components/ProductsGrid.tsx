@@ -8,7 +8,7 @@ import { Fragment } from "react";
 import { InView } from "react-intersection-observer";
 import { PAGE_SIZE } from "../lib/data";
 import { getCategoryBySlug, getProductsWithVariants } from "../lib/queries";
-import ProductCard from "./ProductCard";
+import ProductCard from "../../../../components/ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import ProductsFilters from "./ProductsFilters";
 import ProductsSorter from "./ProductsSorter";

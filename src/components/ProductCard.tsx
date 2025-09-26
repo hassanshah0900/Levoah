@@ -4,7 +4,7 @@ import { Product } from "@/types/products.types";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
-import ProductImage from "./ProductImage";
+import ProductImage from "../app/(app)/[...categories]/components/ProductImage";
 
 interface Props {
   product: Product;
@@ -37,7 +37,7 @@ export default function ProductCard({ product }: Props) {
             {product.variants.map((variant) => (
               <EmblaSlide key={variant.id}>
                 <ProductImage
-                  src={variant.image_url}
+                  src={variant.imageUrl}
                   alt=""
                   className="rounded-xs"
                 />
