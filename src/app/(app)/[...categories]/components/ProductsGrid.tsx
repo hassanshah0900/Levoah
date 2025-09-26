@@ -9,7 +9,7 @@ import { InView } from "react-intersection-observer";
 import { PAGE_SIZE } from "../lib/data";
 import { getCategoryBySlug, getProductsWithVariants } from "../lib/queries";
 import ProductCard from "../../../../components/ProductCard";
-import ProductCardSkeleton from "./ProductCardSkeleton";
+import ProductCardSkeleton from "../../../../components/ProductCardSkeleton";
 import ProductsFilters from "./ProductsFilters";
 import ProductsSorter from "./ProductsSorter";
 

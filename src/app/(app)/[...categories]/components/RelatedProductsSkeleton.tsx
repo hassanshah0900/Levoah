@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
-import ProductCardSkeleton from "./ProductCardSkeleton";
+import ProductCardSkeleton from "../../../../components/ProductCardSkeleton";
 
 export default function RelatedProductsSectionSkeleton() {
   return (
