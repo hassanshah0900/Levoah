@@ -10,7 +10,7 @@ import { PAGE_SIZE } from "../lib/data";
 import { getCategoryBySlug, getProductsWithVariants } from "../lib/queries";
 import ProductCard from "../../../../components/ProductCard";
 import ProductCardSkeleton from "../../../../components/ProductCardSkeleton";
-import ProductsFilters from "./ProductsFilters";
+import ProductsFilters from "../../../../components/ProductsFilters";
 import ProductsSorter from "./ProductsSorter";
 
 export default function ProductsGrid() {
