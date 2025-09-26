@@ -11,26 +11,29 @@ import ProductCardSkeleton from "../../[...categories]/components/ProductCardSke
 import ProductsFilters from "../../[...categories]/components/ProductsFilters";
 import ProductsSorter from "../../[...categories]/components/ProductsSorter";
 
-const PAGE_SIZE = 10;
-export default function CollectionProductGrid() {
+export default function CollectionProductGrid({
+  pageSize,
+}: {
+  pageSize: number;
+}) {
   const { slug } = useParams<{ slug: string }>();
 
   const { data, status, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["products with variants"],
+      queryKey: ["products with variants", slug],
       queryFn: ({ pageParam }) =>
         getProductsByCollection(slug, {
           pageIndex: pageParam,
-          pageSize: PAGE_SIZE,
+          pageSize: pageSize,
         }),
       initialPageParam: 0,
       getNextPageParam: (lastPage, allPages, lastPageParams) => {
-        return getNextPageIndex(lastPageParams, lastPage?.count, PAGE_SIZE);
+        return getNextPageIndex(lastPageParams, lastPage?.count, pageSize);
       },
     });
 
   const numberOfVisibleProducts = data
-    ? (data.pages.length - 1) * PAGE_SIZE +
+    ? (data.pages.length - 1) * pageSize +
       data?.pages[data.pages.length - 1].products.length
     : 0;
 
