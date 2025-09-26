@@ -18,7 +18,11 @@ export default function CollectionProductGrid() {
   const { data, status, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ["products with variants"],
-      queryFn: () => getProductsByCollection(slug),
+      queryFn: ({ pageParam }) =>
+        getProductsByCollection(slug, {
+          pageIndex: pageParam,
+          pageSize: PAGE_SIZE,
+        }),
       initialPageParam: 0,
       getNextPageParam: (lastPage, allPages, lastPageParams) => {
         return getNextPageIndex(lastPageParams, lastPage?.count, PAGE_SIZE);
@@ -54,45 +58,12 @@ export default function CollectionProductGrid() {
               {page.products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-              {page.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
               {isFetchingNextPage && <ProductsLoadingSkeleton />}
-              <InView onChange={handleInView} />
             </Fragment>
           ))
         )}
       </div>
+      <InView onChange={handleInView} />
     </div>
   );
 }
@@ -106,5 +77,3 @@ function ProductsLoadingSkeleton() {
     </>
   );
 }
-
-function Filters() {}
