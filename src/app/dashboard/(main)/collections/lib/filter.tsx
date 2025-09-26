@@ -33,11 +33,15 @@ export function filter(
     switch (condition.relation) {
       case "eq":
         if (condition.variant === "date") {
-          const start = new Date(Number(condition.value));
+          const start = parseDate(condition.value);
+          if (!start) return undefined;
           start.setHours(0, 0, 0, 0);
           const end = new Date(start);
           end.setHours(23, 59, 59, 999);
-          return and(gt(column, start), lt(column, end));
+          return and(
+            gt(column, start.toISOString()),
+            lt(column, end.toISOString())
+          );
         }
         return column
           ? column.dataType === "json"
@@ -46,11 +50,15 @@ export function filter(
           : undefined;
       case "ne":
         if (condition.variant === "date") {
-          const start = new Date(Number(condition.value));
+          const start = parseDate(condition.value);
+          if (!start) return undefined;
           start.setHours(0, 0, 0, 0);
           const end = new Date(start);
           end.setHours(23, 59, 59, 999);
-          return or(lt(column, start), gt(column, end));
+          return or(
+            lt(column, start.toISOString()),
+            gt(column, end.toISOString())
+          );
         }
         return column
           ? column.dataType === "json"
@@ -59,30 +67,34 @@ export function filter(
           : undefined;
       case "lt":
         if (condition.variant === "date") {
-          const date = new Date(Number(condition.value));
+          const date = parseDate(condition.value);
+          if (!date) return undefined;
           date.setHours(0, 0, 0, 0);
-          return lt(column, date);
+          return lt(column, date.toISOString());
         }
         return lt(column, condition.value);
       case "lte":
         if (condition.variant === "date") {
-          const date = new Date(Number(condition.value));
+          const date = parseDate(condition.value);
+          if (!date) return undefined;
           date.setHours(23, 59, 59, 999);
-          return lte(column, date);
+          return lte(column, date.toISOString());
         }
         return lte(column, condition.value);
       case "gt":
         if (condition.variant === "date") {
-          const date = new Date(Number(condition.value));
+          const date = parseDate(condition.value);
+          if (!date) return undefined;
           date.setHours(23, 59, 59, 999);
-          return gt(column, date);
+          return gt(column, date.toISOString());
         }
         return gt(column, condition.value);
       case "gte":
         if (condition.variant === "date") {
-          const date = new Date(Number(condition.value));
+          const date = parseDate(condition.value);
+          if (!date) return undefined;
           date.setHours(0, 0, 0, 0);
-          return gte(column, date);
+          return gte(column, date.toISOString());
         }
         return gte(column, condition.value);
       case "sw":
@@ -90,13 +102,13 @@ export function filter(
       case "ew":
         return ilike(column, `%${condition.value}`);
       case "c":
-        column
+        return column
           ? column.dataType === "json"
             ? sql`${column} ->> ${property} ILIKE %${condition.value}%`
             : ilike(column, `%${condition.value}%`)
           : undefined;
       case "nc":
-        column
+        return column
           ? column.dataType === "json"
             ? sql`${column} ->> ${property} NOT ILIKE %${condition.value}%`
             : not(ilike(column, `%${condition.value}%`))
@@ -121,3 +133,8 @@ function parseJsonColumnName(columnName: string) {
 
 const column = collections["id"];
 column.dataType;
+
+function parseDate(dateString: any) {
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? undefined : date;
+}
