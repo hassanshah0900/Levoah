@@ -59,3 +59,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-PK", {
 export function formatDate(date: Date) {
   return dateFormatter.format(date);
 }
+
+export function isValidDate(date: Date) {
+  return !isNaN(date.getTime());
+}
