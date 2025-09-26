@@ -4,7 +4,7 @@ import { Product } from "@/types/products.types";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
-import ProductImage from "../app/(app)/[...categories]/components/ProductImage";
+import ProductImage from "./ProductImage";
 
 interface Props {
   product: Product;

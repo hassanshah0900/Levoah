@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Product, ProductVariant } from "@/types/products.types";
 import { notFound } from "next/navigation";
 import { useState } from "react";
-import ProductImage from "./ProductImage";
+import ProductImage from "../../../../components/ProductImage";
 
 interface Props {
   product: Product | null;
@@ -25,7 +25,7 @@ export default function SingleProduct({ product }: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-10 py-10">
       <ProductImage
-        src={currentVariant.image_url}
+        src={currentVariant.imageUrl}
         alt=""
         className="shadow-highlight shadow-[0_0_5px] sm:shadow-[0_0_10px] rounded-xs overflow-hidden"
       />
@@ -46,7 +46,7 @@ export default function SingleProduct({ product }: Props) {
         />
 
         <div>
-          {product.product_type === "glasses" && (
+          {product.productType === "glasses" && (
             <GlassesRelatedDetails
               variant={currentVariant as ProductVariant<"glasses">}
             />
@@ -95,7 +95,7 @@ function Variants({
             )}
             onClick={() => onVariantSelect(variant)}
           >
-            <ProductImage src={variant.image_url} alt="" />
+            <ProductImage src={variant.imageUrl} alt="" />
           </button>
         ))}
       </div>
@@ -113,19 +113,19 @@ function GlassesRelatedDetails({
       <p className="font-semibold sm:text-lg">
         Frame
         <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-          {variant.attributes.frame_color}
+          {variant.attributes.frameColor}
         </span>
       </p>
       <p className="font-semibold sm:text-lg">
         Lense
         <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-          {variant.attributes.lense_color}
+          {variant.attributes.lenseColor}
         </span>
       </p>
       <p className="font-semibold sm:text-lg">
         Size
         <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-          {variant.attributes.lense_width} {variant.attributes.bridge_width}
+          {variant.attributes.lenseWidth} {variant.attributes.bridgeWidth}
         </span>
       </p>
     </div>
