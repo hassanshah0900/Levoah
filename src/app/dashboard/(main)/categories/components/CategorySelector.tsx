@@ -11,7 +11,7 @@ import { categories } from "@/db/drizzle/schema";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ChevronRight } from "lucide-react";
-import { ComponentProps, MouseEvent, useState } from "react";
+import { ComponentProps, MouseEvent, useEffect, useState } from "react";
 import { ControllerRenderProps, useFormContext } from "react-hook-form";
 import { getAllCategories } from "../lib/queries";
 
@@ -31,7 +31,7 @@ export default function CategorySelector({
   });
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    () => getSelectedCategory()
+    null
   );
 
   const [openedCategory, setOpenedCategory] = useState<Category | null>(null);
@@ -74,17 +74,26 @@ export default function CategorySelector({
   }
   function getSelectedCategory() {
     if (!categories || !value) return null;
-    categories.find((c) => {
-      switch (selectValueType) {
-        case "id":
-          return c.id === value;
-        case "path":
-          return c.path === value;
-      }
-    });
+    return (
+      categories.find((c) => {
+        switch (selectValueType) {
+          case "id":
+            console.log("This is running");
 
-    return categories.find((c) => c.id === value) ?? null;
+            return c.id === value;
+
+          case "path":
+            console.log("Path: ", c.path);
+
+            return c.path === value;
+        }
+      }) ?? null
+    );
   }
+
+  useEffect(() => {
+    setSelectedCategory(getSelectedCategory());
+  }, [categories]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
