@@ -11,7 +11,7 @@ import { getCategoryBySlug, getProductsWithVariants } from "../lib/queries";
 import ProductCard from "../../../../components/ProductCard";
 import ProductCardSkeleton from "../../../../components/ProductCardSkeleton";
 import ProductsFilters from "../../../../components/ProductsFilters";
-import ProductsSorter from "./ProductsSorter";
+import ProductsSorter from "../../../../components/ProductsSorter";
 
 export default function ProductsGrid() {
   const { categories } = useParams<{
