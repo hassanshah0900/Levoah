@@ -72,7 +72,7 @@ export async function editCollection(collection: CollectionEditSchemaType) {
           .set({ ...condition })
           .where(eq(conditions.id, condition.id!))
       ),
-      db.insert(conditions).values(newConditions),
+      newConditions.length > 0 && db.insert(conditions).values(newConditions),
     ]);
   } catch (error) {
     throw error;
