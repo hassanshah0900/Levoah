@@ -9,12 +9,12 @@ export const productType = pgEnum("product_type", ['glasses', 'accessories', 'le
 export const productVariants = pgTable("product_variants", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({ name: "product_variants_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 9223372036854775807, cache: 1 }),
-	price: integer(),
+	price: integer().notNull(),
 	quantityInStock: integer("quantity_in_stock"),
 	attributes: jsonb(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	productId: bigint("product_id", { mode: "number" }),
+	productId: bigint("product_id", { mode: "number" }).notNull(),
 }, (table) => [
 	foreignKey({
 			columns: [table.productId],
@@ -265,6 +265,18 @@ export const rolePermissions = pgTable("role_permissions", {
 		}).onUpdate("cascade").onDelete("cascade"),
 	primaryKey({ columns: [table.roleId, table.permissionId], name: "role_permissions_pkey"}),
 ]);
+export const glasses = pgView("glasses", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	id: bigint({ mode: "number" }),
+	title: text(),
+	description: text(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
+	published: boolean(),
+	slug: text(),
+	attributes: jsonb(),
+	productType: productType("product_type"),
+	category: jsonb(),
+}).with({"securityInvoker":"on"}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id`);
+
 export const productsWithVariants = pgView("products_with_variants", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }),
 	title: text(),
@@ -276,26 +288,15 @@ export const productsWithVariants = pgView("products_with_variants", {	// You ca
 	productType: productType("product_type"),
 	category: jsonb(),
 	variants: json(),
-}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category, json_agg(to_jsonb(pv.*)) AS variants FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id LEFT JOIN product_variants_with_images pv ON pv.product_id = p.id GROUP BY p.id, c.id HAVING count(pv.*) > 0`);
-
-export const glasses = pgView("glasses", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	id: bigint({ mode: "number" }),
-	title: text(),
-	description: text(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
-	published: boolean(),
-	slug: text(),
-	attributes: jsonb(),
-	productType: productType("product_type"),
-	category: jsonb(),
-}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id`);
+}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category, json_agg(jsonb_build_object('id', pv.id, 'price', pv.price, 'imageUrl', pv.imageurl, 'quantityInStock', pv.quantity_in_stock, 'attributes', pv.attributes, 'createdAt', pv.created_at, 'productId', pv.product_id)) AS variants FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id LEFT JOIN product_variants_with_images pv ON pv.product_id = p.id GROUP BY p.id, c.id HAVING count(pv.*) > 0`);
 
 export const productVariantsWithImages = pgView("product_variants_with_images", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }),
-	imageUrl: text("image_url"),
 	price: integer(),
 	quantityInStock: integer("quantity_in_stock"),
 	attributes: jsonb(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	productId: bigint("product_id", { mode: "number" }),
-}).with({"securityInvoker":"on"}).as(sql`SELECT pv.id, i.path AS image_url, pv.price, pv.quantity_in_stock, pv.attributes, pv.product_id FROM product_variants pv LEFT JOIN images i ON i.variant_id = pv.id AND i.product_id = pv.product_id`);
+	imageurl: text(),
+}).as(sql`SELECT pv.id, pv.price, pv.quantity_in_stock, pv.attributes, pv.created_at, pv.product_id, i.path AS imageurl FROM product_variants pv LEFT JOIN images i ON i.variant_id = pv.id AND i.product_id = pv.product_id`);
