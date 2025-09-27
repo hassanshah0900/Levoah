@@ -29,7 +29,7 @@ export default function GlassesVariantTableRowActions({ row }: Props) {
         id: "delete_variant",
       });
       queryClient.invalidateQueries({
-        queryKey: ["product_variants", row.original.product_id],
+        queryKey: ["product_variants", row.original.productId],
       });
     },
     onError: () => {

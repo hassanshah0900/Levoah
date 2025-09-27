@@ -1,4 +1,4 @@
-import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
+import ProductImage from "@/components/ProductImage";
 import { getSubcategories } from "@/app/dashboard/(main)/categories/lib/queries";
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 import { useQuery } from "@tanstack/react-query";
