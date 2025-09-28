@@ -35,7 +35,7 @@ export default function DataTableColumnVisibilityToggler<TData>({
             View <ChevronsUpDown />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0 w-40" align={align}>
+        <PopoverContent className="p-0 w-max" align={align}>
           <Command>
             <CommandInput placeholder={"Search columns..."} />
             <CommandList>
