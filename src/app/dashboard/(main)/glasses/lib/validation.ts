@@ -22,6 +22,10 @@ export const glassesFormSchema = z.object({
     bridgeAndNosepads: z.enum(bridgeAndNosepads, {
       error: "Bride & nosepads is required.",
     }),
+    lenseWidth: z.coerce.number().min(1, "Lense width is required."),
+    bridgeWidth: z.coerce.number().min(1, "Bridge width is required."),
+    templeLength: z.coerce.number().min(1, "Temple length is required."),
+    modelCode: z.string().min(1, "Model Code is required."),
   }),
   description: z.string(),
   category: z.coerce.number().min(1, "Category is required"),
@@ -43,10 +47,10 @@ export const glassesVariantSchema = z.object({
   quantityInStock: z.coerce.number().min(1, "Quantity is required."),
   attributes: z.object({
     frameColor: z.string().min(1, "Frame color is required."),
+    frameColorDisplay: z.string().min(1, "Frame color is required."),
     lenseColor: z.string().min(1, "Lense Color is required."),
-    lenseWidth: z.coerce.number().min(1, "Lense width is required."),
-    bridgeWidth: z.coerce.number().min(1, "Bridge width is required."),
-    templeLength: z.coerce.number().min(1, "Temple length is required."),
+    lenseColorDisplay: z.string().min(1, "Display Lense Color is required."),
+    lenseType: z.string().min(1, "Lense type is required"),
   }),
 });
 
