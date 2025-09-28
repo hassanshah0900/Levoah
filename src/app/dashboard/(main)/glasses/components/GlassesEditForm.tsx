@@ -33,8 +33,11 @@ import {
   GlassesEditFormSchemaType,
 } from "../lib/validation";
 import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
+import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
+import LenseWidthCombobox from "./LenseWidthCombobox";
+import TempleLengthCombobox from "./TempleLengthCombobox";
 
 interface Props {
   glasses: Product<"glasses">;
@@ -114,6 +117,33 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <CategorySelector {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="attributes.modelCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Model Code</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={(field.value as string).toUpperCase()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               name="attributes.frameShape"
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -150,12 +180,36 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
-              name="category"
-              render={({ field }) => (
+              name={`attributes.lenseWidth`}
+              render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Lense Width</FormLabel>
                   <FormControl>
-                    <CategorySelector {...field} />
+                    <LenseWidthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`attributes.bridgeWidth`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Bridge Width</FormLabel>
+                  <FormControl>
+                    <BridgeWidthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`attributes.templeLength`}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Temple Length</FormLabel>
+                  <FormControl>
+                    <TempleLengthCombobox {...field} {...fieldState} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
