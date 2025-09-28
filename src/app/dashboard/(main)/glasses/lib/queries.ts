@@ -1,12 +1,12 @@
 "use server";
 
+import { db } from "@/db";
+import { productVariantsWithImages } from "@/db/drizzle/schema";
 import { createClient } from "@/supabase/server";
 import { ProductType, ProductVariant } from "@/types/products.types";
 import { SortingState } from "@tanstack/react-table";
+import { desc, eq } from "drizzle-orm";
 import { Category } from "../../categories/lib/types";
-import { db } from "@/db";
-import { productVariantsWithImages } from "@/db/drizzle/schema";
-import { and, eq } from "drizzle-orm";
 
 interface GetAllProductsProps {
   filters: {
@@ -50,7 +50,8 @@ export async function getAllGlassesVariants({
   const productVariants = await db
     .select()
     .from(productVariantsWithImages)
-    .where(eq(productVariantsWithImages.productId, productId));
+    .where(eq(productVariantsWithImages.productId, productId))
+    .orderBy(desc(productVariantsWithImages.createdAt));
 
   return {
     productVariants: productVariants as ProductVariant<"glasses">[],

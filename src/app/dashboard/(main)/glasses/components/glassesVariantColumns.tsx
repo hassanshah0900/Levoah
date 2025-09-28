@@ -1,5 +1,6 @@
-import ProductImage from "@/components/ProductImage";
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
+import ProductImage from "@/components/ProductImage";
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ProductType, ProductVariant } from "@/types/products.types";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -34,12 +35,12 @@ export function createGlassesVariantColumns(productType: ProductType) {
       enableHiding: false,
     }),
     columnHelper.accessor("imageUrl", {
-      id: "image_url",
+      id: "Image",
       header: ({ column }) => (
         <DataTableColumnHeader title="Image" column={column} />
       ),
       cell: ({ getValue }) => (
-        <div className="w-16">
+        <div className="w-20">
           <ProductImage src={getValue()} alt="" />
         </div>
       ),
@@ -51,7 +52,7 @@ export function createGlassesVariantColumns(productType: ProductType) {
       header: ({ column }) => (
         <DataTableColumnHeader title="Price" column={column} />
       ),
-      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      cell: ({ getValue }) => <div className="ml-4">Rs {getValue()}</div>,
     }),
     columnHelper.accessor("quantityInStock", {
       id: "Stock",
@@ -65,34 +66,43 @@ export function createGlassesVariantColumns(productType: ProductType) {
       header: ({ column }) => (
         <DataTableColumnHeader title="Frame Color" column={column} />
       ),
+      cell: ({ getValue }) => <Badge className="ml-4">{getValue()}</Badge>,
+      enableSorting: false,
+    }),
+    columnHelper.accessor("attributes.frameColorDisplay", {
+      id: "Display Frame Color",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Display Frame Color" column={column} />
+      ),
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
       enableSorting: false,
+      size: 200,
     }),
     columnHelper.accessor("attributes.lenseColor", {
       id: "Lense Color",
       header: ({ column }) => (
         <DataTableColumnHeader title="Lense Color" column={column} />
       ),
-      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      cell: ({ getValue }) => <Badge className="ml-4">{getValue()}</Badge>,
       enableSorting: false,
     }),
-    columnHelper.accessor("attributes.templeLength", {
-      id: "Temple Length",
+    columnHelper.accessor("attributes.lenseColorDisplay", {
+      id: "Display Lense Color",
       header: ({ column }) => (
-        <DataTableColumnHeader title="Temple Length" column={column} />
+        <DataTableColumnHeader title="Display Lense Color" column={column} />
+      ),
+      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
+      enableSorting: false,
+      size: 200,
+    }),
+    columnHelper.accessor("attributes.lenseType", {
+      id: "Lense Type",
+      header: ({ column }) => (
+        <DataTableColumnHeader title="Lense Type" column={column} />
       ),
       cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
       enableSorting: false,
     }),
-    columnHelper.accessor("attributes.bridgeWidth", {
-      id: "Bridge Width",
-      header: ({ column }) => (
-        <DataTableColumnHeader title="Bridge Width" column={column} />
-      ),
-      cell: ({ getValue }) => <div className="ml-4">{getValue()}</div>,
-      enableSorting: false,
-    }),
-
     columnHelper.display({
       id: "actions",
       cell: ({ row }) => <GlassesVariantTableRowActions row={row} />,

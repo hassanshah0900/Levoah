@@ -69,8 +69,8 @@ function GlassesRelatedDetails({
       <p className="flex gap-1">
         Size
         <span className="font-normal text-muted-foreground">
-          {cartItem.variant.attributes.lenseWidth}{" "}
-          {cartItem.variant.attributes.bridgeWidth}
+          {cartItem.product.attributes.lenseWidth}{" "}
+          {cartItem.product.attributes.bridgeWidth}
         </span>
       </p>
     </div>

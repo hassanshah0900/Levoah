@@ -48,6 +48,7 @@ export default function SingleProduct({ product }: Props) {
         <div>
           {product.productType === "glasses" && (
             <GlassesRelatedDetails
+              product={product}
               variant={currentVariant as ProductVariant<"glasses">}
             />
           )}
@@ -105,8 +106,10 @@ function Variants({
 
 function GlassesRelatedDetails({
   variant,
+  product,
 }: {
   variant: ProductVariant<"glasses">;
+  product: Product<"glasses">;
 }) {
   return (
     <div>
@@ -125,7 +128,7 @@ function GlassesRelatedDetails({
       <p className="font-semibold sm:text-lg">
         Size
         <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
-          {variant.attributes.lenseWidth} {variant.attributes.bridgeWidth}
+          {product.attributes.lenseWidth} {product.attributes.bridgeWidth}
         </span>
       </p>
     </div>

@@ -26,11 +26,9 @@ import {
   glassesVariantEditSchema,
   GlassesVariantEditSchemaType,
 } from "../lib/validation";
-import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import FrameColorCombobox from "./FrameColorCombobox";
 import LenseColorCombobox from "./LenseColorCombobox";
-import LenseWidthCombobox from "./LenseWidthCombobox";
-import TempleLengthCombobox from "./TempleLengthCombobox";
+import LenseTypeSelect from "./LenseTypeSelect";
 
 interface Props {
   open?: boolean;
@@ -146,6 +144,18 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
+              name={`attributes.frameColorDisplay`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Display Lense Color</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               name={`attributes.frameColor`}
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -158,36 +168,24 @@ export default function GlassesVariantEditForm({
               )}
             />
             <FormField
-              name={`attributes.lenseWidth`}
-              render={({ field, fieldState }) => (
+              name={`attributes.lenseColorDisplay`}
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Lense Width</FormLabel>
+                  <FormLabel>Display Frame Color</FormLabel>
                   <FormControl>
-                    <LenseWidthCombobox {...field} {...fieldState} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
-              name={`attributes.bridgeWidth`}
-              render={({ field, fieldState }) => (
+              name={`attributes.lenseType`}
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bridge Width</FormLabel>
+                  <FormLabel>Lense type</FormLabel>
                   <FormControl>
-                    <BridgeWidthCombobox {...field} {...fieldState} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`attributes.templeLength`}
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Temple Length</FormLabel>
-                  <FormControl>
-                    <TempleLengthCombobox {...field} {...fieldState} />
+                    <LenseTypeSelect {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

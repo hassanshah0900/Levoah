@@ -46,7 +46,18 @@ export const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader title="Slug" column={column} />
     ),
-    cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
+    cell: ({ getValue }) => (
+      <div className="ml-3 whitespace-nowrap">{getValue()}</div>
+    ),
+  }),
+  columnHelper.accessor("attributes.modelCode", {
+    header: ({ column }) => (
+      <DataTableColumnHeader title="Model" column={column} />
+    ),
+    cell: ({ getValue }) => (
+      <div className="ml-3 whitespace-nowrap">{getValue()}</div>
+    ),
+    enableSorting: false,
   }),
   columnHelper.accessor("description", {
     id: "description",
@@ -98,6 +109,36 @@ export const columns = [
     ),
     cell: ({ getValue }) => (
       <Badge className="ml-3">{getValue() ?? "No Value"}</Badge>
+    ),
+    enableSorting: false,
+  }),
+  columnHelper.accessor("attributes.lenseWidth", {
+    id: "Lense Width",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Lense Width" />
+    ),
+    cell: ({ getValue }) => (
+      <div className="ml-3">{getValue() ? `${getValue()} mm` : "No Value"}</div>
+    ),
+    enableSorting: false,
+  }),
+  columnHelper.accessor("attributes.bridgeWidth", {
+    id: "Bridge Width",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Bridge Width" />
+    ),
+    cell: ({ getValue }) => (
+      <div className="ml-3">{getValue() ? `${getValue()} mm` : "No Value"}</div>
+    ),
+    enableSorting: false,
+  }),
+  columnHelper.accessor("attributes.templeLength", {
+    id: "Temple Length",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Temple Length" />
+    ),
+    cell: ({ getValue }) => (
+      <div className="ml-3">{getValue() ? `${getValue()} mm` : "No Value"}</div>
     ),
     enableSorting: false,
   }),

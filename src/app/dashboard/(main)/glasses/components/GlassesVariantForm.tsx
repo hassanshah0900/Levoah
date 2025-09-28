@@ -16,23 +16,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { compressImage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { createGlassesVariant } from "../lib/actions";
 import {
   glassesVariantSchema,
   GlassesVariantSchemaType,
 } from "../lib/validation";
-import { toast } from "sonner";
-import { createGlassesVariant } from "../lib/actions";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { compressImage } from "@/lib/utils";
-import BridgeWidthCombobox from "./BridgeWidthCombobox";
-import LenseWidthCombobox from "./LenseWidthCombobox";
-import TempleLengthCombobox from "./TempleLengthCombobox";
-import LenseColorCombobox from "./LenseColorCombobox";
 import FrameColorCombobox from "./FrameColorCombobox";
+import LenseColorCombobox from "./LenseColorCombobox";
+import LenseTypeSelect from "./LenseTypeSelect";
 
 interface Props {
   productId: number;
@@ -62,10 +60,10 @@ export default function GlassesVariantForm({ productId }: Props) {
       quantityInStock: "",
       attributes: {
         lenseColor: "",
+        lenseColorDisplay: "",
         frameColor: "",
-        lenseWidth: "",
-        bridgeWidth: "",
-        templeLength: "",
+        frameColorDisplay: "",
+        lenseType: "normal",
       },
     },
     resolver: zodResolver(glassesVariantSchema),
@@ -146,6 +144,18 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
+              name={`attributes.frameColorDisplay`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Display Lense Color</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               name={`attributes.frameColor`}
               render={({ field, fieldState }) => (
                 <FormItem>
@@ -158,36 +168,24 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.lenseWidth`}
-              render={({ field, fieldState }) => (
+              name={`attributes.lenseColorDisplay`}
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Lense Width</FormLabel>
+                  <FormLabel>Display Frame Color</FormLabel>
                   <FormControl>
-                    <LenseWidthCombobox {...field} {...fieldState} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
-              name={`attributes.bridgeWidth`}
-              render={({ field, fieldState }) => (
+              name={`attributes.lenseType`}
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bridge Width</FormLabel>
+                  <FormLabel>Lense type</FormLabel>
                   <FormControl>
-                    <BridgeWidthCombobox {...field} {...fieldState} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name={`attributes.templeLength`}
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Temple Length</FormLabel>
-                  <FormControl>
-                    <TempleLengthCombobox {...field} {...fieldState} />
+                    <LenseTypeSelect {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

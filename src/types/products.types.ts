@@ -26,6 +26,10 @@ interface Glasses
     frameShape: FrameShape;
     frameMaterial: FrameMaterial;
     bridgeAndNosepads: BridgeAndNosepads;
+    bridgeWidth: number;
+    lenseWidth: number;
+    templeLength: number;
+    modelCode: string;
   }> {
   productType: "glasses";
   variants: GlassesVariant[];
@@ -36,10 +40,10 @@ type LenseColor = (typeof lenseColors)[number];
 
 type GlassesVariant = SharedProductVariantProperties<{
   lenseColor: LenseColor;
+  lenseColorDisplay: string;
   frameColor: FrameColor;
-  bridgeWidth: number;
-  lenseWidth: number;
-  templeLength: number;
+  frameColorDisplay: string;
+  lenseType: string;
 }>;
 
 interface Accessory extends SharedProductProperties<{}> {

@@ -54,7 +54,7 @@ export default function GlassesVariantTableRowActions({ row }: Props) {
             <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent align="end">
           <DropdownMenuGroup>
             <DropdownMenuItem onSelect={() => setOpenState("EDIT")}>
               Edit
