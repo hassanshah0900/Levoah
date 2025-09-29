@@ -7,14 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Row } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
-import { Row } from "@tanstack/react-table";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { deleteSingleBrand } from "../lib/actions";
 import { Brand } from "../lib/types";
 import EditBrandForm from "./EditBrandForm";
-import { deleteSingleBrand } from "../lib/actions";
 
 interface Props {
   row: Row<Brand>;
@@ -22,7 +22,7 @@ interface Props {
 
 export default function BrandsTableRowAction({ row }: Props) {
   const [openState, setOpenState] = useState<"EDIT" | "DELETE" | null>(null);
-  const categoryName = row.original.name;
+  const brandName = row.original.name;
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -31,7 +31,7 @@ export default function BrandsTableRowAction({ row }: Props) {
       queryClient.invalidateQueries({
         queryKey: ["brands"],
       });
-      toast.success(`Successfully deleted brand ${categoryName}`, {
+      toast.success(`Successfully deleted brand ${brandName}`, {
         id: "delete_brand",
       });
     },
@@ -42,7 +42,7 @@ export default function BrandsTableRowAction({ row }: Props) {
 
   function deleteCategory() {
     mutate(row.original);
-    toast.loading(`Deleting brand ${categoryName}`, {
+    toast.loading(`Deleting brand ${brandName}`, {
       id: "delete_brand",
     });
   }
