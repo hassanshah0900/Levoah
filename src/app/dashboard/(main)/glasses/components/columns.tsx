@@ -2,10 +2,10 @@ import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader"
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Product } from "@/types/products.types";
 import { createColumnHelper } from "@tanstack/react-table";
 import Link from "next/link";
 import GlassesTableRowActions from "./GlassesTableRowActions";
-import { Product } from "@/types/products.types";
 
 const columnHelper = createColumnHelper<Product<"glasses">>();
 
@@ -146,6 +146,13 @@ export const columns = [
     id: "Category",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ getValue }) => <div className="ml-3">{getValue()?.name}</div>,
+  }),
+  columnHelper.accessor("brand", {
+    id: "Brand",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Brand" />
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()?.name}</div>,
   }),

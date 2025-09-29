@@ -29,6 +29,7 @@ export const glassesFormSchema = z.object({
   }),
   description: z.string(),
   category: z.coerce.number().min(1, "Category is required"),
+  brandId: z.coerce.number().min(1, "Brand is required."),
 });
 
 export type GlassesFormSchemaType = z.infer<typeof glassesFormSchema>;

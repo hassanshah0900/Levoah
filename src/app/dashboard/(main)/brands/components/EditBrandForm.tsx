@@ -16,15 +16,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { compressImage, getImagePublicUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { getImagePublicUrl } from "@/lib/utils";
-import { compressImage } from "@/lib/utils";
-import { Brand } from "../lib/types";
 import { editBrand } from "../lib/actions";
+import { Brand } from "../lib/types";
 import { brandSchema, BrandSchemaType } from "../lib/validation";
 
 interface Props {
@@ -92,7 +90,9 @@ export default function EditBrandForm({ brand, open, onOpenChange }: Props) {
                       <ImageInput
                         onChange={onChange}
                         shouldReset={false}
-                        imgUrl={brand.logo && getImagePublicUrl(brand.logo)}
+                        imgUrl={
+                          brand.logo ? getImagePublicUrl(brand.logo) : undefined
+                        }
                       />
                     </FormControl>
                     <FormMessage />

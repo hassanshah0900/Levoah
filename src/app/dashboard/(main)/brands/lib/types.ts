@@ -1,6 +1,3 @@
-export interface Brand {
-  id: number;
-  name: string;
-  slug: string;
-  logo: string;
-}
+import { brands } from "@/db/drizzle/schema";
+
+export type Brand = typeof brands.$inferSelect;

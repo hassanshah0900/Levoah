@@ -1,5 +1,6 @@
 "use client";
 
+import BrandsCombobox from "@/components/BrandsCombobox";
 import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +8,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,12 +25,11 @@ import CategorySelector from "../../categories/components/CategorySelector";
 import { createGlasses } from "../lib/actions";
 import { glassesFormSchema, GlassesFormSchemaType } from "../lib/validation";
 import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
+import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
-import TempleLengthCombobox from "./TempleLengthCombobox";
-import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import LenseWidthCombobox from "./LenseWidthCombobox";
-import { useRouter } from "next/navigation";
+import TempleLengthCombobox from "./TempleLengthCombobox";
 
 export default function GlassesForm() {
   const [isPublished, setIsPublished] = useState(true);
@@ -121,6 +122,18 @@ export default function GlassesForm() {
                 <FormLabel>Category</FormLabel>
                 <FormControl>
                   <CategorySelector {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="brandId"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <FormControl>
+                  <BrandsCombobox {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
