@@ -2,13 +2,15 @@
 
 import DataTable from "@/components/DataTable/DataTable";
 import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableColumnVisibilityToggler";
+import DataTableLoadingSkeleton from "@/components/DataTable/DataTableLoadingSkeleton";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { getAllGlassesVariants } from "../lib/queries";
 import { createGlassesVariantColumns } from "./glassesVariantColumns";
 import GlassesVariantForm from "./GlassesVariantForm";
-import { useMemo } from "react";
+import { notFound } from "next/navigation";
 
 interface Props {
   productId: number;
@@ -19,7 +21,7 @@ export default function GlassesVariantsTable({ productId }: Props) {
     [productId]
   );
 
-  const { data } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["product_variants", productId],
     queryFn: () => getAllGlassesVariants({ productId }),
   });
@@ -36,16 +38,29 @@ export default function GlassesVariantsTable({ productId }: Props) {
 
   console.log(data);
 
+  if (status === "error") notFound();
+
   return (
     <div className="space-y-5 mt-5">
       <div>
         <SidebarTrigger />
       </div>
-      <div className="flex justify-between items-center">
-        <DataTableColumnVisibilityToggler table={table} />
-        <GlassesVariantForm productId={productId} />
-      </div>
-      <DataTable table={table}></DataTable>
+      {status === "pending" ? (
+        <DataTableLoadingSkeleton
+          hasPagination
+          hasSearch
+          hasColumnVisibilityToggler
+          shouldShrink={false}
+        />
+      ) : (
+        <>
+          <div className="flex justify-between items-center">
+            <DataTableColumnVisibilityToggler table={table} />
+            <GlassesVariantForm productId={productId} />
+          </div>
+          <DataTable table={table}></DataTable>
+        </>
+      )}
     </div>
   );
 }
