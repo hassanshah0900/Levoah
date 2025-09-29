@@ -1,5 +1,6 @@
 "use client";
 
+import BrandsCombobox from "@/components/BrandsCombobox";
 import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -129,6 +130,18 @@ export default function GlassesEditForm({
               )}
             />
             <FormField
+              name="brandId"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Brand</FormLabel>
+                  <FormControl>
+                    <BrandsCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               name="attributes.modelCode"
               render={({ field }) => (
                 <FormItem>
@@ -136,7 +149,7 @@ export default function GlassesEditForm({
                   <FormControl>
                     <Input
                       {...field}
-                      value={(field.value as string).toUpperCase()}
+                      value={(field.value as string)?.toUpperCase()}
                     />
                   </FormControl>
                   <FormMessage />
