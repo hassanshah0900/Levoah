@@ -2,6 +2,7 @@
 
 import DataTable from "@/components/DataTable/DataTable";
 import DataTableColumnVisibilityToggler from "@/components/DataTable/DataTableColumnVisibilityToggler";
+import DataTableLoadingSkeleton from "@/components/DataTable/DataTableLoadingSkeleton";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDataTable } from "@/hooks/useDataTable";
@@ -35,7 +36,12 @@ export default function BrandsTable() {
       </div>
 
       {status === "pending" ? (
-        <div>Loading...</div>
+        <DataTableLoadingSkeleton
+          hasPagination
+          hasSearch
+          hasColumnVisibilityToggler
+          shouldShrink={false}
+        />
       ) : status === "error" ? (
         <div>An error occured</div>
       ) : (
