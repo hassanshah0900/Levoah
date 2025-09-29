@@ -17,16 +17,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { compressImage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { compressImage } from "@/lib/utils";
-import { brandSchema, BrandSchemaType } from "../lib/validation";
 import { createBrand } from "../lib/actions";
+import { brandSchema, BrandSchemaType } from "../lib/validation";
 
 export default function NewBrandForm() {
   const form = useForm({
@@ -45,7 +44,7 @@ export default function NewBrandForm() {
       toast.success("New brand successfully created.", {
         id: "new_brand",
       });
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["brands"] });
       form.reset();
     },
     onError(error) {
