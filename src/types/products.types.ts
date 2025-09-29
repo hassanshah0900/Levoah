@@ -1,3 +1,4 @@
+import { Brand } from "@/app/dashboard/(main)/brands/lib/types";
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 import { bridgeAndNosepads } from "@/app/dashboard/(main)/glasses/components/BridgeAndNosepadsSelect";
 import { frameColors } from "@/app/dashboard/(main)/glasses/components/FrameColorCombobox";
@@ -11,6 +12,7 @@ type SharedProductProperties<T extends Record<string, any>> =
   typeof products.$inferSelect & {
     attributes: T;
     category: Category;
+    brand: Brand | null;
   };
 
 type SharedProductVariantProperties<T> = typeof productVariants.$inferSelect & {
