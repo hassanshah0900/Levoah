@@ -1,7 +1,14 @@
 "use client";
 
+import BannerInput from "@/components/BannerInput";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { compressImage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -35,24 +43,46 @@ export default function CollectionForm() {
     },
   });
 
-  console.log(form.formState.errors);
-
   const { mutate, isPending } = useMutation({
     mutationFn: createCollection,
   });
 
-  function onSubmit(data: CollectionSchemaType) {
-    mutate(data);
-    console.log(data);
+  async function onSubmit(data: CollectionSchemaType) {
+    const image = data.banner
+      ? await compressImage(data.banner, "banner")
+      : undefined;
+    const collection = { ...data, banner: image };
+    mutate(collection);
   }
   return (
     <div>
-      <form
-        action=""
-        className="space-y-5"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <Form {...form}>
+      <Form {...form}>
+        <form
+          action=""
+          className="space-y-5"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload Banner</CardTitle>
+              <CardDescription>
+                This Banner image will appear on the top of collections page
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                name="banner"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <BannerInput {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
           <Card>
             <CardContent className="space-y-5">
               <FormField
@@ -86,8 +116,8 @@ export default function CollectionForm() {
           <Button disabled={isPending}>
             {isPending ? "Saving..." : "Save"}
           </Button>
-        </Form>
-      </form>
+        </form>
+      </Form>
     </div>
   );
 }
