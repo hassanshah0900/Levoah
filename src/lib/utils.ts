@@ -1,4 +1,4 @@
-import { createClient } from "@/supabase/client";
+import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
 import { clsx, type ClassValue } from "clsx";
 import { toast } from "sonner";
@@ -48,7 +48,10 @@ export function getImagePublicUrl(
   url: string,
   storageName: "Product Images" | "Banners" = "Product Images"
 ) {
-  const supabase = createClient();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+  );
   const {
     data: { publicUrl },
   } = supabase.storage.from(storageName).getPublicUrl(url);
