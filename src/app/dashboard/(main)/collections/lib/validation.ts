@@ -2,6 +2,7 @@ import z from "zod";
 
 export const collectionSchema = z
   .object({
+    banner: z.instanceof(File, { error: "Banner is required." }).optional(),
     title: z
       .string()
       .min(1, "Title is required.")
@@ -61,12 +62,12 @@ export const collectionSchema = z
       },
     }
   );
-
 export type CollectionSchemaType = z.infer<typeof collectionSchema>;
 
 export const collectionEditSchema = z.object({
-  id: z.number(),
+  id: z.coerce.number(),
   ...collectionSchema.shape,
+  bannerUrl: z.string().nullable(),
   conditions: z
     .array(
       z.object({
@@ -79,5 +80,4 @@ export const collectionEditSchema = z.object({
     )
     .default([]),
 });
-
 export type CollectionEditSchemaType = z.infer<typeof collectionEditSchema>;
