@@ -1,5 +1,6 @@
 import { getCollectionBySlug } from "@/app/dashboard/(main)/collections/lib/queries";
 import Container from "@/components/Container";
+import { getImagePublicUrl } from "@/lib/utils";
 import {
   dehydrate,
   HydrationBoundary,
@@ -7,7 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
-import poster from "../../../../../public/images/poster.jpg";
+import { notFound } from "next/navigation";
 import CollectionProductsGrid from "../components/CollectionProductsGrid";
 import { getProductsByCollection } from "../lib/queries";
 
@@ -21,9 +22,17 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await params;
   const collection = await getCollectionBySlug(slug);
+
+  if (!collection) {
+    return {
+      title: "Collection not found",
+      description: "The collection you are looking for does not exist.",
+    };
+  }
+
   return {
-    title: collection.pageTitle,
-    description: collection.metaDescription,
+    title: collection.pageTitle || collection.title || "Collection",
+    description: collection.metaDescription || "Browse our collection.",
   };
 }
 
@@ -37,17 +46,23 @@ export default async function CollectionsPage({
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: ["products with variants", slug],
-    queryFn: ({ pageParam }) =>
-      getProductsByCollection(slug, {
-        pageIndex: pageParam,
-        pageSize: COLLECTION_PAGE_SIZE,
-      }),
-    initialPageParam: 0,
-  });
+  const [collection] = await Promise.all([
+    queryClient.fetchQuery({
+      queryKey: ["collections", slug],
+      queryFn: () => getCollectionBySlug(slug),
+    }),
+    queryClient.prefetchInfiniteQuery({
+      queryKey: ["products with variants", slug],
+      queryFn: ({ pageParam }) =>
+        getProductsByCollection(slug, {
+          pageIndex: pageParam,
+          pageSize: COLLECTION_PAGE_SIZE,
+        }),
+      initialPageParam: 0,
+    }),
+  ]);
 
-  const collection = await getCollectionBySlug(slug);
+  if (!collection) notFound();
 
   const state = dehydrate(queryClient);
   return (
@@ -56,11 +71,16 @@ export default async function CollectionsPage({
         <Container>
           <div className="py-10">
             <div className="mb-10 md:mb-16">
-              <Image
-                src={poster}
-                alt=""
-                className="w-full aspect-video mb-2 xs:mb-4 object-center object-cover"
-              />
+              {collection.bannerUrl && (
+                <div className="w-full aspect-video mb-2 xs:mb-4 relative">
+                  <Image
+                    src={getImagePublicUrl(collection.bannerUrl, "Banners")}
+                    alt=""
+                    fill
+                    className="object-center object-cover"
+                  />
+                </div>
+              )}
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-start">
                 {collection.title}
               </h1>
