@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { products, productVariants, categories, collections, conditions, images, orders, orderItems, collectionProducts, productCategories, permissions, rolePermissions, roles } from "./schema";
+import { products, productVariants, categories, collections, conditions, images, orders, orderItems, brands, collectionProducts, productCategories, permissions, rolePermissions, roles } from "./schema";
 
 export const productVariantsRelations = relations(productVariants, ({one, many}) => ({
 	product: one(products, {
@@ -9,9 +9,13 @@ export const productVariantsRelations = relations(productVariants, ({one, many})
 	images: many(images),
 }));
 
-export const productsRelations = relations(products, ({many}) => ({
+export const productsRelations = relations(products, ({one, many}) => ({
 	productVariants: many(productVariants),
 	images: many(images),
+	brand: one(brands, {
+		fields: [products.brandId],
+		references: [brands.id]
+	}),
 	collectionProducts: many(collectionProducts),
 	productCategories: many(productCategories),
 }));
@@ -60,6 +64,10 @@ export const orderItemsRelations = relations(orderItems, ({one}) => ({
 
 export const ordersRelations = relations(orders, ({many}) => ({
 	orderItems: many(orderItems),
+}));
+
+export const brandsRelations = relations(brands, ({many}) => ({
+	products: many(products),
 }));
 
 export const collectionProductsRelations = relations(collectionProducts, ({one}) => ({

@@ -90,6 +90,7 @@ export const collections = pgTable("collections", {
 	slug: text().notNull(),
 	type: collectionType().default('manual').notNull(),
 	matchType: matchType("match_type"),
+	bannerUrl: text("banner_url"),
 }, (table) => [
 	unique("collections_slug_key").on(table.slug),
 ]);
@@ -132,14 +133,6 @@ export const orders = pgTable("orders", {
 	pgPolicy("allow access to everything to everyone", { as: "permissive", for: "all", to: ["public"] }),
 ]);
 
-export const brands = pgTable("brands", {
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({ name: "brands_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 9223372036854775807, cache: 1 }),
-	name: text(),
-	slug: text(),
-	logo: text(),
-});
-
 export const images = pgTable("images", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({ name: "images_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 9223372036854775807, cache: 1 }),
@@ -163,6 +156,19 @@ export const images = pgTable("images", {
 	pgPolicy("allow delete access based on role", { as: "permissive", for: "delete", to: ["authenticated"], using: sql`authorize('product_variants.delete'::text)` }),
 	pgPolicy("allow update access based on role", { as: "permissive", for: "update", to: ["authenticated"] }),
 	pgPolicy("allow insert access based on role", { as: "permissive", for: "insert", to: ["authenticated"] }),
+	pgPolicy("allow read access to everyone", { as: "permissive", for: "select", to: ["public"] }),
+]);
+
+export const brands = pgTable("brands", {
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({ name: "brands_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 9223372036854775807, cache: 1 }),
+	name: text().notNull(),
+	slug: text().notNull(),
+	logo: text(),
+}, (table) => [
+	pgPolicy("allow delete access based on role", { as: "permissive", for: "delete", to: ["authenticated"], using: sql`authorize('brands.delete'::text)` }),
+	pgPolicy("allow insert access based on role", { as: "permissive", for: "insert", to: ["authenticated"] }),
+	pgPolicy("allow update access based on role", { as: "permissive", for: "update", to: ["authenticated"] }),
 	pgPolicy("allow read access to everyone", { as: "permissive", for: "select", to: ["public"] }),
 ]);
 
@@ -203,7 +209,14 @@ export const products = pgTable("products", {
 	slug: text().notNull(),
 	attributes: jsonb().default({}).notNull(),
 	productType: productType("product_type").default('glasses').notNull(),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	brandId: bigint("brand_id", { mode: "number" }),
 }, (table) => [
+	foreignKey({
+			columns: [table.brandId],
+			foreignColumns: [brands.id],
+			name: "products_brand_id_fkey"
+		}).onUpdate("cascade").onDelete("set null"),
 	pgPolicy("allow delete access on products based on role", { as: "permissive", for: "delete", to: ["public"], using: sql`authorize('products.delete'::text)` }),
 	pgPolicy("allow read access on products based on role", { as: "permissive", for: "select", to: ["public"] }),
 	pgPolicy("allow update access on products based on role", { as: "permissive", for: "update", to: ["public"] }),
@@ -265,6 +278,20 @@ export const rolePermissions = pgTable("role_permissions", {
 		}).onUpdate("cascade").onDelete("cascade"),
 	primaryKey({ columns: [table.roleId, table.permissionId], name: "role_permissions_pkey"}),
 ]);
+export const productsWithImages = pgView("products_with_images", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	id: bigint({ mode: "number" }),
+	title: text(),
+	description: text(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
+	published: boolean(),
+	slug: text(),
+	attributes: jsonb(),
+	productType: productType("product_type"),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	brandId: bigint("brand_id", { mode: "number" }),
+	images: json(),
+}).with({"securityInvoker":true}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, p.brand_id, json_agg(json_build_object('id', i.id, 'image_url', i.path)) AS images FROM products p LEFT JOIN images i ON p.id = i.product_id GROUP BY p.id`);
+
 export const glasses = pgView("glasses", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }),
 	title: text(),
@@ -274,8 +301,22 @@ export const glasses = pgView("glasses", {	// You can use { mode: "bigint" } if 
 	slug: text(),
 	attributes: jsonb(),
 	productType: productType("product_type"),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	brandId: bigint("brand_id", { mode: "number" }),
 	category: jsonb(),
-}).with({"securityInvoker":"on"}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id`);
+	brand: jsonb(),
+}).with({"securityInvoker":true}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, p.brand_id, to_jsonb(c.*) AS category, to_jsonb(b.*) AS brand FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id LEFT JOIN brands b ON b.id = p.brand_id`);
+
+export const productVariantsWithImages = pgView("product_variants_with_images", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	id: bigint({ mode: "number" }),
+	price: integer(),
+	quantityInStock: integer("quantity_in_stock"),
+	attributes: jsonb(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	productId: bigint("product_id", { mode: "number" }),
+	imageUrl: text("image_url"),
+}).with({"securityInvoker":true}).as(sql`SELECT pv.id, pv.price, pv.quantity_in_stock, pv.attributes, pv.created_at, pv.product_id, i.path AS image_url FROM product_variants pv LEFT JOIN images i ON i.variant_id = pv.id AND i.product_id = pv.product_id`);
 
 export const productsWithVariants = pgView("products_with_variants", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }),
@@ -286,17 +327,9 @@ export const productsWithVariants = pgView("products_with_variants", {	// You ca
 	slug: text(),
 	attributes: jsonb(),
 	productType: productType("product_type"),
-	category: jsonb(),
-	variants: json(),
-}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, to_jsonb(c.*) AS category, json_agg(jsonb_build_object('id', pv.id, 'price', pv.price, 'imageUrl', pv.imageurl, 'quantityInStock', pv.quantity_in_stock, 'attributes', pv.attributes, 'createdAt', pv.created_at, 'productId', pv.product_id)) AS variants FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id LEFT JOIN product_variants_with_images pv ON pv.product_id = p.id GROUP BY p.id, c.id HAVING count(pv.*) > 0`);
-
-export const productVariantsWithImages = pgView("product_variants_with_images", {	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	id: bigint({ mode: "number" }),
-	price: integer(),
-	quantityInStock: integer("quantity_in_stock"),
-	attributes: jsonb(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	productId: bigint("product_id", { mode: "number" }),
-	imageurl: text(),
-}).as(sql`SELECT pv.id, pv.price, pv.quantity_in_stock, pv.attributes, pv.created_at, pv.product_id, i.path AS imageurl FROM product_variants pv LEFT JOIN images i ON i.variant_id = pv.id AND i.product_id = pv.product_id`);
+	brandId: bigint("brand_id", { mode: "number" }),
+	category: jsonb(),
+	brand: jsonb(),
+	variants: json(),
+}).with({"securityInvoker":true}).as(sql`SELECT p.id, p.title, p.description, p.created_at, p.published, p.slug, p.attributes, p.product_type, p.brand_id, to_jsonb(c.*) AS category, to_jsonb(b.*) AS brand, json_agg(jsonb_build_object('id', pv.id, 'price', pv.price, 'imageUrl', pv.image_url, 'quantityInStock', pv.quantity_in_stock, 'attributes', pv.attributes, 'createdAt', pv.created_at, 'productId', pv.product_id)) AS variants FROM products p LEFT JOIN product_categories pc ON pc.product_id = p.id LEFT JOIN categories c ON pc.category_id = c.id LEFT JOIN product_variants_with_images pv ON pv.product_id = p.id LEFT JOIN brands b ON b.id = p.brand_id GROUP BY p.id, c.id, b.id HAVING count(pv.*) > 0`);
