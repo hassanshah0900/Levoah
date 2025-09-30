@@ -16,6 +16,7 @@ export async function getProductsByCollection(
 ) {
   try {
     const collection = await getCollectionBySlug(slug);
+    if (!collection) return null;
     const filters = filter(
       collection.conditions,
       collection.matchType!,
