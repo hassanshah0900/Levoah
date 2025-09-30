@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import imageCompression from "browser-image-compression";
-import { toast } from "sonner";
 import { createClient } from "@/supabase/client";
+import imageCompression from "browser-image-compression";
+import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,11 +28,14 @@ export function getNextPageIndex(
   if (currentPageIndex < lastPageIndex) return currentPageIndex + 1;
 }
 
-export async function compressImage(file: File) {
+export async function compressImage(
+  file: File,
+  imageType: "product" | "banner" = "product"
+) {
   if (!file) return;
   try {
     return await imageCompression(file, {
-      maxWidthOrHeight: 2000,
+      maxWidthOrHeight: imageType ? 2000 : 2200,
       fileType: "image/webp",
       initialQuality: 0.8,
     });
@@ -41,11 +44,14 @@ export async function compressImage(file: File) {
   }
 }
 
-export function getImagePublicUrl(url: string) {
+export function getImagePublicUrl(
+  url: string,
+  storageName: "Product Images" | "Banners" = "Product Images"
+) {
   const supabase = createClient();
   const {
     data: { publicUrl },
-  } = supabase.storage.from("Product Images").getPublicUrl(url);
+  } = supabase.storage.from(storageName).getPublicUrl(url);
   return publicUrl;
 }
 
