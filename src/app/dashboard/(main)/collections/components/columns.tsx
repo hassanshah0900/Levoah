@@ -3,6 +3,7 @@ import { Collection } from "../lib/types";
 
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
 import { Checkbox } from "@/components/ui/checkbox";
+import BannerImage from "./BannerImage";
 import CollectionsTableRowActions from "./CollectionsTableRowActions";
 
 const columnHelper = createColumnHelper<Collection>();
@@ -31,6 +32,15 @@ export const columns = [
       />
     ),
     enableHiding: false,
+  }),
+  columnHelper.accessor("bannerUrl", {
+    id: "Image",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Banner" />
+    ),
+    cell: ({ getValue }) => <BannerImage src={getValue()} alt="" />,
+    enableColumnFilter: false,
+    enableSorting: false,
   }),
   columnHelper.accessor("title", {
     id: "title",
