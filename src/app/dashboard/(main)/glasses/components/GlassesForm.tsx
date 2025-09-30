@@ -1,5 +1,6 @@
 "use client";
 
+import BrandsCombobox from "@/components/BrandsCombobox";
 import SlugInput from "@/components/SlugInput";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +8,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,17 +25,22 @@ import CategorySelector from "../../categories/components/CategorySelector";
 import { createGlasses } from "../lib/actions";
 import { glassesFormSchema, GlassesFormSchemaType } from "../lib/validation";
 import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
+import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
+import LenseWidthCombobox from "./LenseWidthCombobox";
+import TempleLengthCombobox from "./TempleLengthCombobox";
 
 export default function GlassesForm() {
   const [isPublished, setIsPublished] = useState(true);
+  const router = useRouter();
 
   const { mutate } = useMutation({
     mutationFn: createGlasses,
     onSuccess() {
       toast.success("Successfully created Product", { id: "new_product" });
       form.reset();
+      router.replace("/dashboard/glasses");
     },
     onError(error) {
       toast.error(error.message, { id: "new_product" });
@@ -46,6 +53,12 @@ export default function GlassesForm() {
       slug: "",
       description: "",
       category: "",
+      attributes: {
+        bridgeWidth: "",
+        lenseWidth: "",
+        templeLength: "",
+        modelCode: "",
+      },
     },
     resolver: zodResolver(glassesFormSchema),
   });
@@ -103,6 +116,45 @@ export default function GlassesForm() {
             )}
           />
           <FormField
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <CategorySelector {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="brandId"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <FormControl>
+                  <BrandsCombobox {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="attributes.modelCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Model Code</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    value={(field.value as string).toUpperCase()}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
             name="attributes.frameShape"
             render={({ field, fieldState }) => (
               <FormItem>
@@ -139,12 +191,36 @@ export default function GlassesForm() {
             )}
           />
           <FormField
-            name="category"
-            render={({ field }) => (
+            name={`attributes.lenseWidth`}
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Category</FormLabel>
+                <FormLabel>Lense Width</FormLabel>
                 <FormControl>
-                  <CategorySelector {...field} />
+                  <LenseWidthCombobox {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name={`attributes.bridgeWidth`}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Bridge Width</FormLabel>
+                <FormControl>
+                  <BridgeWidthCombobox {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name={`attributes.templeLength`}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Temple Length</FormLabel>
+                <FormControl>
+                  <TempleLengthCombobox {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

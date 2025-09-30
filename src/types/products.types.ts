@@ -1,3 +1,4 @@
+import { Brand } from "@/app/dashboard/(main)/brands/lib/types";
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
 import { bridgeAndNosepads } from "@/app/dashboard/(main)/glasses/components/BridgeAndNosepadsSelect";
 import { frameColors } from "@/app/dashboard/(main)/glasses/components/FrameColorCombobox";
@@ -11,6 +12,7 @@ type SharedProductProperties<T extends Record<string, any>> =
   typeof products.$inferSelect & {
     attributes: T;
     category: Category;
+    brand: Brand | null;
   };
 
 type SharedProductVariantProperties<T> = typeof productVariants.$inferSelect & {
@@ -26,6 +28,10 @@ interface Glasses
     frameShape: FrameShape;
     frameMaterial: FrameMaterial;
     bridgeAndNosepads: BridgeAndNosepads;
+    bridgeWidth: number;
+    lenseWidth: number;
+    templeLength: number;
+    modelCode: string;
   }> {
   productType: "glasses";
   variants: GlassesVariant[];
@@ -36,10 +42,10 @@ type LenseColor = (typeof lenseColors)[number];
 
 type GlassesVariant = SharedProductVariantProperties<{
   lenseColor: LenseColor;
+  lenseColorDisplay: string;
   frameColor: FrameColor;
-  bridgeWidth: number;
-  lenseWidth: number;
-  templeLength: number;
+  frameColorDisplay: string;
+  lenseType: string;
 }>;
 
 interface Accessory extends SharedProductProperties<{}> {

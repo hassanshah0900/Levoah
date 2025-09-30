@@ -37,7 +37,7 @@ export default function ProductCard({ product }: Props) {
             {product.variants.map((variant) => (
               <EmblaSlide key={variant.id}>
                 <ProductImage
-                  src={variant.image_url}
+                  src={variant.imageUrl}
                   alt=""
                   className="rounded-xs"
                 />

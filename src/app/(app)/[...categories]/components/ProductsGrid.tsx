@@ -8,10 +8,10 @@ import { Fragment } from "react";
 import { InView } from "react-intersection-observer";
 import { PAGE_SIZE } from "../lib/data";
 import { getCategoryBySlug, getProductsWithVariants } from "../lib/queries";
-import ProductCard from "./ProductCard";
-import ProductCardSkeleton from "./ProductCardSkeleton";
-import ProductsFilters from "./ProductsFilters";
-import ProductsSorter from "./ProductsSorter";
+import ProductCard from "../../../../components/ProductCard";
+import ProductCardSkeleton from "../../../../components/ProductCardSkeleton";
+import ProductsFilters from "../../../../components/ProductsFilters";
+import ProductsSorter from "../../../../components/ProductsSorter";
 
 export default function ProductsGrid() {
   const { categories } = useParams<{

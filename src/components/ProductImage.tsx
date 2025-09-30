@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { ComponentProps } from "react";
 
 interface Props extends Omit<ComponentProps<typeof Image>, "src"> {
-  src?: string;
+  src?: string | null;
 }
 export default function ProductImage({ src, className, ...props }: Props) {
   return (

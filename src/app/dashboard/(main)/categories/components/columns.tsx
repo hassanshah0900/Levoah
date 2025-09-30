@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createColumnHelper } from "@tanstack/react-table";
 import CategoriesTableRowActions from "./CategoriesTableRowActions";
 import { Category } from "../lib/types";
-import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
+import ProductImage from "@/components/ProductImage";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";

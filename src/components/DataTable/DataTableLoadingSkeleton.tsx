@@ -1,11 +1,11 @@
 import { Skeleton } from "../ui/skeleton";
 import {
-  TableHeader,
-  TableRow,
-  TableHead,
+  Table,
   TableBody,
   TableCell,
-  Table,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "../ui/table";
 
 const DEFAULT_ROW_COUNT = 5;
@@ -37,7 +37,7 @@ export default function DataTableLoadingSkeleton({
     (_, idx) => cellWidths[idx % cellWidths.length] ?? "auto"
   );
   return (
-    <div className="space-y-5 my-5">
+    <div className="space-y-5 my-5 @container">
       <div className="flex justify-between items-center gap-5">
         <div className="flex justify-center items-center gap-2">
           {hasSearch && <Skeleton className="h-8 w-40" />}
@@ -84,19 +84,36 @@ export default function DataTableLoadingSkeleton({
         </TableBody>
       </Table>
       {hasPagination && (
-        <div className="flex justify-between items-center">
-          <Skeleton className="h-5 w-40 shrink-0" />
-
-          <div className="flex justify-center items-center gap-10">
-            <div className="flex justify-center items-center gap-2">
+        <div>
+          <div className="justify-between items-center hidden @2xl:flex">
+            <Skeleton className="h-5 w-40 shrink-0" />
+            <div className="flex justify-center items-center gap-10">
+              <div className="flex justify-center items-center gap-2">
+                <Skeleton className="h-5 w-20" />
+                <Skeleton className="w-12 h-8" />
+              </div>
               <Skeleton className="h-5 w-20" />
-              <Skeleton className="w-12 h-8" />
+              <div className="flex justify-center items-center gap-2">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <Skeleton key={idx} className="size-8" />
+                ))}
+              </div>
             </div>
-            <Skeleton className="h-5 w-20" />
-            <div className="flex justify-center items-center gap-2">
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <Skeleton key={idx} className="size-8" />
-              ))}
+          </div>
+          <div className="flex justify-between items-center gap-5 @2xl:hidden">
+            <div className="space-y-4">
+              <Skeleton className="h-5 w-40 shrink-0" />
+              <div className="flex justify-start items-center gap-2">
+                <Skeleton className="h-5 w-20" />
+                <Skeleton className="w-12 h-8" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <Skeleton className="h-5 w-20" />
+              <div className="flex gap-2 justify-end">
+                <Skeleton className="size-8" />
+                <Skeleton className="size-8" />
+              </div>
             </div>
           </div>
         </div>

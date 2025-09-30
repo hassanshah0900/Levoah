@@ -103,33 +103,55 @@ export async function editGlassesVariant(
 ) {
   const supabase = await createClient();
 
-  let image_url = glassesVariant.imageUrl;
+  let imageUrl = glassesVariant.imageUrl;
+  let isNewImage = false;
   if (glassesVariant.image) {
     const { data, error } = await supabase.storage
       .from("Product Images")
       .upload(crypto.randomUUID(), glassesVariant.image);
     if (error) throw error;
-
-    image_url = data.path;
+    imageUrl = data.path;
+    isNewImage = true;
   }
 
-  await Promise.all([
-    db
+  await db.transaction(async (tx) => {
+    await tx
       .update(productVariants)
-      .set({ ...glassesVariant })
-      .where(eq(productVariants.id, glassesVariant.id)),
-    db
-      .update(images)
-      .set({ path: image_url })
+      .set({
+        ...glassesVariant,
+      })
+      .where(eq(productVariants.id, glassesVariant.id));
+
+    const existing = await tx
+      .select()
+      .from(images)
       .where(
         and(
           eq(images.variantId, glassesVariant.id),
           eq(images.productId, glassesVariant.productId!)
         )
-      ),
-  ]);
+      );
+
+    existing.length > 0
+      ? await tx
+          .update(images)
+          .set({ path: imageUrl })
+          .where(
+            and(
+              eq(images.variantId, glassesVariant.id),
+              eq(images.productId, glassesVariant.productId!)
+            )
+          )
+      : await tx.insert(images).values({
+          productId: glassesVariant.productId,
+          variantId: glassesVariant.id,
+          path: imageUrl,
+        });
+  });
+
   // Delete old image from storage if a new image was uploaded
-  if (glassesVariant.image) {
+
+  if (isNewImage && glassesVariant.imageUrl) {
     const { error } = await supabase.storage
       .from("Product Images")
       .remove([glassesVariant.imageUrl]);

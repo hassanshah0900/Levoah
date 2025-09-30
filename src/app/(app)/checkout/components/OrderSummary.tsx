@@ -42,7 +42,7 @@ function OrderSummaryItem({ cartItem }: { cartItem: ShoppingCartItem }) {
         </span>
         <span>Rs {cartItem.variant.price * cartItem.quantity}</span>
       </div>
-      {cartItem.product.product_type === "glasses" && (
+      {cartItem.product.productType === "glasses" && (
         <>
           {(() => {
             const variant = cartItem.variant as ProductVariant<"glasses">;
@@ -51,13 +51,13 @@ function OrderSummaryItem({ cartItem }: { cartItem: ShoppingCartItem }) {
                 <div className="text-xs">
                   Frame{" "}
                   <span className="text-muted-foreground">
-                    {variant.attributes.frame_color}
+                    {variant.attributes.frameColor}
                   </span>
                 </div>
                 <div className="text-xs">
                   Lense{" "}
                   <span className="text-muted-foreground">
-                    {variant.attributes.lense_color}
+                    {variant.attributes.lenseColor}
                   </span>
                 </div>
               </>

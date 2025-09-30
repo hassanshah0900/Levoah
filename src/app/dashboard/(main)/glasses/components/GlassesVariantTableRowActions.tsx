@@ -29,7 +29,7 @@ export default function GlassesVariantTableRowActions({ row }: Props) {
         id: "delete_variant",
       });
       queryClient.invalidateQueries({
-        queryKey: ["product_variants", row.original.product_id],
+        queryKey: ["product_variants", row.original.productId],
       });
     },
     onError: () => {
@@ -54,7 +54,7 @@ export default function GlassesVariantTableRowActions({ row }: Props) {
             <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent align="end">
           <DropdownMenuGroup>
             <DropdownMenuItem onSelect={() => setOpenState("EDIT")}>
               Edit

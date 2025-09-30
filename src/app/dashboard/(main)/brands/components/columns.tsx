@@ -1,4 +1,4 @@
-import ProductImage from "@/app/(app)/[...categories]/components/ProductImage";
+import ProductImage from "@/components/ProductImage";
 import DataTableColumnHeader from "@/components/DataTable/DataTableColumnHeader";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createColumnHelper } from "@tanstack/react-table";
