@@ -1,14 +1,15 @@
 "use server";
 
+import { db } from "@/db";
 import {
   collectionProducts,
   collections,
   conditions,
 } from "@/db/drizzle/schema";
-import { CollectionEditSchemaType, CollectionSchemaType } from "./validation";
-import { db } from "@/db";
+import { createClient } from "@/supabase/server";
+import { and, eq, notInArray } from "drizzle-orm";
 import { Collection } from "./types";
-import { and, eq, ne, notInArray } from "drizzle-orm";
+import { CollectionEditSchemaType, CollectionSchemaType } from "./validation";
 
 export async function createCollection(collection: CollectionSchemaType) {
   const { insertedId } = (
@@ -30,51 +31,94 @@ export async function createCollection(collection: CollectionSchemaType) {
   }
 
   if (collection.type === "automatic") {
-    await db.insert(conditions).values([
-      ...collection.conditions.map((condition) => ({
+    await db.insert(conditions).values(
+      collection.conditions.map((condition) => ({
         ...condition,
         collectionId: insertedId,
-      })),
-    ]);
+      }))
+    );
+  }
+
+  if (collection.banner) {
+    const supabase = await createClient();
+    const { data, error } = await supabase.storage
+      .from("Banners")
+      .upload(crypto.randomUUID(), collection.banner);
+    if (error) throw error;
+
+    await db.update(collections).set({ bannerUrl: data.path });
   }
 }
 
 export async function deleteCollection(collection: Collection) {
   if (!collection) return;
   await db.delete(collections).where(eq(collections.id, collection.id));
+
+  if (collection.bannerUrl) {
+    const supabase = await createClient();
+    const { error } = await supabase.storage
+      .from("Banners")
+      .remove([collection.bannerUrl]);
+    if (error) throw error;
+  }
 }
 
 export async function editCollection(collection: CollectionEditSchemaType) {
-  try {
-    await db.update(collections).set({ ...collection });
+  const supabase = await createClient();
+  let bannerUrl = collection.bannerUrl;
+  if (collection.banner) {
+    const { data, error } = await supabase.storage
+      .from("Banners")
+      .upload(crypto.randomUUID(), collection.banner);
+    if (error) throw error;
+    bannerUrl = data.path;
+  }
 
-    const newConditions = collection.conditions
-      .filter((condition) => !condition.id)
-      .map((condition) => ({ ...condition, collectionId: collection.id }));
-    const existingConditions = collection.conditions.filter(
-      (condition) => !!condition.id
-    );
+  await db
+    .update(collections)
+    .set({
+      title: collection.title,
+      description: collection.description,
+      pageTitle: collection.pageTitle,
+      metaDescription: collection.metaDescription,
+      slug: collection.slug,
+      matchType: collection.matchType,
+      type: collection.type,
+      bannerUrl,
+    })
+    .where(eq(collections.id, collection.id));
 
-    await db.delete(conditions).where(
-      and(
-        eq(conditions.collectionId, collection.id),
-        notInArray(
-          conditions.id,
-          existingConditions.map((condition) => condition.id!)
-        )
+  const newConditions = collection.conditions
+    .filter((condition) => !condition.id)
+    .map((condition) => ({ ...condition, collectionId: collection.id }));
+  const existingConditions = collection.conditions.filter(
+    (condition) => !!condition.id
+  );
+
+  await db.delete(conditions).where(
+    and(
+      eq(conditions.collectionId, collection.id),
+      notInArray(
+        conditions.id,
+        existingConditions.map((condition) => condition.id!)
       )
-    );
+    )
+  );
 
-    await Promise.all([
-      ...existingConditions.map((condition) =>
-        db
-          .update(conditions)
-          .set({ ...condition })
-          .where(eq(conditions.id, condition.id!))
-      ),
-      newConditions.length > 0 && db.insert(conditions).values(newConditions),
-    ]);
-  } catch (error) {
-    throw error;
+  await Promise.all([
+    ...existingConditions.map((condition) =>
+      db
+        .update(conditions)
+        .set({ ...condition })
+        .where(eq(conditions.id, condition.id!))
+    ),
+    newConditions.length > 0 && db.insert(conditions).values(newConditions),
+  ]);
+
+  if (collection.bannerUrl && collection.banner) {
+    const { error } = await supabase.storage
+      .from("Banners")
+      .remove([collection.bannerUrl]);
+    if (error) throw error;
   }
 }
