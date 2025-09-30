@@ -2,11 +2,12 @@
 
 import { db } from "@/db";
 import { collections, conditions } from "@/db/drizzle/schema";
-import { and, eq, getTableColumns } from "drizzle-orm";
+import { and, desc, eq, getTableColumns } from "drizzle-orm";
+import { Collection } from "./types";
 
 export async function getCollections() {
   const [collectionsList, count] = await Promise.all([
-    db.select().from(collections),
+    db.select().from(collections).orderBy(desc(collections.createdAt)),
     db.$count(collections),
   ]);
 
@@ -24,5 +25,11 @@ export async function getCollectionBySlug(slug: string) {
         and(eq(collections.slug, slug), eq(collections.type, "automatic"))
       ),
   ]);
-  return { ...collectionsList[0], conditions: conditionsList, products: [] };
+  return collectionsList.length
+    ? ({
+        ...collectionsList[0],
+        conditions: conditionsList,
+        products: [],
+      } as Collection)
+    : null;
 }
