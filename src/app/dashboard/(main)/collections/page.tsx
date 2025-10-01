@@ -1,12 +1,9 @@
 import CollectionsTable from "./components/CollectionsTable";
-import { getCollections } from "./lib/queries";
 
-export default async function CollectionsPage() {
-  const { collections, count } = await getCollections();
-
+export default function CollectionsPage() {
   return (
     <div>
-      <CollectionsTable collections={collections} rowCount={count} />
+      <CollectionsTable />
     </div>
   );
 }
