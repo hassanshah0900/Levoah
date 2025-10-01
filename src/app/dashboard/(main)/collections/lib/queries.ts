@@ -11,7 +11,7 @@ export async function getCollections() {
     db.$count(collections),
   ]);
 
-  return { collections: collectionsList, count };
+  return { collections: collectionsList as Collection[], count };
 }
 
 export async function getCollectionBySlug(slug: string) {
