@@ -1,4 +1,4 @@
-import ProductCardSkeleton from "@/app/(app)/[...categories]/components/ProductCardSkeleton";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 import { Skeleton } from "./ui/skeleton";
 
 export default function ProductsGridLoadingSkeleton() {
