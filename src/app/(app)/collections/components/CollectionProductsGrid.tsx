@@ -1,15 +1,15 @@
 "use client";
 
 import { getProductsByCollection } from "@/app/(app)/collections/lib/queries";
+import ProductCard from "@/components/ProductCard";
+import ProductCardSkeleton from "@/components/ProductCardSkeleton";
+import ProductsFilters from "@/components/ProductsFilters";
+import ProductsSorter from "@/components/ProductsSorter";
 import { getNextPageIndex } from "@/lib/utils";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Fragment } from "react";
 import { InView } from "react-intersection-observer";
-import ProductCard from "../../[...categories]/components/ProductCard";
-import ProductCardSkeleton from "../../[...categories]/components/ProductCardSkeleton";
-import ProductsFilters from "../../[...categories]/components/ProductsFilters";
-import ProductsSorter from "../../[...categories]/components/ProductsSorter";
 
 export default function CollectionProductGrid({
   pageSize,
