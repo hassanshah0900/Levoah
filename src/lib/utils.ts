@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
+import { clsx, type ClassValue } from "clsx";
 import { toast } from "sonner";
-import { createClient } from "@/supabase/client";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,11 +28,14 @@ export function getNextPageIndex(
   if (currentPageIndex < lastPageIndex) return currentPageIndex + 1;
 }
 
-export async function compressImage(file: File) {
+export async function compressImage(
+  file: File,
+  imageType: "product" | "banner" = "product"
+) {
   if (!file) return;
   try {
     return await imageCompression(file, {
-      maxWidthOrHeight: 2000,
+      maxWidthOrHeight: imageType ? 2000 : 2200,
       fileType: "image/webp",
       initialQuality: 0.8,
     });
@@ -41,10 +44,31 @@ export async function compressImage(file: File) {
   }
 }
 
-export function getImagePublicUrl(url: string) {
-  const supabase = createClient();
+export function getImagePublicUrl(
+  url: string,
+  storageName: "Product Images" | "Banners" = "Product Images"
+) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+  );
   const {
     data: { publicUrl },
-  } = supabase.storage.from("Product Images").getPublicUrl(url);
+  } = supabase.storage.from(storageName).getPublicUrl(url);
   return publicUrl;
+}
+
+const dateFormatter = new Intl.DateTimeFormat("en-PK", {
+  hourCycle: "h12",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+export function formatDate(date: Date) {
+  return dateFormatter.format(date);
+}
+
+export function isValidDate(date: Date) {
+  return !isNaN(date.getTime());
 }

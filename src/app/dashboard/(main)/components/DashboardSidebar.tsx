@@ -25,6 +25,7 @@ import {
   Badge,
   ChevronDown,
   Glasses,
+  Grid,
   LogOut,
   Package,
   Star,
@@ -72,6 +73,14 @@ export default function DashboardSidebar() {
                   <Link href={"/dashboard/brands"}>
                     <Star />
                     <span>Brands</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href={"/dashboard/collections"}>
+                    <Grid />
+                    <span>Collections</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

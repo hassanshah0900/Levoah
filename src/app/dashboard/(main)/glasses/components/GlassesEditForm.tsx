@@ -57,7 +57,7 @@ export default function GlassesEditForm({
       description: glasses.description ?? "",
       published: glasses.published,
       attributes: glasses.attributes,
-      category: glasses.category.id,
+      category: glasses.category?.id ?? "",
     },
     resolver: zodResolver(glassesEditFormSchema),
   });

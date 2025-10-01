@@ -11,7 +11,7 @@ import { categories } from "@/db/drizzle/schema";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ChevronRight } from "lucide-react";
-import { ComponentProps, MouseEvent, useState } from "react";
+import { ComponentProps, MouseEvent, useEffect, useState } from "react";
 import { ControllerRenderProps, useFormContext } from "react-hook-form";
 import { getAllCategories } from "../lib/queries";
 
@@ -22,20 +22,16 @@ export default function CategorySelector({
   name,
   onChange,
   ref,
-}: ControllerRenderProps) {
+  selectValueType = "id",
+}: ControllerRenderProps & { selectValueType?: "id" | "path" }) {
   const [open, setOpen] = useState(false);
-  const {
-    data: categories,
-    status,
-    isPending,
-    isError,
-  } = useQuery({
+  const { data: categories, status } = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
   });
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    () => getSelectedCategory()
+    null
   );
 
   const [openedCategory, setOpenedCategory] = useState<Category | null>(null);
@@ -66,13 +62,38 @@ export default function CategorySelector({
   function handleCategorySelect(e: MouseEvent, category: Category) {
     e.stopPropagation();
     setSelectedCategory(category);
-    onChange(category.id);
+    switch (selectValueType) {
+      case "id":
+        onChange(category.id);
+        break;
+      case "path":
+        onChange(category.path);
+        break;
+    }
     setOpen(false);
   }
   function getSelectedCategory() {
     if (!categories || !value) return null;
-    return categories.find((c) => c.id === value) ?? null;
+    return (
+      categories.find((c) => {
+        switch (selectValueType) {
+          case "id":
+            console.log("This is running");
+
+            return c.id === value;
+
+          case "path":
+            console.log("Path: ", c.path);
+
+            return c.path === value;
+        }
+      }) ?? null
+    );
   }
+
+  useEffect(() => {
+    setSelectedCategory(getSelectedCategory());
+  }, [categories]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
