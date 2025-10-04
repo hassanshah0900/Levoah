@@ -19,13 +19,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { compressImage, getImagePublicUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notFound, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { editCollection } from "../lib/actions";
-import { Collection } from "../lib/types";
+import { getCollectionBySlug } from "../lib/queries";
 import {
   collectionEditSchema,
   CollectionEditSchemaType,
@@ -33,9 +34,6 @@ import {
 import ConditionsSection from "./ConditionsSection";
 import ProductsSearchSection from "./ProductsSearchSection";
 import SearchEngineListingSection from "./SearchEngineListingSection";
-import { getCollectionBySlug } from "../lib/queries";
-import { useEffect } from "react";
-import { compressImage, getImagePublicUrl } from "@/lib/utils";
 
 interface Props {
   slug: string;
@@ -77,7 +75,6 @@ export default function CollectionEditForm({ slug }: Props) {
       metaDescription: collection?.metaDescription ?? "",
       slug: collection?.slug,
       conditions: collection?.conditions,
-      products: collection?.products.map((product) => product.id),
       bannerUrl: collection?.bannerUrl,
     },
   });

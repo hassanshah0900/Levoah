@@ -72,3 +72,43 @@ export function formatDate(date: Date) {
 export function isValidDate(date: Date) {
   return !isNaN(date.getTime());
 }
+
+function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, char: string) => char.toUpperCase());
+}
+
+export function toCamelCase<T extends Record<string, any>>(obj: T): any {
+  if (!obj) return null;
+  if (Array.isArray(obj)) {
+    return obj.map((v) => toCamelCase(v));
+  } else if (obj !== null && obj.constructor === Object) {
+    return Object.keys(obj).reduce((result: any, key) => {
+      const camelKey = snakeToCamel(key);
+      result[camelKey] = toCamelCase(obj[key]);
+      return result;
+    }, {});
+  }
+  return obj;
+}
+
+function camelToSnake(str: string): string {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
+export function toSnakeCase<T>(obj: T): any {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => toSnakeCase(item));
+  } else if (typeof obj === "object" && obj.constructor === Object) {
+    return Object.keys(obj).reduce((result: Record<string, any>, key) => {
+      const snakeKey = camelToSnake(key);
+      result[snakeKey] = toSnakeCase((obj as Record<string, any>)[key]);
+      return result;
+    }, {});
+  }
+
+  return obj;
+}

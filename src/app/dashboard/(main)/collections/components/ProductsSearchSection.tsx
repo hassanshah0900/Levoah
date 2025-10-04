@@ -13,11 +13,7 @@ export default function ProductsSearchSection() {
       <CardHeader>
         <CardTitle>Products</CardTitle>
       </CardHeader>
-      <CardContent>
-        {errors.products && (
-          <p className="text-destructive text-sm">{errors.products.message}</p>
-        )}
-      </CardContent>
+      <CardContent></CardContent>
     </Card>
   );
 }

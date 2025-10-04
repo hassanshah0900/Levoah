@@ -1,61 +1,55 @@
 "use server";
 
-import { db } from "@/db";
-import {
-  collectionProducts,
-  collections,
-  conditions,
-} from "@/db/drizzle/schema";
+import { toSnakeCase } from "@/lib/utils";
 import { createClient } from "@/supabase/server";
-import { and, eq, notInArray } from "drizzle-orm";
 import { Collection } from "./types";
 import { CollectionEditSchemaType, CollectionSchemaType } from "./validation";
 
 export async function createCollection(collection: CollectionSchemaType) {
-  const { insertedId } = (
-    await db
-      .insert(collections)
-      .values({
-        ...collection,
-      })
-      .returning({ insertedId: collections.id })
-  )[0];
+  const { conditions, banner, ...collectionToInsert } = collection;
 
-  if (collection.type === "manual") {
-    await db.insert(collectionProducts).values([
-      ...collection.products.map((productId) => ({
-        collectionId: insertedId,
-        productId,
-      })),
-    ]);
-  }
+  const supabase = await createClient();
 
-  if (collection.type === "automatic") {
-    await db.insert(conditions).values(
-      collection.conditions.map((condition) => ({
-        ...condition,
-        collectionId: insertedId,
-      }))
-    );
-  }
+  const { data: insertedCollection, error } = await supabase
+    .from("collections")
+    .insert(toSnakeCase(collectionToInsert))
+    .select("id")
+    .single();
+  if (error) throw error;
+
+  const conditionsToInsert = conditions.map((condition) => ({
+    ...toSnakeCase(condition),
+    collection_id: insertedCollection.id,
+  }));
+
+  const { error: conditionsError } = await supabase
+    .from("conditions")
+    .insert(conditionsToInsert);
+  if (conditionsError) throw conditionsError;
 
   if (collection.banner) {
-    const supabase = await createClient();
     const { data, error } = await supabase.storage
       .from("Banners")
       .upload(crypto.randomUUID(), collection.banner);
     if (error) throw error;
 
-    await db.update(collections).set({ bannerUrl: data.path });
+    const { error: collectionsUpdateError } = await supabase
+      .from("collections")
+      .update({ banner_url: data.path })
+      .eq("id", insertedCollection.id);
+    if (collectionsUpdateError) throw collectionsUpdateError;
   }
 }
 
 export async function deleteCollection(collection: Collection) {
-  if (!collection) return;
-  await db.delete(collections).where(eq(collections.id, collection.id));
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("collections")
+    .delete()
+    .eq("id", collection.id);
+  if (error) throw error;
 
   if (collection.bannerUrl) {
-    const supabase = await createClient();
     const { error } = await supabase.storage
       .from("Banners")
       .remove([collection.bannerUrl]);
@@ -65,60 +59,75 @@ export async function deleteCollection(collection: Collection) {
 
 export async function editCollection(collection: CollectionEditSchemaType) {
   const supabase = await createClient();
-  let bannerUrl = collection.bannerUrl;
-  if (collection.banner) {
-    const { data, error } = await supabase.storage
+  let { conditions, banner, id, ...collectionToUpdate } = collection;
+  console.log(typeof id);
+
+  const oldBannerUrl = collectionToUpdate.bannerUrl;
+  let newBannerUrl = oldBannerUrl;
+
+  if (banner) {
+    const { data, error: uploadError } = await supabase.storage
       .from("Banners")
-      .upload(crypto.randomUUID(), collection.banner);
-    if (error) throw error;
-    bannerUrl = data.path;
+      .upload(`${crypto.randomUUID()}`, banner);
+    if (uploadError) throw uploadError;
+
+    newBannerUrl = data.path;
   }
 
-  await db
-    .update(collections)
-    .set({
-      title: collection.title,
-      description: collection.description,
-      pageTitle: collection.pageTitle,
-      metaDescription: collection.metaDescription,
-      slug: collection.slug,
-      matchType: collection.matchType,
-      type: collection.type,
-      bannerUrl,
-    })
-    .where(eq(collections.id, collection.id));
+  const collectionPayload = toSnakeCase({
+    ...collectionToUpdate,
+    bannerUrl: newBannerUrl,
+  });
 
-  const newConditions = collection.conditions
+  const { error: collectionError } = await supabase
+    .from("collections")
+    .update(collectionPayload)
+    .eq("id", id);
+  if (collectionError) throw collectionError;
+
+  const conditionsToUpdate = conditions
+    .filter((condition) => condition.id)
+    .map((condition) => toSnakeCase(condition));
+
+  const conditionsToInsert = conditions
     .filter((condition) => !condition.id)
-    .map((condition) => ({ ...condition, collectionId: collection.id }));
-  const existingConditions = collection.conditions.filter(
-    (condition) => !!condition.id
+    .map((condition) => ({ ...toSnakeCase(condition), collection_id: id }));
+
+  const conditionsToNotDeleteIds = conditionsToUpdate.map(
+    (condition) => condition.id
   );
 
-  await db.delete(conditions).where(
-    and(
-      eq(conditions.collectionId, collection.id),
-      notInArray(
-        conditions.id,
-        existingConditions.map((condition) => condition.id!)
-      )
-    )
-  );
+  const notDeleteIdsString =
+    conditionsToNotDeleteIds.length > 0
+      ? `(${conditionsToNotDeleteIds.join(",")})`
+      : ``;
 
-  await Promise.all([
-    ...existingConditions.map((condition) =>
-      db
-        .update(conditions)
-        .set({ ...condition })
-        .where(eq(conditions.id, condition.id!))
-    ),
-    newConditions.length > 0 && db.insert(conditions).values(newConditions),
-  ]);
+  if (notDeleteIdsString) {
+    const { error: deleteConditionsError } = await supabase
+      .from("conditions")
+      .delete()
+      .not("id", "in", notDeleteIdsString)
+      .eq("collection_id", id);
+    if (deleteConditionsError) throw deleteConditionsError;
+  }
 
-  if (collection.bannerUrl && collection.banner) {
-    const { error } = await supabase.storage
+  const { error: conditionsUpdateError } = await supabase
+    .from("conditions")
+    .upsert(conditionsToUpdate);
+  if (conditionsUpdateError) throw conditionsUpdateError;
+
+  const { error: conditionsInsertError } = await supabase
+    .from("conditions")
+    .insert(conditionsToInsert);
+  if (conditionsInsertError) throw conditionsInsertError;
+
+  if (banner && oldBannerUrl && oldBannerUrl !== newBannerUrl) {
+    const { error: removeError } = await supabase.storage
       .from("Banners")
-      .remove([collection.bannerUrl]);
-    if (error) throw error;
+      .remove([oldBannerUrl]);
+
+    if (removeError) {
+      console.error("Error removing old banner:", removeError);
+    }
   }
 }

@@ -7,10 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Row } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { deleteCollection } from "../lib/actions";
@@ -21,17 +21,26 @@ interface Props {
 }
 export default function CollectionsTableRowActions({ row }: Props) {
   const [openState, setOpenState] = useState<"DELETE" | "EDIT" | null>(null);
-  const router = useRouter();
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: deleteCollection,
+    onSuccess() {
+      toast.success("Successfully deleted collection.", {
+        id: "delete collection",
+      });
+      queryClient.invalidateQueries({ queryKey: ["collections"] });
+    },
+    onError() {
+      toast.error("An error occured while deleting collection.", {
+        id: "delete collection",
+      });
+    },
+  });
 
   function deleteProduct() {
-    toast.promise(deleteCollection(row.original), {
-      loading: "Deleting product...",
-      success: () => {
-        router.refresh();
-        return "Successfully deleted product";
-      },
-      error: ({ message }) => <div>{message}</div>,
-    });
+    mutate(row.original);
+    toast.loading("Deleting collection...", { id: "delete collection" });
     setOpenState(null);
   }
   return (

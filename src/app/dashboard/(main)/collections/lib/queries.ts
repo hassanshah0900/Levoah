@@ -1,35 +1,37 @@
 "use server";
 
-import { db } from "@/db";
-import { collections, conditions } from "@/db/drizzle/schema";
-import { and, desc, eq, getTableColumns } from "drizzle-orm";
+import { toCamelCase } from "@/lib/utils";
+import { createClient } from "@/supabase/server";
 import { Collection } from "./types";
 
 export async function getCollections() {
-  const [collectionsList, count] = await Promise.all([
-    db.select().from(collections).orderBy(desc(collections.createdAt)),
-    db.$count(collections),
-  ]);
+  const supabase = await createClient();
 
-  return { collections: collectionsList as Collection[], count };
+  const { data, count, error } = await supabase
+    .from("collections")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  return { collections: toCamelCase(data) as Collection[], count };
 }
 
 export async function getCollectionBySlug(slug: string) {
-  const [collectionsList, conditionsList] = await Promise.all([
-    db.select().from(collections).where(eq(collections.slug, slug)),
-    db
-      .select(getTableColumns(conditions))
-      .from(conditions)
-      .innerJoin(collections, eq(collections.id, conditions.collectionId))
-      .where(
-        and(eq(collections.slug, slug), eq(collections.type, "automatic"))
-      ),
-  ]);
-  return collectionsList.length
-    ? ({
-        ...collectionsList[0],
-        conditions: conditionsList,
-        products: [],
-      } as Collection)
-    : null;
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("collections")
+    .select(
+      `
+      *, 
+      conditions(*)
+      `
+    )
+    .eq("slug", slug)
+    .limit(1);
+  if (error) throw error;
+
+  console.log(toCamelCase(data[0]));
+
+  return data.length ? toCamelCase(data[0]) : null;
 }
