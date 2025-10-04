@@ -34,7 +34,7 @@ export const collectionSchema = z
       .string()
       .min(1, "Meta description is required.")
       .max(160, "Meta description can be maximum 160 characters long."),
-    slug: z.string().min(1, "URL handle is required.").max(200),
+    slug: z.string().min(1, "URL handle is required.").lowercase().max(200),
   })
   .refine((data) => data.type === "automatic" && data.conditions.length > 0, {
     path: ["conditions"],
