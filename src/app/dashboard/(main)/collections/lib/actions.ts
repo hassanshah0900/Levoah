@@ -60,7 +60,6 @@ export async function deleteCollection(collection: Collection) {
 export async function editCollection(collection: CollectionEditSchemaType) {
   const supabase = await createClient();
   let { conditions, banner, id, ...collectionToUpdate } = collection;
-  console.log(typeof id);
 
   const oldBannerUrl = collectionToUpdate.bannerUrl;
   let newBannerUrl = oldBannerUrl;
@@ -116,10 +115,12 @@ export async function editCollection(collection: CollectionEditSchemaType) {
     .upsert(conditionsToUpdate);
   if (conditionsUpdateError) throw conditionsUpdateError;
 
-  const { error: conditionsInsertError } = await supabase
-    .from("conditions")
-    .insert(conditionsToInsert);
-  if (conditionsInsertError) throw conditionsInsertError;
+  if (conditionsToInsert.length) {
+    const { error: conditionsInsertError } = await supabase
+      .from("conditions")
+      .insert(conditionsToInsert);
+    if (conditionsInsertError) throw conditionsInsertError;
+  }
 
   if (banner && oldBannerUrl && oldBannerUrl !== newBannerUrl) {
     const { error: removeError } = await supabase.storage
