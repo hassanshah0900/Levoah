@@ -21,14 +21,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { compressImage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { createCollection } from "../lib/actions";
 import { collectionSchema, CollectionSchemaType } from "../lib/validation";
 import CollectionTypeSection from "./CollectionTypeSection";
 import SearchEngineListingSection from "./SearchEngineListingSection";
 
 export default function CollectionForm() {
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(collectionSchema),
     mode: "onChange",
@@ -43,8 +46,21 @@ export default function CollectionForm() {
     },
   });
 
+  const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: createCollection,
+    onSuccess() {
+      router.push("/dashboard/collections");
+      queryClient.invalidateQueries({ queryKey: ["collections"] });
+      toast.success("Successfully created collection", {
+        id: "create collection",
+      });
+    },
+    onError() {
+      toast.error("An error occured while creating collection", {
+        id: "create collection",
+      });
+    },
   });
 
   async function onSubmit(data: CollectionSchemaType) {
@@ -53,6 +69,7 @@ export default function CollectionForm() {
       : undefined;
     const collection = { ...data, banner: image };
     mutate(collection);
+    toast.loading("Creating collection...", { id: "create collection" });
   }
   return (
     <div>
