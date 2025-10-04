@@ -25,7 +25,7 @@ export const collectionSchema = z
         })
       )
       .default([]),
-    products: z.array(z.number()).default([]),
+    // products: z.array(z.number()).default([]),
     pageTitle: z
       .string()
       .min(1, "Page title is required.")
@@ -46,22 +46,22 @@ export const collectionSchema = z
         })
         .safeParse(payload.value).success;
     },
-  })
-  .refine(
-    (collection) =>
-      collection.type === "manual" && collection.products.length > 0,
-    {
-      error: "At least 1 product is required.",
-      path: ["products"],
-      when(payload) {
-        return z
-          .object({
-            type: z.literal("manual"),
-          })
-          .safeParse(payload.value).success;
-      },
-    }
-  );
+  });
+// .refine(
+//   (collection) =>
+//     collection.type === "manual" && collection.products.length > 0,
+//   {
+//     error: "At least 1 product is required.",
+//     path: ["products"],
+//     when(payload) {
+//       return z
+//         .object({
+//           type: z.literal("manual"),
+//         })
+//         .safeParse(payload.value).success;
+//     },
+//   }
+// );
 export type CollectionSchemaType = z.infer<typeof collectionSchema>;
 
 export const collectionEditSchema = z.object({
