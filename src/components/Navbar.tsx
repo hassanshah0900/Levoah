@@ -13,12 +13,13 @@ import Container from "./Container";
 import MobileNavbar from "./MobileNavbar";
 import NavbarHoverItem from "./NavbarHoverItem";
 import NavbarSubmenuItem from "./NavbarSubmenuItem";
+import { buttonVariants } from "./ui/button";
 
 export default function Navbar() {
   const { cartItems, setIsOpen } = useShoppingCart();
 
   return (
-    <div className="bg-primary text-primary-foreground sticky top-0 z-20 border-y-0 border-highlight/60 ">
+    <div className="bg-navbar/70 text-navbar-foreground backdrop-blur-sm shadow-black/40 shadow-md sticky top-0 z-20 border-y-0 border-highlight/60 ">
       <Container>
         <div className="flex justify-between items-center py-2">
           <div className="w-20">
@@ -41,7 +42,15 @@ export default function Navbar() {
               >
                 {cartItems.length}
               </div>
-              <ShoppingBag />
+              <span
+                className={buttonVariants({
+                  variant: "default",
+                  shape: "round",
+                  size: "icon",
+                })}
+              >
+                <ShoppingBag />
+              </span>
             </button>
             <MobileNavbar />
           </div>

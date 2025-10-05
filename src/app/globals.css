@@ -9,6 +9,10 @@
   --breakpoint-xs: 27rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-navbar: var(--navbar);
+  --color-navbar-foreground: var(--navbar-foreground);
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
   --font-poppins: var(--poppins);
   --font-montserrat: var(--montserrat);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -49,9 +53,13 @@
 }
 
 :root {
-  --radius: 0.225rem;
+  --radius: 0.675rem;
   --background: oklch(0.1676 0.0736 270.08);
   --foreground: oklch(0.984 0.003 247.858);
+  --navbar: oklch(0.208 0.042 265.755);
+  --navbar-foreground: oklch(0.984 0.003 247.858);
+  --footer: oklch(0.208 0.042 265.755);
+  --footer-foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);

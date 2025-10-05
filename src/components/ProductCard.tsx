@@ -31,7 +31,7 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <Link href={`/products/${product.slug}`}>
-      <div className="rounded-xs">
+      <div className="@container/product">
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
             {product.variants.map((variant) => (
@@ -39,21 +39,21 @@ export default function ProductCard({ product }: Props) {
                 <ProductImage
                   src={variant.imageUrl}
                   alt=""
-                  className="rounded-xs"
+                  className="rounded-sm"
                 />
               </EmblaSlide>
             ))}
           </div>
-          <div className="py-4 space-y-1 xs:space-y-2">
-            <div className="flex flex-col xs:flex-row justify-between items-start gap-2 xs:gap-3">
+          <div className="py-4 space-y-1 @md/product:space-y-2">
+            <div className="flex flex-col @md/product:flex-row justify-between items-start gap-2 @md/product:gap-3">
               <h2 className="leading-tight">
                 {product.title} And many other details
               </h2>
-              <span className="text-base xs:text-lg md:text-xl font-semibold text-nowrap">
+              <span className="text-base @md/product:text-lg @3xl/product:text-xl font-semibold text-nowrap">
                 Rs {currentVariant.price}
               </span>
             </div>
-            <div className="flex justify-between items-center text-xs xs:text-sm text-foreground/70">
+            <div className="flex justify-between items-center text-xs @md/product:text-sm text-foreground/70">
               {product.variants.length} Colors
             </div>
           </div>
