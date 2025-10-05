@@ -2,6 +2,8 @@
 
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
+import FloatingCartItem from "./FloatingCartItem";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -12,8 +14,6 @@ import {
   DrawerTrigger,
 } from "./ui/drawer";
 import { Separator } from "./ui/separator";
-import FloatingCartItem from "./FloatingCartItem";
-import Link from "next/link";
 
 export default function FloatingShoppingCart() {
   const { cartItems, isOpen, setIsOpen } = useShoppingCart();
@@ -24,7 +24,7 @@ export default function FloatingShoppingCart() {
         <DrawerTrigger asChild>
           <Button
             size={"icon-lg"}
-            className="fixed bottom-8 right-8 z-10 rounded-full shadow-[0px_0px_8px] shadow-highlight"
+            className="fixed bottom-8 right-8 z-10 rounded-full shadow-[0px_0px_8px] shadow-black/60"
           >
             <ShoppingCart />
           </Button>
