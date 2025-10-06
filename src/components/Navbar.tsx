@@ -1,18 +1,15 @@
 "use client";
 
-import { getSubcategories } from "@/app/dashboard/(main)/categories/lib/queries";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
+import { eyeglassesSublinks, sunglassesSublinks } from "@/lib/navbar-data";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
 import levoah from "../../public/images/Levoah.png";
 import Container from "./Container";
 import MobileNavbar from "./MobileNavbar";
 import NavbarHoverItem from "./NavbarHoverItem";
-import NavbarSubmenuItem from "./NavbarSubmenuItem";
+import NavbarImageItem from "./NavbarImageItem";
 import { buttonVariants } from "./ui/button";
 
 export default function Navbar() {
@@ -26,8 +23,26 @@ export default function Navbar() {
             <Image src={levoah} alt="Logo" />
           </div>
           <nav className="justify-center items-center gap-4 hidden sm:flex">
-            <NavbarCategoryItem label="Sunglasses" slug="sunglasses" />
-            <NavbarCategoryItem label="Eyeglasses" slug="eyeglasses" />
+            <NavbarHoverItem label="Sunglasses">
+              {sunglassesSublinks.map((item) => (
+                <NavbarImageItem
+                  key={item.url}
+                  label={item.title}
+                  url={item.url}
+                  imageUrl={item.imageUrl}
+                />
+              ))}
+            </NavbarHoverItem>
+            <NavbarHoverItem label="Eyeglasses">
+              {eyeglassesSublinks.map((item) => (
+                <NavbarImageItem
+                  key={item.url}
+                  label={item.title}
+                  url={item.url}
+                  imageUrl={item.imageUrl}
+                />
+              ))}
+            </NavbarHoverItem>
           </nav>
           <div className="space-x-4 flex justify-center items-center">
             <button
@@ -57,26 +72,5 @@ export default function Navbar() {
         </div>
       </Container>
     </div>
-  );
-}
-
-function NavbarCategoryItem({ slug, label }: { slug: string; label: string }) {
-  const [open, setOpen] = useState(false);
-  const { data: categories } = useQuery({
-    queryKey: ["categories", "sub", slug],
-    queryFn: () => getSubcategories(slug),
-  });
-
-  return (
-    <NavbarHoverItem open={open} onOpenChange={setOpen} label={label}>
-      {categories?.map((category) => (
-        <Link href={category.path} key={category.id}>
-          <NavbarSubmenuItem
-            label={category.name}
-            imgUrl={category.image_url}
-          />
-        </Link>
-      ))}
-    </NavbarHoverItem>
   );
 }
