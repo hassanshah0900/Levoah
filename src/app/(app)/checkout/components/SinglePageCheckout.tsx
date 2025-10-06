@@ -17,7 +17,7 @@ import PaymentOptions from "./PaymentOptions";
 import ReviewOrder from "./ReviewOrder";
 
 export default function SinglePageCheckout() {
-  const { reset } = useShoppingCart();
+  const { reset, cartItems } = useShoppingCart();
   const router = useRouter();
   const { mutate, isPending } = useMutation({
     mutationFn: createOrder,
@@ -50,8 +50,10 @@ export default function SinglePageCheckout() {
     },
   });
   function onSubmit(data: any) {
+    const order = { ...data, orderItems: cartItems };
     toast.loading("Creating order...", { id: "create order" });
-    mutate(data);
+    mutate(order);
+    console.log(order);
   }
 
   return (
