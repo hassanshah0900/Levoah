@@ -24,7 +24,7 @@ export async function createOrder({
     .insert({
       shipping_address: shippingAddress,
       payment_status: "Unpaid",
-      order_status: "pending",
+      status: "pending",
       payment_method: paymentMethod,
       tracking_code: orderTrackingCode,
     })
