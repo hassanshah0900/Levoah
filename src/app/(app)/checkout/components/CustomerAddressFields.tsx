@@ -23,7 +23,7 @@ interface FormField {
 
 const formFields: FormField[] = [
   {
-    name: "full_name",
+    name: "fullName",
     title: "Name",
     component: ({ field }) => <Input {...field} />,
   },
@@ -79,7 +79,7 @@ const formFields: FormField[] = [
     component: ({ field }) => <Input {...field} />,
   },
   {
-    name: "postal_code",
+    name: "postalCode",
     title: "Postal Code",
     component: ({ field }) => <Input {...field} />,
   },
@@ -103,7 +103,7 @@ export default function CustomerAddressFields() {
       {formFields.map((formField) => (
         <FormField
           key={formField.name}
-          name={`shipping_address.${formField.name}`}
+          name={`shippingAddress.${formField.name}`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>{formField.title}</FormLabel>
