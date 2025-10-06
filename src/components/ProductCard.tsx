@@ -46,9 +46,7 @@ export default function ProductCard({ product }: Props) {
           </div>
           <div className="py-4 space-y-1 @md/product:space-y-2">
             <div className="flex flex-col @md/product:flex-row justify-between items-start gap-2 @md/product:gap-3">
-              <h2 className="leading-tight">
-                {product.title} And many other details
-              </h2>
+              <h2 className="leading-tight">{product.title}</h2>
               <span className="text-base @md/product:text-lg @3xl/product:text-xl font-semibold text-nowrap">
                 Rs {currentVariant.price}
               </span>
