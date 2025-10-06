@@ -47,7 +47,7 @@ export default function PaymentOptions() {
               {paymentOptions.map((option) => (
                 <AccordionItem key={option.label} value={option.value}>
                   <AccordionHeader>
-                    <AccordionTrigger className="flex justify-between items-center w-full [&[data-state=open]>svg]:opacity-100 py-3 px-2">
+                    <AccordionTrigger className="flex justify-between items-center w-full [&[data-state=open]>svg]:opacity-100 py-3 px-2 cursor-pointer">
                       <span className="text-base sm:text-lg font-semibold uppercase">
                         {option.label}
                       </span>{" "}
