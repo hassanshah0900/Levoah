@@ -29,6 +29,8 @@ export default function HomePage() {
             alt=""
             className="object-cover object-top"
             fill
+            priority
+            sizes="(max-with: 1100px) 100vw, 1100px"
           />
         </div>
         <ShopSunglassesSection />
