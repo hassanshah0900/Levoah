@@ -1,12 +1,13 @@
-import ProductImage from "@/components/ProductImage";
-import { getSubcategories } from "@/app/dashboard/(main)/categories/lib/queries";
-import { Category } from "@/app/dashboard/(main)/categories/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import {
+  eyeglassesSublinks,
+  SubLink,
+  sunglassesSublinks,
+} from "@/lib/navbar-data";
 import { ChevronRight, Menu, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { ComponentProps, useState } from "react";
+import { useState } from "react";
 import levoah from "../../public/images/Levoah.png";
+import NavbarImageItem from "./NavbarImageItem";
 import {
   Drawer,
   DrawerClose,
@@ -16,7 +17,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
-import NavbarSubmenuItem from "./NavbarSubmenuItem";
 
 export default function MobileNavbar() {
   return (
@@ -25,7 +25,7 @@ export default function MobileNavbar() {
         <DrawerTrigger aria-label="Open menu">
           <Menu />
         </DrawerTrigger>
-        <DrawerContent className="bg-primary text-primary-foreground min-w-full">
+        <DrawerContent className="min-w-full bg-background/80 backdrop-blur-xs">
           <DrawerHeader className="hidden">
             <DrawerTitle>Menu</DrawerTitle>
             <DrawerDescription>
@@ -33,16 +33,20 @@ export default function MobileNavbar() {
             </DrawerDescription>
           </DrawerHeader>
           <div className="">
-            <div className="p-1 flex justify-between items-center">
-              <Image src={levoah} alt="Logo" className="w-30 " />
-              <DrawerClose className="pe-5">
+            <div className="ps-2 pt-2 p-1 flex justify-between items-center">
+              <Image
+                src={levoah}
+                alt="Logo"
+                className="w-20 shadow-white/20 shadow-[0_0_5px]"
+              />
+              <DrawerClose className="pe-3">
                 <X />
               </DrawerClose>
             </div>
             <div className="p-4">
-              <nav className="flex flex-col  font-semibold gap-4">
-                <BaseCategory slug="eyeglasses" label="Eyeglasses" />
-                <BaseCategory slug="sunglasses" label="Sunglasses" />
+              <nav className="flex flex-col gap-4">
+                <RootLink label="Eyeglasses" sublinks={eyeglassesSublinks} />
+                <RootLink label="Sunglasses" sublinks={sunglassesSublinks} />
               </nav>
             </div>
           </div>
@@ -52,13 +56,8 @@ export default function MobileNavbar() {
   );
 }
 
-function BaseCategory({ slug, label }: { slug: string; label: string }) {
+function RootLink({ label, sublinks }: { label: string; sublinks: SubLink[] }) {
   const [open, setOpen] = useState(false);
-  const { data: categories } = useQuery({
-    queryKey: ["categories", "sub", slug],
-    queryFn: () => getSubcategories(slug),
-  });
-
   return (
     <Drawer direction="left" open={open} onOpenChange={setOpen}>
       <DrawerTrigger
@@ -67,9 +66,9 @@ function BaseCategory({ slug, label }: { slug: string; label: string }) {
       >
         {label} <ChevronRight />
       </DrawerTrigger>
-      <DrawerContent className="bg-primary min-w-full overflow-y-auto text-primary-foreground">
+      <DrawerContent className="min-w-full bg-background/80 backdrop-blur-xs overflow-y-auto">
         <DrawerHeader className="hidden">
-          <DrawerTitle>Sunglasses subcategories</DrawerTitle>
+          <DrawerTitle>{label} sublinks</DrawerTitle>
           <DrawerDescription>
             Choose a link below to navigate.
           </DrawerDescription>
@@ -80,13 +79,13 @@ function BaseCategory({ slug, label }: { slug: string; label: string }) {
               <X />
             </DrawerClose>
           </div>
-          {categories?.map((category) => (
-            <Link href={category.path} key={category.id}>
-              <NavbarSubmenuItem
-                imgUrl={category.image_url}
-                label={category.name}
-              />
-            </Link>
+          {sublinks?.map((sublink) => (
+            <NavbarImageItem
+              key={sublink.url}
+              label={sublink.title}
+              url={sublink.url}
+              imageUrl={sublink.imageUrl}
+            />
           ))}
         </div>
       </DrawerContent>
