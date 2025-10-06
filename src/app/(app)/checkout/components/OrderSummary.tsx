@@ -3,15 +3,17 @@ import {
   useShoppingCart,
 } from "@/contexts/ShoppingCartContext";
 import { ProductVariant } from "@/types/products.types";
+import { useWatch } from "react-hook-form";
 import { calculateSubtotal } from "../lib/utils";
 
 export default function OrderSummary() {
   const { cartItems } = useShoppingCart();
+  const province = useWatch({ name: "shippingAddress.province" });
 
   return (
     <div className="space-y-2">
-      <div className="bg-accent p-2 md:p-4 rounded-xs space-y-2">
-        <h2 className="text-xl mb-2">Order Summary</h2>
+      <h2 className="text-xl mb-2">Order Summary</h2>
+      <div className="bg-accent p-2 md:p-4 rounded-sm space-y-2">
         <div className="space-y-2">
           {cartItems.map((cartItem) => (
             <OrderSummaryItem key={cartItem.variant.id} cartItem={cartItem} />
@@ -21,13 +23,16 @@ export default function OrderSummary() {
           <div className="flex justify-between items-center">
             Subtotal <span>Rs {calculateSubtotal(cartItems)}</span>
           </div>
-          <div className="flex justify-between items-center text-sm">
-            Shipping to Punjab, Pakistan <span>Rs 50</span>
-          </div>
+          {province && (
+            <div className="flex justify-between items-center text-sm gap-10">
+              Shipping to {province}
+              <span className="whitespace-nowrap">Rs 50</span>
+            </div>
+          )}
         </div>
       </div>
-      <div className="p-2 md:p-4 flex justify-between items-center bg-accent rounded-xs text-xl">
-        Order Total <span>Rs {calculateSubtotal(cartItems)}</span>
+      <div className="p-2 md:p-4 flex justify-between items-center bg-accent rounded-sm text-lg">
+        Order Total <span>Rs {calculateSubtotal(cartItems) + 50}</span>
       </div>
     </div>
   );
