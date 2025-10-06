@@ -3,8 +3,8 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 
 interface Props {
   children: ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   label: string;
 }
 export default function NavbarHoverItem({
@@ -18,8 +18,8 @@ export default function NavbarHoverItem({
       <HoverCardTrigger className="font-semibold cursor-pointer">
         {label}
       </HoverCardTrigger>
-      <HoverCardContent className="w-xl" sideOffset={20}>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-5">
+      <HoverCardContent className="w-max" sideOffset={20}>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2">
           {children}
         </div>
       </HoverCardContent>
