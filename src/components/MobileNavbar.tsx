@@ -32,8 +32,8 @@ export default function MobileNavbar() {
               Choose a link below to navigate.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="">
-            <div className="ps-2 pt-2 p-1 flex justify-between items-center">
+          <div>
+            <div className="p-2 pb-4 flex justify-between items-center border-2 mb-5">
               <Image
                 src={levoah}
                 alt="Logo"
