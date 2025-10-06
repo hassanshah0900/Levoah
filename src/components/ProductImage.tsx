@@ -8,7 +8,10 @@ interface Props extends Omit<ComponentProps<typeof Image>, "src"> {
 export default function ProductImage({ src, className, ...props }: Props) {
   return (
     <div
-      className={cn("relative w-full aspect-square overflow-hidden", className)}
+      className={cn(
+        "relative w-full aspect-square overflow-hidden rounded-sm",
+        className
+      )}
     >
       <Image
         {...props}

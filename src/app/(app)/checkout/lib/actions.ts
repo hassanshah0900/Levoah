@@ -7,11 +7,12 @@ import { CheckoutFormSchemaType } from "./validation";
 
 interface Order extends CheckoutFormSchemaType {
   orderItems: ShoppingCartItem[];
+  shippingAddress: CheckoutFormSchemaType["shippingAddress"];
 }
 
 export async function createOrder({
-  payment_method,
-  shipping_address,
+  paymentMethod,
+  shippingAddress,
   orderItems,
 }: Order) {
   const supabase = await createClient();
@@ -21,10 +22,10 @@ export async function createOrder({
   const { data, error } = await supabase
     .from("orders")
     .insert({
-      shipping_address,
+      shipping_address: shippingAddress,
       payment_status: "Unpaid",
-      order_status: "pending",
-      payment_method,
+      status: "pending",
+      payment_method: paymentMethod,
       tracking_code: orderTrackingCode,
     })
     .select("id, tracking_code")

@@ -6,11 +6,11 @@ export interface MultistepFormStep {
   element: ReactElement;
   fields: (
     | keyof CheckoutFormSchemaType
-    | `shipping_address.${keyof CheckoutFormSchemaType["shipping_address"]}`
+    | `shipping_address.${keyof CheckoutFormSchemaType["shippingAddress"]}`
   )[];
 }
 
-export type PaymentMethod = "CASHONDELIVERY" | "PAYFAST";
+export type PaymentMethod = "CASHONDELIVERY" | "BANKTRANSFER";
 
 export type OrderStatus =
   | "Pending"

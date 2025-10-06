@@ -5,6 +5,7 @@ import {
 } from "@/lib/navbar-data";
 import { ChevronRight, Menu, X } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import levoah from "../../public/images/Levoah.png";
 import NavbarImageItem from "./NavbarImageItem";
@@ -19,40 +20,43 @@ import {
 } from "./ui/drawer";
 
 export default function MobileNavbar() {
+  const pathname = usePathname();
   return (
     <div className="sm:hidden flex justify-center items-center">
-      <Drawer direction="left">
-        <DrawerTrigger aria-label="Open menu">
-          <Menu />
-        </DrawerTrigger>
-        <DrawerContent className="min-w-full bg-background/80 backdrop-blur-xs">
-          <DrawerHeader className="hidden">
-            <DrawerTitle>Menu</DrawerTitle>
-            <DrawerDescription>
-              Choose a link below to navigate.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div>
-            <div className="p-2 pb-4 flex justify-between items-center border-2 mb-5">
-              <Image
-                src={levoah}
-                alt="Levoah Logo"
-                priority
-                className="w-20 shadow-white/20 shadow-[0_0_5px]"
-              />
-              <DrawerClose className="pe-3">
-                <X />
-              </DrawerClose>
+      {pathname !== "/checkout" && (
+        <Drawer direction="left">
+          <DrawerTrigger aria-label="Open menu">
+            <Menu />
+          </DrawerTrigger>
+          <DrawerContent className="min-w-full bg-background/80 backdrop-blur-xs">
+            <DrawerHeader className="hidden">
+              <DrawerTitle>Menu</DrawerTitle>
+              <DrawerDescription>
+                Choose a link below to navigate.
+              </DrawerDescription>
+            </DrawerHeader>
+            <div>
+              <div className="p-2 pb-4 flex justify-between items-center border-2 mb-5">
+                <Image
+                  src={levoah}
+                  alt="Levoah Logo"
+                  priority
+                  className="w-20 shadow-white/20 shadow-[0_0_5px]"
+                />
+                <DrawerClose className="pe-3">
+                  <X />
+                </DrawerClose>
+              </div>
+              <div className="p-4">
+                <nav className="flex flex-col gap-4">
+                  <RootLink label="Eyeglasses" sublinks={eyeglassesSublinks} />
+                  <RootLink label="Sunglasses" sublinks={sunglassesSublinks} />
+                </nav>
+              </div>
             </div>
-            <div className="p-4">
-              <nav className="flex flex-col gap-4">
-                <RootLink label="Eyeglasses" sublinks={eyeglassesSublinks} />
-                <RootLink label="Sunglasses" sublinks={sunglassesSublinks} />
-              </nav>
-            </div>
-          </div>
-        </DrawerContent>
-      </Drawer>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   );
 }
