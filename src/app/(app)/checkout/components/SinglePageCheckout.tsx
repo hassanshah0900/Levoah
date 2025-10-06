@@ -1,11 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -57,26 +58,37 @@ export default function SinglePageCheckout() {
   }
 
   return (
-    <Form {...form}>
-      <form
-        className="grid grid-cols-1 md:grid-cols-2 gap-5"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <div className="space-y-5">
-          <ReviewOrder />
-          <Separator className="md:mb-0" />
-          <CustomerAddressFields />
+    <>
+      {cartItems.length ? (
+        <Form {...form}>
+          <form
+            className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <div className="space-y-5">
+              <ReviewOrder />
+              <Separator />
+              <CustomerAddressFields />
+            </div>
+            <div className="space-y-5">
+              <Separator className="md:hidden" />
+              <PaymentOptions />
+              <Separator />
+              <OrderSummary />
+              <Button className="w-full" type="submit" disabled={isPending}>
+                Complete Order
+              </Button>
+            </div>
+          </form>
+        </Form>
+      ) : (
+        <div className="flex flex-col justify-center items-center gap-5">
+          <h2 className="text-center text-2xl">Your cart is empty</h2>
+          <Link href={"/"} className={buttonVariants({ variant: "default" })}>
+            Continue Shopping
+          </Link>
         </div>
-        <div className="space-y-5">
-          <Separator className="md:hidden" />
-          <PaymentOptions />
-          <Separator />
-          <OrderSummary />
-          <Button className="w-full" type="submit" disabled={isPending}>
-            Complete Order
-          </Button>
-        </div>
-      </form>
-    </Form>
+      )}
+    </>
   );
 }
