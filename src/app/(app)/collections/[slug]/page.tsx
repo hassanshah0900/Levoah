@@ -78,6 +78,8 @@ export default async function CollectionsPage({
                     alt=""
                     fill
                     className="object-center object-cover"
+                    priority
+                    sizes="(max-width: 1100px) 100vw, 1100px"
                   />
                 </div>
               )}

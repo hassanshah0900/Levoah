@@ -20,7 +20,7 @@ export default function Navbar() {
       <Container>
         <div className="flex justify-between items-center py-2">
           <div className="w-20">
-            <Image src={levoah} alt="Logo" />
+            <Image src={levoah} alt="Levoah Logo" priority />
           </div>
           <nav className="justify-center items-center gap-4 hidden sm:flex">
             <NavbarHoverItem label="Sunglasses">

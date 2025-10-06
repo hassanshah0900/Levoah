@@ -28,7 +28,13 @@ function MenCard() {
       className="w-full sm:aspect-auto aspect-video bg-card text-card-foreground sm:col-span-5 grid grid-cols-2 rounded-sm"
     >
       <div className="relative w-full h-full">
-        <Image src={men} alt="" fill className="object-cover object-top" />
+        <Image
+          src={men}
+          alt=""
+          fill
+          className="object-cover object-top"
+          sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 380px"
+        />
       </div>
       <h2 className=" text-xl md:text-2xl font-bold flex justify-center items-center uppercase">
         Shop Men
@@ -47,7 +53,13 @@ function WomenCard() {
         Shop Women
       </h2>
       <div className="order-first sm:order-last relative sm:aspect-video sm:col-span-2">
-        <Image src={women} alt="" fill className="object-cover object-top" />
+        <Image
+          src={women}
+          alt=""
+          fill
+          className="object-cover object-top"
+          sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 380px"
+        />
       </div>
     </Link>
   );
@@ -60,7 +72,13 @@ function ChildrenCard() {
       className="order-last sm:order-first w-full aspect-video bg-card text-card-foreground sm:col-span-4 grid grid-cols-2 rounded-sm"
     >
       <div className="relative w-full h-full">
-        <Image src={child} alt="" fill className="object-cover object-top" />
+        <Image
+          src={child}
+          alt=""
+          fill
+          className="object-cover object-top"
+          sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 380px"
+        />
       </div>
       <h2 className="text-xl md:text-2xl font-bold flex justify-center items-center uppercase p-4">
         Shop Children

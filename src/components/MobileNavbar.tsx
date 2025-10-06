@@ -36,7 +36,8 @@ export default function MobileNavbar() {
             <div className="p-2 pb-4 flex justify-between items-center border-2 mb-5">
               <Image
                 src={levoah}
-                alt="Logo"
+                alt="Levoah Logo"
+                priority
                 className="w-20 shadow-white/20 shadow-[0_0_5px]"
               />
               <DrawerClose className="pe-3">
