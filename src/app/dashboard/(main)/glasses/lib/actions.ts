@@ -7,6 +7,7 @@ import {
   products,
   productVariants,
 } from "@/db/drizzle/schema";
+import { toSnakeCase } from "@/lib/utils";
 import { createClient } from "@/supabase/server";
 import { Product, ProductVariant } from "@/types/products.types";
 import { and, eq, inArray } from "drizzle-orm";
@@ -44,16 +45,37 @@ export async function createGlasses(
 export async function editGlasses(
   glasses: GlassesEditFormSchemaType & { id: number }
 ) {
-  await Promise.all([
-    db
-      .update(products)
-      .set({ ...glasses })
-      .where(eq(products.id, glasses.id)),
-    db
-      .update(productCategories)
-      .set({ categoryId: glasses.category })
-      .where(eq(productCategories.productId, glasses.id)),
-  ]);
+  const supabase = await createClient();
+
+  const { category, ...glassesToUpdate } = glasses;
+
+  const { error } = await supabase
+    .from("products")
+    .update({
+      ...toSnakeCase(glassesToUpdate),
+      attributes: glassesToUpdate.attributes,
+    })
+    .eq("id", glasses.id);
+  if (error) throw error;
+
+  const {
+    data,
+    count,
+    error: categoryUpdateError,
+  } = await supabase
+    .from("product_categories")
+    .update({ product_id: glasses.id, category_id: category })
+    .eq("product_id", glasses.id)
+    .select("*");
+  if (categoryUpdateError) throw categoryUpdateError;
+  console.log(data);
+
+  if (!data.length) {
+    const { error } = await supabase
+      .from("product_categories")
+      .insert({ product_id: glasses.id, category_id: category });
+    if (error) throw error;
+  }
 }
 
 export async function deleteSingleGlassesPair(productId: number) {
