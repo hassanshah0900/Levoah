@@ -8,6 +8,7 @@ import z from "zod";
 import { bridgeAndNosepads } from "../components/BridgeAndNosepadsSelect";
 import { frameMaterials } from "../components/FrameMaterialCombobox";
 import { frameShapes } from "../components/FrameShapeCombobox";
+import { genders } from "../components/GenderSelect";
 
 export const glassesFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -26,6 +27,7 @@ export const glassesFormSchema = z.object({
     bridgeWidth: z.coerce.number().min(1, "Bridge width is required."),
     templeLength: z.coerce.number().min(1, "Temple length is required."),
     modelCode: z.string().min(1, "Model Code is required."),
+    gender: z.enum(genders),
   }),
   description: z.string(),
   category: z.coerce.number().min(1, "Category is required"),
