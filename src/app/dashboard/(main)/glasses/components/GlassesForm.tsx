@@ -28,6 +28,7 @@ import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
 import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
+import GenderSelect from "./GenderSelect";
 import LenseWidthCombobox from "./LenseWidthCombobox";
 import TempleLengthCombobox from "./TempleLengthCombobox";
 
@@ -221,6 +222,18 @@ export default function GlassesForm() {
                 <FormLabel>Temple Length</FormLabel>
                 <FormControl>
                   <TempleLengthCombobox {...field} {...fieldState} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name={`attributes.gender`}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Gender</FormLabel>
+                <FormControl>
+                  <GenderSelect {...field} {...fieldState} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
