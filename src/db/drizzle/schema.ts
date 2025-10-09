@@ -93,6 +93,10 @@ export const collections = pgTable("collections", {
 	bannerUrl: text("banner_url"),
 }, (table) => [
 	unique("collections_slug_key").on(table.slug),
+	pgPolicy("allow read access to everyone", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
+	pgPolicy("allow delete access based on role", { as: "permissive", for: "delete", to: ["authenticated"] }),
+	pgPolicy("allow create access based on role", { as: "permissive", for: "insert", to: ["authenticated"] }),
+	pgPolicy("allow update access based on role", { as: "permissive", for: "update", to: ["authenticated"] }),
 ]);
 
 export const conditions = pgTable("conditions", {
@@ -111,6 +115,10 @@ export const conditions = pgTable("conditions", {
 			foreignColumns: [collections.id],
 			name: "conditions_collection_id_fkey"
 		}).onUpdate("cascade").onDelete("cascade"),
+	pgPolicy("allow delete access based on role", { as: "permissive", for: "delete", to: ["authenticated"], using: sql`authorize('conditions.delete'::text)` }),
+	pgPolicy("allow create access based on role", { as: "permissive", for: "insert", to: ["authenticated"] }),
+	pgPolicy("allow read access to everyone", { as: "permissive", for: "select", to: ["public"] }),
+	pgPolicy("allow update access based on role", { as: "permissive", for: "update", to: ["authenticated"] }),
 ]);
 
 export const orders = pgTable("orders", {
@@ -124,7 +132,6 @@ export const orders = pgTable("orders", {
 	shippingAmount: integer("shipping_amount"),
 	paymentStatus: text("payment_status"),
 	discountAmount: integer("discount_amount"),
-	taxAmount: integer("tax_amount"),
 	paymentMethod: text("payment_method"),
 	trackingCode: text("tracking_code"),
 }, (table) => [
