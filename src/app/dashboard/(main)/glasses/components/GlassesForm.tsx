@@ -229,11 +229,11 @@ export default function GlassesForm() {
           />
           <FormField
             name={`attributes.gender`}
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Gender</FormLabel>
                 <FormControl>
-                  <GenderSelect {...field} {...fieldState} />
+                  <GenderSelect {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
