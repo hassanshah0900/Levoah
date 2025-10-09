@@ -4,6 +4,7 @@ import { bridgeAndNosepads } from "@/app/dashboard/(main)/glasses/components/Bri
 import { frameColors } from "@/app/dashboard/(main)/glasses/components/FrameColorCombobox";
 import { frameMaterials } from "@/app/dashboard/(main)/glasses/components/FrameMaterialCombobox";
 import { frameShapes } from "@/app/dashboard/(main)/glasses/components/FrameShapeCombobox";
+import { genders } from "@/app/dashboard/(main)/glasses/components/GenderSelect";
 import { lenseColors } from "@/app/dashboard/(main)/glasses/components/LenseColorCombobox";
 import { products, productVariants } from "@/db/drizzle/schema";
 
@@ -32,6 +33,7 @@ interface Glasses
     lenseWidth: number;
     templeLength: number;
     modelCode: string;
+    gender: (typeof genders)[number];
   }> {
   productType: "glasses";
   variants: GlassesVariant[];
