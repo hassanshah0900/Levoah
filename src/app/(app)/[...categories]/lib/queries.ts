@@ -1,6 +1,7 @@
 "use server";
 
 import { Category } from "@/app/dashboard/(main)/categories/lib/types";
+import { toCamelCase } from "@/lib/utils";
 import { createClient } from "@/supabase/server";
 import { Product } from "@/types/products.types";
 
@@ -47,7 +48,7 @@ export async function getProductWithVariants(slug: string) {
 
   if (error) throw error;
 
-  return (data[0] as Product) ?? null;
+  return data[0] ? toCamelCase(data[0]) : null;
 }
 
 export async function getCategoryBySlug(slug: string) {

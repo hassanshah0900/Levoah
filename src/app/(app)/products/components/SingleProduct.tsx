@@ -5,27 +5,46 @@ import { Separator } from "@/components/ui/separator";
 import { useShoppingCart } from "@/contexts/ShoppingCartContext";
 import { cn } from "@/lib/utils";
 import { Product, ProductVariant } from "@/types/products.types";
+import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductImage from "../../../../components/ProductImage";
+import { getProductWithVariants } from "../../[...categories]/lib/queries";
+import SingleProductSkeleton from "./SingleProductSkeleton";
 
 interface Props {
-  product: Product | null;
+  slug: string;
 }
-export default function SingleProduct({ product }: Props) {
+export default function SingleProduct({ slug }: Props) {
+  const { data: product, status } = useQuery({
+    queryKey: ["glasses", slug],
+    queryFn: () => getProductWithVariants(slug),
+  });
+
   const { addCartItem, setIsOpen, isInCart } = useShoppingCart();
 
-  if (!product) notFound();
+  const [currentVariant, setCurrentVariant] = useState<
+    ProductVariant | undefined
+  >(undefined);
 
-  const [currentVariant, setCurrentVariant] = useState<ProductVariant>(
-    product.variants[0] as ProductVariant
-  );
-  const isItemInCart = isInCart(product.id, currentVariant.id);
+  useEffect(() => {
+    if (status === "success" && product && product.variants.length > 0)
+      setCurrentVariant(product.variants[0]);
+  }, [status, product]);
+
+  if (status === "pending") return <SingleProductSkeleton />;
+  if (status === "error") return <div>An unexpected error has occured</div>;
+
+  if (product === null) notFound();
+
+  const isItemInCart = currentVariant
+    ? isInCart(product.id, currentVariant.id)
+    : false;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-10 py-10">
       <ProductImage
-        src={currentVariant.imageUrl}
+        src={currentVariant?.imageUrl}
         alt=""
         className="shadow-highlight shadow-[0_0_5px] sm:shadow-[0_0_10px] rounded-xs overflow-hidden"
       />
@@ -35,7 +54,7 @@ export default function SingleProduct({ product }: Props) {
             {product.title}
           </h1>
           <p className="text-xl sm:text-2xl leading-tight sm:leading-normal">
-            Rs {currentVariant.price}
+            Rs {currentVariant?.price}
           </p>
         </div>
         <Separator />
@@ -46,7 +65,7 @@ export default function SingleProduct({ product }: Props) {
         />
 
         <div>
-          {product.productType === "glasses" && (
+          {product.productType === "glasses" && currentVariant && (
             <GlassesRelatedDetails
               product={product}
               variant={currentVariant as ProductVariant<"glasses">}
@@ -54,11 +73,15 @@ export default function SingleProduct({ product }: Props) {
           )}
         </div>
 
-        <p className="text-sm sm:text-base">{product.description}</p>
+        <p className="text-sm sm:text-base">{product?.description}</p>
         <Separator />
         <Button
           onClick={() => {
-            addCartItem({ product, variant: currentVariant, quantity: 1 });
+            addCartItem({
+              product: product,
+              variant: currentVariant!,
+              quantity: 1,
+            });
             setIsOpen(true);
           }}
           className={"w-full"}
@@ -78,7 +101,7 @@ function Variants({
 }: {
   variants: ProductVariant[];
   onVariantSelect: (variant: ProductVariant) => void;
-  currentVariant: ProductVariant;
+  currentVariant: ProductVariant | undefined;
 }) {
   return (
     <div className="space-y-2">
@@ -90,8 +113,8 @@ function Variants({
           <button
             key={variant.id}
             className={cn(
-              "w-full rounded-xs overflow-hidden",
-              variant.id === currentVariant.id &&
+              "w-full rounded-sm overflow-hidden",
+              variant.id === currentVariant?.id &&
                 "shadow-[0_0_4px] sm:shadow-[0_0_10px] shadow-highlight"
             )}
             onClick={() => onVariantSelect(variant)}
@@ -113,21 +136,21 @@ function GlassesRelatedDetails({
 }) {
   return (
     <div>
-      <p className="font-semibold sm:text-lg">
+      <p className="sm:text-lg">
         Frame
-        <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
+        <span className="text-sm sm:text-base text-muted-foreground font-normal ms-2 normal-case sm:ms-2">
           {variant.attributes.frameColor}
         </span>
       </p>
-      <p className="font-semibold sm:text-lg">
+      <p className="sm:text-lg">
         Lense
-        <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
+        <span className="text-sm sm:text-base text-muted-foreground font-normal ms-2 normal-case sm:ms-2">
           {variant.attributes.lenseColor}
         </span>
       </p>
-      <p className="font-semibold sm:text-lg">
+      <p className="sm:text-lg">
         Size
-        <span className="text-sm sm:text-base text-muted-foreground font-normal normal-case ms-1 sm:ms-2">
+        <span className="text-sm sm:text-base text-muted-foreground font-normal ms-2 normal-case sm:ms-2">
           {product.attributes.lenseWidth} {product.attributes.bridgeWidth}
         </span>
       </p>

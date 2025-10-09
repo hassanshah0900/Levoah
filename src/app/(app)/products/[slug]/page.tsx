@@ -1,10 +1,5 @@
 import Container from "@/components/Container";
-import { Suspense } from "react";
-import RelatedProductsSectionSkeleton from "../components/RelatedProductsSkeleton";
 import SingleProduct from "../components/SingleProduct";
-import SingleProductSkeleton from "../components/SingleProductSkeleton";
-import { getProductWithVariants } from "../../[...categories]/lib/queries";
-import { getRelatedProductsWithVariants } from "./lib/queries";
 
 export default async function ProductPage({
   params,
@@ -15,22 +10,7 @@ export default async function ProductPage({
 
   return (
     <Container>
-      <Suspense fallback={<SingleProductSkeleton />}>
-        <SingleProductServer slug={slug} />
-      </Suspense>
-      <Suspense fallback={<RelatedProductsSectionSkeleton />}>
-        <RelatedProductsServer slug={slug} />
-      </Suspense>
+      <SingleProduct slug={slug} />
     </Container>
   );
-}
-
-async function SingleProductServer({ slug }: { slug: string }) {
-  const product = await getProductWithVariants(slug);
-
-  return <SingleProduct product={product} />;
-}
-
-async function RelatedProductsServer({ slug }: { slug: string }) {
-  return <div></div>;
 }
