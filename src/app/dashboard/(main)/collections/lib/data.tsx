@@ -4,6 +4,7 @@ import { FC } from "react";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import CategorySelector from "../../categories/components/CategorySelector";
 import FrameShapeCombobox from "../../glasses/components/FrameShapeCombobox";
+import GenderSelect from "../../glasses/components/GenderSelect";
 
 export const filters: FilterItem[] = [
   {
@@ -29,6 +30,11 @@ export const filters: FilterItem[] = [
     variant: "date",
     field: { label: "Creation Date", value: "createdAt" },
     value: ({ field }) => <DateInput {...field} />,
+  },
+  {
+    variant: "select",
+    field: { label: "Gender", value: "attributes.gender" },
+    value: ({ field }) => <GenderSelect {...field} />,
   },
 ];
 type Variant = "text" | "date" | "dateRange" | "number" | "select" | "category";
