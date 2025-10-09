@@ -78,13 +78,8 @@ export default function CategorySelector({
       categories.find((c) => {
         switch (selectValueType) {
           case "id":
-            console.log("This is running");
-
             return c.id === value;
-
           case "path":
-            console.log("Path: ", c.path);
-
             return c.path === value;
         }
       }) ?? null
