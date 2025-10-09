@@ -144,7 +144,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.frameColorDisplay`}
+              name={`attributes.lenseColorDisplay`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Display Lense Color</FormLabel>
@@ -168,7 +168,7 @@ export default function GlassesVariantForm({ productId }: Props) {
               )}
             />
             <FormField
-              name={`attributes.lenseColorDisplay`}
+              name={`attributes.frameColorDisplay`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Display Frame Color</FormLabel>
