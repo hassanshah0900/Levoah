@@ -15,6 +15,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { deleteSingleGlassesPair } from "../lib/actions";
 import GlassesEditForm from "./GlassesEditForm";
+import { toCamelCase } from "@/lib/utils";
 
 interface Props {
   row: Row<Product>;
@@ -59,7 +60,7 @@ export default function GlassesTableRowActions({ row }: Props) {
         onOpenChange={() => setOpenState(null)}
       />
       <GlassesEditForm
-        glasses={row.original as Product<"glasses">}
+        glasses={toCamelCase(row.original) as Product<"glasses">}
         open={openState === "EDIT"}
         onOpenChange={() => setOpenState(null)}
       />

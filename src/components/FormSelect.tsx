@@ -18,8 +18,6 @@ export default function FormSelect({
   items,
   ...props
 }: Props) {
-  console.log(props.value);
-
   return (
     <Select {...props} onValueChange={onChange}>
       <SelectTrigger asChild>

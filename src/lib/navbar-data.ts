@@ -7,17 +7,17 @@ export type SubLink = {
 export const sunglassesSublinks: SubLink[] = [
   {
     imageUrl: "/images/men.webp",
-    title: "Men",
+    title: "Men Sunglasses",
     url: "/collections/sunglasses-men",
   },
   {
     imageUrl: "/images/women.webp",
-    title: "Women",
+    title: "Women Sunglasses",
     url: "/collections/sunglasses-women",
   },
   {
     imageUrl: "/images/child.webp",
-    title: "Children",
+    title: "Children Sunglasses",
     url: "/collections/sunglasses-children",
   },
 ];
@@ -25,17 +25,17 @@ export const sunglassesSublinks: SubLink[] = [
 export const eyeglassesSublinks: SubLink[] = [
   {
     imageUrl: "/images/men.webp",
-    title: "Men",
+    title: "Men Eyeglasses",
     url: "/collections/eyeglasses-men",
   },
   {
     imageUrl: "/images/women.webp",
-    title: "Women",
+    title: "Women Eyeglasses",
     url: "/collections/eyeglasses-women",
   },
   {
     imageUrl: "/images/child.webp",
-    title: "Children",
+    title: "Children Eyeglasses",
     url: "/collections/eyeglasses-children",
   },
 ];

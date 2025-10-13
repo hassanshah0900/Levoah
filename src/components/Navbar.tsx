@@ -24,7 +24,7 @@ export default function Navbar() {
           <div className="w-20">
             <Image src={levoah} alt="Levoah Logo" priority />
           </div>
-          <nav className="justify-center items-center gap-4 flex">
+          <nav className="justify-center items-center gap-4 hidden sm:flex">
             {pathname === "/checkout" ? (
               <h1 className="text-xl">Checkout</h1>
             ) : (

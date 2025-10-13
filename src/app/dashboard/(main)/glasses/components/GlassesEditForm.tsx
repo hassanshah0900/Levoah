@@ -14,8 +14,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Product } from "@/types/products.types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -37,6 +37,7 @@ import BridgeAndNosepadsSelect from "./BridgeAndNosepadsSelect";
 import BridgeWidthCombobox from "./BridgeWidthCombobox";
 import FrameMaterialCombobox from "./FrameMaterialCombobox";
 import FrameShapeCombobox from "./FrameShapeCombobox";
+import GenderSelect from "./GenderSelect";
 import LenseWidthCombobox from "./LenseWidthCombobox";
 import TempleLengthCombobox from "./TempleLengthCombobox";
 
@@ -58,19 +59,26 @@ export default function GlassesEditForm({
       published: glasses.published,
       attributes: glasses.attributes,
       category: glasses.category?.id ?? "",
+      brandId: glasses.brandId,
     },
     resolver: zodResolver(glassesEditFormSchema),
   });
-  const router = useRouter();
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: editGlasses,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["glasses"] });
+      toast.success("Successfully edited glasses", { id: "edit glasses" });
+    },
+    onError() {
+      toast.error("Couldn't edit glasses", { id: "edit glasses" });
+    },
+  });
+
   async function onSubmit(edittedGlasses: GlassesEditFormSchemaType) {
-    toast.promise(editGlasses({ ...glasses, ...edittedGlasses }), {
-      loading: "Editing glasses...",
-      success: () => {
-        router.refresh();
-        return "Successfully edited.";
-      },
-      error: ({ message }) => <div>{message}</div>,
-    });
+    mutate({ ...edittedGlasses, id: glasses.id });
+    toast.loading("Editing glasses...", { id: "edit glasses" });
     onOpenChange?.(false);
   }
 
@@ -131,15 +139,19 @@ export default function GlassesEditForm({
             />
             <FormField
               name="brandId"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Brand</FormLabel>
-                  <FormControl>
-                    <BrandsCombobox {...field} {...fieldState} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field, fieldState }) => {
+                console.log("Brand Id Value: ", field.value);
+
+                return (
+                  <FormItem>
+                    <FormLabel>Brand</FormLabel>
+                    <FormControl>
+                      <BrandsCombobox {...field} {...fieldState} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <FormField
               name="attributes.modelCode"
@@ -223,6 +235,18 @@ export default function GlassesEditForm({
                   <FormLabel>Temple Length</FormLabel>
                   <FormControl>
                     <TempleLengthCombobox {...field} {...fieldState} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name={`attributes.gender`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <FormControl>
+                    <GenderSelect {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

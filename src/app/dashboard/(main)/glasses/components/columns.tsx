@@ -111,6 +111,7 @@ export const columns = [
       <Badge className="ml-3">{getValue() ?? "No Value"}</Badge>
     ),
     enableSorting: false,
+    size: 200,
   }),
   columnHelper.accessor("attributes.lenseWidth", {
     id: "Lense Width",
@@ -131,6 +132,7 @@ export const columns = [
       <div className="ml-3">{getValue() ? `${getValue()} mm` : "No Value"}</div>
     ),
     enableSorting: false,
+    size: 200,
   }),
   columnHelper.accessor("attributes.templeLength", {
     id: "Temple Length",
@@ -155,6 +157,13 @@ export const columns = [
       <DataTableColumnHeader column={column} title="Brand" />
     ),
     cell: ({ getValue }) => <div className="ml-3">{getValue()?.name}</div>,
+  }),
+  columnHelper.accessor("attributes.gender", {
+    id: "Gender",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Gender" />
+    ),
+    cell: ({ getValue }) => <div className="ml-3">{getValue()}</div>,
   }),
   columnHelper.display({
     id: "variants_link",
