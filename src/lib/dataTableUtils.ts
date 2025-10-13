@@ -36,7 +36,7 @@ export function createDataTableFiltersParsers<TData, TValue = unknown>(
   >((acc, column) => {
     if (column.meta?.options) {
       acc[column.id ?? ""] = parseAsArrayOf(parseAsString);
-    } else if (column.meta?.variant === "DATE_RANGE") {
+    } else if (column.meta?.variant === "dateRange") {
       acc[column.id ?? ""] = parseAsArrayOf(parseAsTimestamp);
     } else {
       acc[column.id ?? ""] = parseAsString;
